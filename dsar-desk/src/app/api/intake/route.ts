@@ -7,6 +7,8 @@ import { logAuditEvent } from "@/lib/audit";
 import { calculateDeadline } from "@/lib/dsar/deadline";
 import { RIGHT_TYPE_LABELS } from "@/lib/dsar/reference";
 import { publicIntakeSchema } from "@/lib/dsar/schemas";
+import { getDemoCompanyByToken, getDemoRequests, submitDemoIntake } from "@/lib/demo-store";
+import { isDemoMode } from "@/lib/env";
 import { sendEmail } from "@/lib/mailer";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Company, RequestRecord, RightType } from "@/types";
@@ -21,6 +23,43 @@ export async function POST(request: Request) {
         { error: "invalid_payload", issues: parsed.error.flatten() },
         { status: 400 },
       );
+    }
+
+    if (isDemoMode()) {
+      const company = getDemoCompanyByToken(parsed.data.token);
+
+      if (!company) {
+        return NextResponse.json({ error: "invalid_token" }, { status: 404 });
+      }
+
+      const recentCount = getDemoRequests(company.id, { limit: 1000 }).requests.filter(
+        (item) =>
+          item.requester_email === parsed.data.requester_email &&
+          new Date(item.created_at) >= subDays(new Date(), 1),
+      ).length;
+
+      if (recentCount >= 5) {
+        return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+      }
+
+      const rightType: RightType =
+        parsed.data.right_type === "not_sure" ? "access" : parsed.data.right_type;
+      const createdRequest = submitDemoIntake({
+        token: parsed.data.token,
+        right_type: rightType,
+        requester_name: parsed.data.requester_name,
+        requester_email: parsed.data.requester_email,
+        description: parsed.data.description,
+      });
+
+      if (!createdRequest) {
+        return NextResponse.json({ error: "invalid_token" }, { status: 404 });
+      }
+
+      return NextResponse.json({
+        id: createdRequest.id,
+        deadline_at: createdRequest.deadline_at,
+      });
     }
 
     const admin = createSupabaseAdminClient();

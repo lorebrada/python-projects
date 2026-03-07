@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 
 import { IntakeForm } from "@/components/intake/IntakeForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getDemoCompanyByToken } from "@/lib/demo-store";
+import { isDemoMode } from "@/lib/env";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Company } from "@/types";
 
@@ -12,14 +14,14 @@ interface IntakePageProps {
 
 export default async function IntakePage({ params }: IntakePageProps) {
   const { token } = await params;
-  const admin = createSupabaseAdminClient();
-  const { data: company } = await admin
-    .from("companies")
-    .select("*")
-    .eq("intake_token", token)
-    .eq("intake_enabled", true)
-    .maybeSingle();
-  const typedCompany = company as Company | null;
+  const typedCompany = isDemoMode()
+    ? getDemoCompanyByToken(token)
+    : (((await createSupabaseAdminClient()
+        .from("companies")
+        .select("*")
+        .eq("intake_token", token)
+        .eq("intake_enabled", true)
+        .maybeSingle()).data as Company | null) ?? null);
 
   if (!typedCompany) {
     notFound();

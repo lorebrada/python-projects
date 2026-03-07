@@ -8,6 +8,8 @@ import { getAuthContext } from "@/lib/auth";
 import { calculateDeadline, getDeadlineStatus } from "@/lib/dsar/deadline";
 import { RIGHT_TYPE_LABELS } from "@/lib/dsar/reference";
 import { requestCreateSchema } from "@/lib/dsar/schemas";
+import { addDemoAuditEvent, createDemoRequest } from "@/lib/demo-store";
+import { isDemoMode } from "@/lib/env";
 import { sendEmail } from "@/lib/mailer";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { RequestRecord, RequestStatus } from "@/types";
@@ -50,11 +52,38 @@ export async function POST(request: Request) {
       }
     }
 
-    const supabase = await createSupabaseServerClient();
     const receivedAt = parsed.data.received_at ?? new Date();
     const deadline = calculateDeadline(receivedAt);
     const requesterIp =
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+
+    if (isDemoMode()) {
+      const demoRequest = createDemoRequest({
+        company_id: authContext.company.id,
+        right_type: parsed.data.right_type,
+        requester_name: parsed.data.requester_name,
+        requester_email: parsed.data.requester_email,
+        description: parsed.data.description,
+        internal_notes: parsed.data.internal_notes,
+        received_at: receivedAt,
+        source: parsed.data.source,
+        assigned_to: parsed.data.assigned_to,
+        requester_ip: requesterIp,
+      });
+
+      addDemoAuditEvent({
+        companyId: authContext.company.id,
+        requestId: demoRequest.id,
+        eventType: "acknowledgment_sent",
+        details: {
+          to: demoRequest.requester_email,
+        },
+      });
+
+      return NextResponse.json(demoRequest);
+    }
+
+    const supabase = await createSupabaseServerClient();
 
     const { data: createdRequest, error } = await supabase
       .from("requests")

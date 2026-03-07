@@ -4,6 +4,8 @@ import { differenceInDays } from "date-fns";
 
 import AuditLogPDF from "@/components/pdf/AuditLogPDF";
 import { getAuthContext } from "@/lib/auth";
+import { getDemoAuditLog, getDemoRequests } from "@/lib/demo-store";
+import { isDemoMode } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { AuditEvent, RequestRecord } from "@/types";
 
@@ -38,6 +40,117 @@ export async function GET(request: Request) {
 
     if (format === "pdf" && authContext.profile.plan === "solo") {
       return NextResponse.json({ error: "upgrade_required" }, { status: 402 });
+    }
+
+    if (isDemoMode()) {
+      const events = getDemoAuditLog(authContext.company.id, {
+        from: from ?? undefined,
+        to: to ?? undefined,
+        requestId: requestId ?? undefined,
+      });
+      const requests = getDemoRequests(authContext.company.id, {
+        limit: 1000,
+      }).requests.map((item) => ({
+        id: item.id,
+        company_id: item.company_id,
+        assigned_to: item.assigned_to,
+        requester_name: item.requester_name,
+        requester_email: item.requester_email,
+        requester_ip: item.requester_ip,
+        right_type: item.right_type,
+        description: item.description,
+        internal_notes: item.internal_notes,
+        status: item.status,
+        received_at: item.received_at,
+        deadline_at: item.deadline_at,
+        extended_deadline_at: item.extended_deadline_at,
+        completed_at: item.completed_at,
+        source: item.source,
+        identity_verified: item.identity_verified,
+        identity_method: item.identity_method,
+        created_at: item.created_at,
+        updated_at: item.updated_at,
+      }));
+      const requestIds = [...new Set(events.map((event) => event.request_id))];
+      const requestMap = new Map(requests.map((item) => [item.id, item]));
+      const pdfRequests = requestIds
+        .map((id) => ({
+          request: requestMap.get(id),
+          auditEvents: events.filter((event) => event.request_id === id),
+        }))
+        .filter((item): item is { request: RequestRecord; auditEvents: AuditEvent[] } =>
+          Boolean(item.request),
+        );
+
+      if (format === "csv") {
+        const csv = toCsv(
+          events.map((event) => ({
+            created_at: event.created_at,
+            request_id: event.request_id,
+            event_type: event.event_type,
+            actor_email: event.actor_email ?? "",
+            details: event.details ? JSON.stringify(event.details) : "",
+          })),
+        );
+
+        return new NextResponse(csv, {
+          headers: {
+            "Content-Disposition": 'attachment; filename="audit-log.csv"',
+            "Content-Type": "text/csv; charset=utf-8",
+          },
+        });
+      }
+
+      const totalRequests = requests.length;
+      const completed = requests.filter((item) => item.completed_at);
+      const completedOnTime = completed.filter((item) => {
+        const deadline = new Date(item.extended_deadline_at ?? item.deadline_at);
+        return new Date(item.completed_at ?? deadline) <= deadline;
+      }).length;
+      const averageResponseDays =
+        completed.length > 0
+          ? completed.reduce((sum, item) => {
+              return (
+                sum +
+                differenceInDays(
+                  new Date(item.completed_at ?? item.received_at),
+                  new Date(item.received_at),
+                )
+              );
+            }, 0) / completed.length
+          : 0;
+      const overdue = requests.filter((item) => item.status === "overdue").length;
+      const byRightType = requests.reduce<Record<string, number>>((acc, item) => {
+        acc[item.right_type] = (acc[item.right_type] ?? 0) + 1;
+        return acc;
+      }, {});
+
+      const buffer = await renderToBuffer(
+        AuditLogPDF({
+          companyName: authContext.company.name,
+          from,
+          generatedAt: new Date().toISOString(),
+          logoUrl: authContext.company.logo_url,
+          requests: pdfRequests,
+          stats: {
+            averageResponseDays,
+            byRightType,
+            completedOnTime,
+            completedOnTimeRate:
+              totalRequests > 0 ? (completedOnTime / totalRequests) * 100 : 0,
+            overdue,
+            totalRequests,
+          },
+          to,
+        }),
+      );
+
+      return new NextResponse(new Uint8Array(buffer), {
+        headers: {
+          "Content-Disposition": 'attachment; filename="audit-log.pdf"',
+          "Content-Type": "application/pdf",
+        },
+      });
     }
 
     const supabase = await createSupabaseServerClient();

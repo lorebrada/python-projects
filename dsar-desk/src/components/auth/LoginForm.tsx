@@ -18,8 +18,18 @@ export function LoginForm({ nextPath = "/dashboard" }: { nextPath?: string }) {
   const [loading, setLoading] = useState(false);
 
   const next = nextPath;
+  const demoMode =
+    process.env.NEXT_PUBLIC_DEMO_MODE === "true" ||
+    !process.env.NEXT_PUBLIC_SUPABASE_URL;
 
   async function handlePasswordLogin() {
+    if (demoMode) {
+      toast.success("Demo mode active. Opening the dashboard.");
+      router.push(next);
+      router.refresh();
+      return;
+    }
+
     setLoading(true);
     const supabase = createSupabaseBrowserClient();
 
@@ -40,6 +50,13 @@ export function LoginForm({ nextPath = "/dashboard" }: { nextPath?: string }) {
   }
 
   async function handleGoogleLogin() {
+    if (demoMode) {
+      toast.success("Demo mode active. Opening the dashboard.");
+      router.push(next);
+      router.refresh();
+      return;
+    }
+
     const supabase = createSupabaseBrowserClient();
 
     const { error } = await supabase.auth.signInWithOAuth({

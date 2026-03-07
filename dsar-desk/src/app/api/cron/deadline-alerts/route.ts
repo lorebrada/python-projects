@@ -4,7 +4,7 @@ import { addDays } from "date-fns";
 
 import DeadlineAlert from "@/components/emails/DeadlineAlert";
 import { logAuditEvent } from "@/lib/audit";
-import { requireEnv } from "@/lib/env";
+import { isDemoMode, requireEnv } from "@/lib/env";
 import { sendEmail } from "@/lib/mailer";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getDeadlineStatus } from "@/lib/dsar/deadline";
@@ -12,6 +12,16 @@ import type { Company, Profile, RequestRecord, SubscriptionRecord } from "@/type
 
 export async function GET(request: Request) {
   try {
+    if (isDemoMode()) {
+      return NextResponse.json({
+        companies_checked: 1,
+        alerts_sent: 1,
+        overdue_updated: 1,
+        errors: [],
+        mode: "demo",
+      });
+    }
+
     const authHeader = request.headers.get("authorization");
 
     if (authHeader !== `Bearer ${requireEnv("CRON_SECRET")}`) {

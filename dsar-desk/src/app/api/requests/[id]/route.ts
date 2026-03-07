@@ -4,6 +4,8 @@ import { logAuditEvent } from "@/lib/audit";
 import { getAuthContext } from "@/lib/auth";
 import { calculateExtendedDeadline, getDeadlineStatus } from "@/lib/dsar/deadline";
 import { requestUpdateSchema } from "@/lib/dsar/schemas";
+import { addDemoAuditEvent, getDemoRequestDetail, updateDemoRequest } from "@/lib/demo-store";
+import { isDemoMode } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { AuditEvent, RequestRecord } from "@/types";
 import type { Database } from "@/types/database";
@@ -22,6 +24,18 @@ export async function GET(
 
     if (!authContext?.company) {
       return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    }
+
+    if (isDemoMode()) {
+      const detail = getDemoRequestDetail(authContext.company.id, id);
+      if (!detail) {
+        return NextResponse.json({ error: "not_found" }, { status: 404 });
+      }
+
+      return NextResponse.json({
+        ...detail.request,
+        audit_events: detail.auditEvents,
+      });
     }
 
     const supabase = await createSupabaseServerClient();
@@ -83,6 +97,78 @@ export async function PATCH(
         { error: "invalid_payload", issues: parsed.error.flatten() },
         { status: 400 },
       );
+    }
+
+    if (isDemoMode()) {
+      const result = updateDemoRequest(authContext.company.id, id, {
+        ...parsed.data,
+      });
+
+      if (!result) {
+        return NextResponse.json({ error: "not_found" }, { status: 404 });
+      }
+
+      if (parsed.data.status && parsed.data.status !== result.existing.status) {
+        addDemoAuditEvent({
+          companyId: authContext.company.id,
+          requestId: id,
+          eventType:
+            parsed.data.status === "extended"
+              ? "deadline_extended"
+              : parsed.data.status === "refused"
+                ? "request_refused"
+                : "status_changed",
+          details: {
+            from: result.existing.status,
+            to: parsed.data.status,
+          },
+        });
+      }
+
+      if (
+        parsed.data.assigned_to !== undefined &&
+        parsed.data.assigned_to !== result.existing.assigned_to
+      ) {
+        addDemoAuditEvent({
+          companyId: authContext.company.id,
+          requestId: id,
+          eventType: "request_assigned",
+          details: {
+            assigned_to: parsed.data.assigned_to,
+          },
+        });
+      }
+
+      if (
+        parsed.data.identity_verified !== undefined &&
+        parsed.data.identity_verified !== result.existing.identity_verified
+      ) {
+        addDemoAuditEvent({
+          companyId: authContext.company.id,
+          requestId: id,
+          eventType: "identity_verified",
+          details: {
+            identity_verified: parsed.data.identity_verified,
+            method: parsed.data.identity_method ?? "manual",
+          },
+        });
+      }
+
+      if (
+        parsed.data.internal_notes !== undefined &&
+        parsed.data.internal_notes !== result.existing.internal_notes
+      ) {
+        addDemoAuditEvent({
+          companyId: authContext.company.id,
+          requestId: id,
+          eventType: "note_added",
+          details: {
+            internal_notes: parsed.data.internal_notes,
+          },
+        });
+      }
+
+      return NextResponse.json(result.updated);
     }
 
     const supabase = await createSupabaseServerClient();

@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-import { getAdminEmails } from "@/lib/env";
+import { getAdminEmails, isDemoMode } from "@/lib/env";
 import type { Database } from "@/types/database";
 
 const protectedPrefixes = [
@@ -21,6 +21,10 @@ function isProtectedPath(pathname: string) {
 }
 
 export async function middleware(request: NextRequest) {
+  if (isDemoMode()) {
+    return NextResponse.next();
+  }
+
   const pathname = request.nextUrl.pathname;
 
   if (

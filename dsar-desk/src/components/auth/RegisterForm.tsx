@@ -12,6 +12,9 @@ import { Label } from "@/components/ui/label";
 export function RegisterForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const demoMode =
+    process.env.NEXT_PUBLIC_DEMO_MODE === "true" ||
+    !process.env.NEXT_PUBLIC_SUPABASE_URL;
   const [formState, setFormState] = useState({
     full_name: "",
     email: "",
@@ -37,8 +40,10 @@ export function RegisterForm() {
         throw new Error(payload.error ?? "Unable to create account");
       }
 
-      toast.success("Account created. Please sign in.");
-      router.push("/login?registered=1");
+      toast.success(
+        demoMode ? "Demo workspace ready." : "Account created. Please sign in.",
+      );
+      router.push(demoMode ? "/dashboard" : "/login?registered=1");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Unable to create account");
     } finally {

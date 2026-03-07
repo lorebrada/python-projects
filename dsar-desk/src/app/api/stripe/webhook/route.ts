@@ -3,7 +3,7 @@ import { createElement } from "react";
 
 import PaymentFailed from "@/components/emails/PaymentFailed";
 import WelcomeEmail from "@/components/emails/WelcomeEmail";
-import { getAppUrl, requireEnv } from "@/lib/env";
+import { getAppUrl, isDemoMode, requireEnv } from "@/lib/env";
 import { sendEmail } from "@/lib/mailer";
 import { getPlanByPriceId, PLANS } from "@/lib/stripe/plans";
 import { getStripeServerClient } from "@/lib/stripe/server";
@@ -24,6 +24,10 @@ async function findProfileByCustomerId(customerId: string) {
 }
 
 export async function POST(request: Request) {
+  if (isDemoMode()) {
+    return NextResponse.json({ received: true, mode: "demo" });
+  }
+
   const payload = await request.text();
   const signature = request.headers.get("stripe-signature");
 

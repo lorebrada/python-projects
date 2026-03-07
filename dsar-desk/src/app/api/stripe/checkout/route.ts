@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 
 import { getAuthContext } from "@/lib/auth";
+import { activateDemoPlan } from "@/lib/demo-store";
+import { getAppUrl, isDemoMode } from "@/lib/env";
 import { PLANS } from "@/lib/stripe/plans";
 import { getStripeServerClient } from "@/lib/stripe/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getAppUrl } from "@/lib/env";
 
 export async function GET(request: Request) {
   try {
@@ -22,6 +23,14 @@ export async function GET(request: Request) {
     }
 
     const plan = PLANS[planKey as keyof typeof PLANS];
+
+    if (isDemoMode()) {
+      activateDemoPlan(plan.key);
+      return NextResponse.redirect(
+        `${getAppUrl()}/billing?checkout=success&plan=${plan.key}`,
+      );
+    }
+
     const stripe = getStripeServerClient();
     const supabase = await createSupabaseServerClient();
 

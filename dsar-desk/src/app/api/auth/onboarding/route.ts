@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 
+import { getDemoStore } from "@/lib/demo-store";
 import { createCompanyForSignedInUser } from "@/lib/company";
 import { onboardingSchema } from "@/lib/dsar/schemas";
+import { isDemoMode } from "@/lib/env";
 import { getAuthContext } from "@/lib/auth";
 
 export async function POST(request: Request) {
@@ -26,11 +28,23 @@ export async function POST(request: Request) {
       );
     }
 
-    const company = await createCompanyForSignedInUser({
-      companyName: parsed.data.company_name,
-      country: parsed.data.country,
-      domain: parsed.data.domain,
-    });
+    const company = isDemoMode()
+      ? (() => {
+          const store = getDemoStore();
+          store.company = {
+            ...store.company,
+            name: parsed.data.company_name,
+            country: parsed.data.country,
+            domain: parsed.data.domain ?? null,
+          };
+          store.companies = [store.company];
+          return store.company;
+        })()
+      : await createCompanyForSignedInUser({
+          companyName: parsed.data.company_name,
+          country: parsed.data.country,
+          domain: parsed.data.domain,
+        });
 
     return NextResponse.json({ company_id: company.id });
   } catch (error) {

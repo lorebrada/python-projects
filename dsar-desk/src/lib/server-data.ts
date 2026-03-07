@@ -4,6 +4,18 @@ import { addDays, endOfMonth, startOfMonth } from "date-fns";
 
 import { getAuthContext } from "@/lib/auth";
 import { getDeadlineStatus } from "@/lib/dsar/deadline";
+import {
+  getDemoAuditLog,
+  getDemoAuthContext,
+  getDemoCompanyMembers,
+  getDemoDashboardStats,
+  getDemoRequestDetail,
+  getDemoRequests,
+  getDemoTemplates,
+  getDemoUpcomingDeadlines,
+  getDemoUsageThisMonth,
+} from "@/lib/demo-store";
+import { isDemoMode } from "@/lib/env";
 import type {
   AuditEvent,
   AuditEventType,
@@ -24,6 +36,10 @@ export interface TeamMemberOption {
 }
 
 export async function getCompanyMembers(companyId: string) {
+  if (isDemoMode()) {
+    return getDemoCompanyMembers(companyId);
+  }
+
   const supabase = await createSupabaseServerClient();
   const { data: membersData } = await supabase
     .from("company_members")
@@ -63,6 +79,10 @@ export async function getTemplatesForCompany(
   companyId: string,
   rightType?: TemplateRightType,
 ) {
+  if (isDemoMode()) {
+    return getDemoTemplates(companyId, rightType);
+  }
+
   const supabase = await createSupabaseServerClient();
   let query = supabase
     .from("templates")
@@ -80,6 +100,10 @@ export async function getTemplatesForCompany(
 }
 
 export async function getCompanyUsageThisMonth(companyId: string) {
+  if (isDemoMode()) {
+    return getDemoUsageThisMonth(companyId);
+  }
+
   const supabase = await createSupabaseServerClient();
   const from = startOfMonth(new Date()).toISOString();
   const to = endOfMonth(new Date()).toISOString();
@@ -95,6 +119,10 @@ export async function getCompanyUsageThisMonth(companyId: string) {
 }
 
 export async function getDashboardStats(companyId: string) {
+  if (isDemoMode()) {
+    return getDemoDashboardStats(companyId);
+  }
+
   const supabase = await createSupabaseServerClient();
   const now = new Date();
   const weekAhead = addDays(now, 7).toISOString();
@@ -151,6 +179,14 @@ export async function getCompanyRequests(params: {
   page?: number;
   limit?: number;
 }) {
+  if (isDemoMode()) {
+    return getDemoRequests(params.companyId, {
+      status: params.status,
+      page: params.page,
+      limit: params.limit,
+    });
+  }
+
   const supabase = await createSupabaseServerClient();
   const page = params.page ?? 1;
   const limit = params.limit ?? 20;
@@ -179,6 +215,10 @@ export async function getCompanyRequests(params: {
 }
 
 export async function getUpcomingDeadlines(companyId: string) {
+  if (isDemoMode()) {
+    return getDemoUpcomingDeadlines(companyId);
+  }
+
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from("requests")
@@ -192,6 +232,10 @@ export async function getUpcomingDeadlines(companyId: string) {
 }
 
 export async function getRequestDetail(companyId: string, requestId: string) {
+  if (isDemoMode()) {
+    return getDemoRequestDetail(companyId, requestId);
+  }
+
   const supabase = await createSupabaseServerClient();
   const [{ data: request }, { data: auditEvents }] = await Promise.all([
     supabase
@@ -232,6 +276,10 @@ export async function getCompanyAuditLog(companyId: string, filters?: {
   actor?: string;
   requestId?: string;
 }) {
+  if (isDemoMode()) {
+    return getDemoAuditLog(companyId, filters);
+  }
+
   const supabase = await createSupabaseServerClient();
   let query = supabase
     .from("audit_events")
@@ -264,6 +312,10 @@ export async function getCompanyAuditLog(companyId: string, filters?: {
 }
 
 export async function requireCompanyData() {
+  if (isDemoMode()) {
+    return getDemoAuthContext();
+  }
+
   const authContext = await getAuthContext();
 
   if (!authContext?.company) {

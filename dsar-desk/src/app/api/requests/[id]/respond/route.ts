@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { logAuditEvent } from "@/lib/audit";
 import { getAuthContext } from "@/lib/auth";
 import { requestResponseSchema } from "@/lib/dsar/schemas";
+import { getDemoRequestDetail, respondToDemoRequest } from "@/lib/demo-store";
+import { isDemoMode } from "@/lib/env";
 import { sendEmail } from "@/lib/mailer";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { buildTemplateVariables, resolveTemplate, resolveTemplateString } from "@/lib/template-resolver";
@@ -32,6 +34,31 @@ export async function POST(
         { error: "invalid_payload", issues: parsed.error.flatten() },
         { status: 400 },
       );
+    }
+
+    if (isDemoMode()) {
+      const detail = getDemoRequestDetail(authContext.company.id, id);
+      if (!detail) {
+        return NextResponse.json({ error: "not_found" }, { status: 404 });
+      }
+
+      const variables = buildTemplateVariables({
+        request: detail.request,
+        company: authContext.company,
+      });
+
+      const resolvedSubject = `Response regarding your data request - ${authContext.company.name}`;
+      const resolvedBody = resolveTemplateString(parsed.data.custom_body, variables);
+      const demoResult = respondToDemoRequest(authContext.company.id, id, {
+        subject: resolvedSubject,
+        body: resolvedBody,
+        sendEmail: parsed.data.send_email,
+      });
+
+      return NextResponse.json({
+        sent: parsed.data.send_email,
+        audit_event_id: demoResult?.auditEvent.id ?? null,
+      });
     }
 
     const supabase = await createSupabaseServerClient();

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getAuthContext } from "@/lib/auth";
-import { getAdminEmails } from "@/lib/env";
+import { getAdminEmails, isDemoMode } from "@/lib/env";
 
 const navigation = [
   { href: "/dashboard", label: "Dashboard" },
@@ -60,6 +60,11 @@ export default async function DashboardLayout({
           </div>
         </aside>
         <div className="p-6 lg:p-10">{children}</div>
+        {isDemoMode() ? (
+          <div className="fixed bottom-4 right-4 rounded-full bg-violet-700 px-4 py-2 text-sm font-medium text-white shadow-lg">
+            Demo mode active
+          </div>
+        ) : null}
       </div>
     </div>
   );

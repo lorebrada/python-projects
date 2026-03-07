@@ -13,7 +13,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getAuthContext } from "@/lib/auth";
+import { getDemoAdminOverview } from "@/lib/demo-store";
 import { getAdminEmails } from "@/lib/env";
+import { isDemoMode } from "@/lib/env";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import type { Company, Profile, RequestRecord } from "@/types";
@@ -25,14 +27,21 @@ export default async function AdminPage() {
     forbidden();
   }
 
-  const admin = createSupabaseAdminClient();
   const monthStart = startOfMonth(new Date()).toISOString();
+  const demoOverview = isDemoMode() ? getDemoAdminOverview() : null;
+  const admin = isDemoMode() ? null : createSupabaseAdminClient();
 
-  const [{ data: profiles }, { data: companies }, { data: requests }] = await Promise.all([
-    admin.from("profiles").select("*").order("created_at", { ascending: false }),
-    admin.from("companies").select("*"),
-    admin.from("requests").select("*"),
-  ]);
+  const [{ data: profiles }, { data: companies }, { data: requests }] = isDemoMode()
+    ? [
+        { data: demoOverview?.profiles ?? [] },
+        { data: demoOverview?.companies ?? [] },
+        { data: demoOverview?.requests ?? [] },
+      ]
+    : await Promise.all([
+        admin!.from("profiles").select("*").order("created_at", { ascending: false }),
+        admin!.from("companies").select("*"),
+        admin!.from("requests").select("*"),
+      ]);
   const typedProfiles = (profiles ?? []) as Profile[];
   const typedCompanies = (companies ?? []) as Company[];
   const typedRequests = (requests ?? []) as RequestRecord[];

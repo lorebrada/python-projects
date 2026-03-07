@@ -3,6 +3,8 @@ import "server-only";
 import type { User } from "@supabase/supabase-js";
 
 import type { Company, Profile } from "@/types";
+import { getDemoAuthContext } from "@/lib/demo-store";
+import { isDemoMode } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export interface AuthContext {
@@ -12,6 +14,10 @@ export interface AuthContext {
 }
 
 export async function getAuthContext(): Promise<AuthContext | null> {
+  if (isDemoMode()) {
+    return getDemoAuthContext();
+  }
+
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },

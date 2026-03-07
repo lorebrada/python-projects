@@ -10,6 +10,14 @@ export type RequiredServerVar =
   | "NEXT_PUBLIC_APP_URL"
   | "CRON_SECRET";
 
+export function isDemoMode() {
+  return (
+    process.env.NEXT_PUBLIC_DEMO_MODE === "true" ||
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+}
+
 export function getEnv(key: string, fallback = "") {
   return process.env[key] ?? fallback;
 }
@@ -43,10 +51,16 @@ export function isResendConfigured() {
 }
 
 export function getAdminEmails() {
-  return getEnv("ADMIN_EMAILS")
+  const emails = getEnv("ADMIN_EMAILS")
     .split(",")
     .map((email) => email.trim().toLowerCase())
     .filter(Boolean);
+
+  if (emails.length === 0 && isDemoMode()) {
+    return ["demo@dsardesk.test"];
+  }
+
+  return emails;
 }
 
 export function getAppUrl() {

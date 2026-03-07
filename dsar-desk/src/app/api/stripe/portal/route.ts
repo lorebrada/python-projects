@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 
 import { getAuthContext } from "@/lib/auth";
-import { getAppUrl } from "@/lib/env";
+import { getAppUrl, isDemoMode } from "@/lib/env";
 import { getStripeServerClient } from "@/lib/stripe/server";
 
 export async function GET() {
   try {
     const authContext = await getAuthContext();
+
+    if (isDemoMode()) {
+      return NextResponse.redirect(`${getAppUrl()}/billing?portal=demo`);
+    }
 
     if (!authContext?.profile.stripe_customer_id) {
       return NextResponse.redirect(`${getAppUrl()}/billing`);
