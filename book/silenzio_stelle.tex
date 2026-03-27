@@ -1,160 +1,278 @@
-\documentclass[12pt,a4paper,openany]{book}
+\documentclass[11.5pt,a4paper,openany]{book}
 
-% --- Encoding & Language ---
+% ============================================================
+%  ENCODING & LANGUAGE
+% ============================================================
 \usepackage{fontspec}
 \usepackage{polyglossia}
 \setmainlanguage{italian}
 
-% --- Fonts ---
-\setmainfont{Linux Libertine O}[
-  BoldFont     = Linux Libertine O Bold,
-  ItalicFont   = Linux Libertine O Italic,
-  BoldItalicFont = Linux Libertine O Bold Italic,
-  Numbers      = OldStyle,
-  Ligatures    = TeX,
-]
-\setsansfont{Linux Biolinum O}[
-  Ligatures = TeX,
-]
+% ============================================================
+%  FONTS
+%  Body: EB Garamond (elegant, warm, humanist)
+%  Fallback: Linux Libertine O if EB Garamond not available
+% ============================================================
+\IfFontExistsTF{EB Garamond}{%
+  \setmainfont{EB Garamond}[
+    BoldFont        = EB Garamond Bold,
+    ItalicFont      = EB Garamond Italic,
+    BoldItalicFont  = EB Garamond Bold Italic,
+    Numbers         = OldStyle,
+    Ligatures       = TeX,
+    SmallCapsFont   = EB Garamond SC,
+  ]
+}{%
+  \setmainfont{Linux Libertine O}[
+    BoldFont        = Linux Libertine O Bold,
+    ItalicFont      = Linux Libertine O Italic,
+    BoldItalicFont  = Linux Libertine O Bold Italic,
+    Numbers         = OldStyle,
+    Ligatures       = TeX,
+  ]
+}
 
-% --- Page Layout ---
+\IfFontExistsTF{Linux Biolinum O}{%
+  \setsansfont{Linux Biolinum O}[Ligatures=TeX]
+}{}
+
+% ============================================================
+%  PAGE LAYOUT
+%  Golden-ratio-inspired text block: text height ≈ 1.618 × width
+% ============================================================
 \usepackage[
   a4paper,
-  top=3.0cm,
-  bottom=3.4cm,
-  inner=3.2cm,
-  outer=2.6cm,
-  headheight=15pt,
-  marginparwidth=1.8cm,
+  top      = 3.2cm,
+  bottom   = 3.8cm,
+  inner    = 3.4cm,
+  outer    = 2.8cm,
+  headheight = 14pt,
+  headsep    = 18pt,
 ]{geometry}
 
-% --- Typography ---
-\usepackage[
-  protrusion=true,
-]{microtype}
+% ============================================================
+%  TYPOGRAPHY
+% ============================================================
+\usepackage[protrusion=true]{microtype}
 
 \usepackage{setspace}
-\setstretch{1.32}
+\setstretch{1.38}
+
 \usepackage{parskip}
-\setlength{\parskip}{0.72em plus 0.1em minus 0.05em}
+\setlength{\parskip}{0.8em plus 0.1em minus 0.05em}
 \setlength{\parindent}{0pt}
 
-% --- Headers/Footers ---
+% Better widow/orphan control
+\widowpenalty=10000
+\clubpenalty=10000
+\raggedbottom
+
+% Generous line-breaking tolerance — eliminates most overfull boxes
+% without sacrificing spacing quality
+\tolerance=1500
+\hbadness=1500
+\emergencystretch=2em
+
+% ============================================================
+%  COLOUR PALETTE
+%  Restrained: one dark ink, one rule grey, one warm text shadow
+% ============================================================
+\usepackage{xcolor}
+\definecolor{inkblue}   {RGB}{22,  35,  65 }   % near-black with blue undertone
+\definecolor{rulegray}  {RGB}{180, 182, 190}   % very light grey for rules
+\definecolor{captionink}{RGB}{80,  85,  100}   % chapter number tint
+\definecolor{headink}   {RGB}{120, 125, 140}   % running head
+
+% ============================================================
+%  HEADERS & FOOTERS
+%  Minimal: title left verso, chapter right recto; page centred at foot
+% ============================================================
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[LE]{\small\itshape\color{gray!70} Il silenzio tra le stelle}
-\fancyhead[RO]{\small\itshape\color{gray!70}\leftmark}
-\fancyfoot[C]{\small\thepage}
-\renewcommand{\headrulewidth}{0.25pt}
-\renewcommand{\headrule}{\color{gray!50}\hrule width\headwidth height\headrulewidth \vskip-\headrulewidth}
+\fancyhead[LE]{%
+  \small\itshape\color{headink}%
+  Il silenzio tra le stelle%
+}
+\fancyhead[RO]{%
+  \small\itshape\color{headink}%
+  \leftmark%
+}
+\fancyfoot[C]{\small\color{headink}\thepage}
+\renewcommand{\headrulewidth}{0pt}   % no rule — cleaner look
+\fancypagestyle{plain}{%             % chapter opening pages: just page number
+  \fancyhf{}%
+  \fancyfoot[C]{\small\color{headink}\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
 
-% --- Part Style ---
+% ============================================================
+%  PART STYLE
+%  Centred, small-caps, generous vertical air, no rule
+% ============================================================
 \usepackage{titlesec}
-\titleformat{\part}[display]
-  {\centering\normalfont\scshape\huge\color{accent}}
-  {}
-  {0pt}
-  {}
-  []
-\titlespacing*{\part}{0pt}{4em}{3em}
 
-% --- Chapter Style (clean, with thin rules and generous spacing) ---
+\titleformat{\part}[display]
+  {\centering\normalfont}
+  {}
+  {0em}
+  {%
+    \vspace{2em}%
+    \fontsize{9}{12}\selectfont\scshape\color{captionink}\MakeUppercase%
+  }
+  [\vspace{0.4em}{\centering\color{rulegray}\rule{2.5cm}{0.3pt}}\vspace{3em}]
+\titlespacing*{\part}{0pt}{6em}{0pt}
+
+% ============================================================
+%  CHAPTER STYLE
+%  A single thin rule above; chapter title in large but not enormous type;
+%  generous white space after for first paragraph
+% ============================================================
 \titleformat{\chapter}[display]
   {\normalfont}
   {}
   {0pt}
   {%
-    \vspace{0.5em}%
-    \color{gray!60}\rule{\textwidth}{0.5pt}%
-    \vspace{0.6em}%
-    \raggedright\fontsize{22}{28}\selectfont\bfseries%
+    {\color{rulegray}\rule{\textwidth}{0.4pt}}%
+    \vspace{1.2em}%
+    \raggedright\fontsize{20}{26}\selectfont\bfseries%
   }
-  [{\vspace{0.5em}\color{gray!40}\rule{\textwidth}{0.25pt}\vspace{1.6em}}]
+  [\vspace{2.2em}]
 
-\titlespacing*{\chapter}{0pt}{0pt}{1.8em}
+\titlespacing*{\chapter}{0pt}{1em}{0em}
 
-% --- Math ---
+% ============================================================
+%  MATH
+% ============================================================
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{mathtools}
 
-% --- Epigraphs ---
+% ============================================================
+%  EPIGRAPHS
+%  Narrow column, italic body, small attribution, generous breathing
+% ============================================================
 \usepackage{epigraph}
-\setlength{\epigraphwidth}{0.65\textwidth}
+\setlength{\epigraphwidth}{0.60\textwidth}
 \setlength{\epigraphrule}{0pt}
 \renewcommand{\epigraphflush}{center}
-\renewcommand{\epigraphrule}{0pt}
-\setlength{\beforeepigraphskip}{0.8em}
-\setlength{\afterepigraphskip}{1.6em}
+\setlength{\beforeepigraphskip}{0.5em}
+\setlength{\afterepigraphskip}{2.2em}
 
-% --- Lists ---
+% Custom epigraph formatting: body in \small\itshape, source in \footnotesize
+\renewcommand{\textflush}{center}
+\renewcommand{\sourceflush}{center}
+
+% ============================================================
+%  LISTS
+% ============================================================
 \usepackage{enumitem}
-\setlist[itemize]{leftmargin=1.5em, itemsep=0.2em, topsep=0.3em}
-\setlist[enumerate]{leftmargin=1.8em, itemsep=0.2em, topsep=0.3em}
+\setlist[itemize] {leftmargin=1.6em, itemsep=0.15em, topsep=0.4em, parsep=0pt}
+\setlist[enumerate]{leftmargin=1.8em, itemsep=0.15em, topsep=0.4em, parsep=0pt}
 
-% --- Colour ---
-\usepackage{xcolor}
-\definecolor{accent}{RGB}{35,45,75}
-\definecolor{rulecolor}{RGB}{160,165,180}
+% ============================================================
+%  BLOCK QUOTES  (for the PRF principle statement)
+% ============================================================
+\usepackage{quoting}
+\quotingsetup{font=itshape, leftmargin=2em, rightmargin=2em}
 
-% --- Hyperref ---
+% ============================================================
+%  HYPERREF  (loaded last among packages)
+% ============================================================
 \usepackage{hyperref}
 \hypersetup{
-  colorlinks  = true,
-  linkcolor   = accent,
-  urlcolor    = accent,
-  citecolor   = accent,
-  pdftitle    = {Il silenzio tra le stelle},
-  pdfauthor   = {},
-  pdfsubject  = {Fisica, Filosofia, Matematica, Mente},
-  pdfkeywords = {fisica, filosofia, coscienza, relazionalismo},
+  colorlinks      = true,
+  linkcolor       = inkblue,
+  urlcolor        = inkblue,
+  citecolor       = inkblue,
+  pdftitle        = {Il silenzio tra le stelle},
+  pdfauthor       = {},
+  pdfsubject      = {Fisica · Filosofia · Matematica · Mente},
+  pdfkeywords     = {fisica, filosofia, coscienza, relazionalismo, PRF},
   pdfdisplaydoctitle = true,
+  pdfstartview    = {FitH},
 }
 
-% --- Custom commands ---
-\newcommand{\puntini}{%
-  \vspace{0.8em}%
-  \begin{center}
-    \textcolor{rulecolor}{$\cdot\enspace\cdot\enspace\cdot$}
-  \end{center}%
-  \vspace{0.4em}%
-}
-
-% --- TOC depth and spacing ---
+% ============================================================
+%  TABLE OF CONTENTS  (tocloft)
+% ============================================================
 \usepackage{tocloft}
-\setlength{\cftbeforechapskip}{0.5em}
+\renewcommand{\cfttoctitlefont}{\normalfont\large\scshape}
+\setlength{\cftbeforetoctitleskip}{1em}
+\setlength{\cftaftertoctitleskip}{1.5em}
+\setlength{\cftbeforechapskip}{0.55em}
 \renewcommand{\cftchapfont}{\normalfont}
 \renewcommand{\cftchappagefont}{\normalfont}
-\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftchapleader}{\hfill}
+\setlength{\cftchapnumwidth}{0pt}
+
+% ============================================================
+%  CUSTOM COMMANDS
+% ============================================================
+
+% Separator between sections inside a chapter: three centred dots
+\newcommand{\puntini}{%
+  \vspace{1.1em}%
+  \begin{center}
+    \textcolor{rulegray}{%
+      \raisebox{0.25ex}{\rule{0.9em}{0.3pt}}\enspace
+      \raisebox{0.5ex}{$\cdot$}\enspace
+      \raisebox{0.5ex}{$\cdot$}\enspace
+      \raisebox{0.5ex}{$\cdot$}\enspace
+      \raisebox{0.25ex}{\rule{0.9em}{0.3pt}}%
+    }%
+  \end{center}%
+  \vspace{0.6em}%
+}
+
+% Thin drop-rule used in part pages and interlude openings
+\newcommand{\partlinerule}{%
+  {\centering\color{rulegray}\rule{3cm}{0.3pt}\par}%
+}
 
 \begin{document}
 
 % ============================================================
-%  COPERTINA
+%  TITLE PAGE
+%  Clean: title alone on the page, generous vertical space,
+%  no decorative borders or thick rules
 % ============================================================
 \begin{titlepage}
 \begin{center}
-\vspace*{4cm}
-{\fontsize{40}{50}\selectfont\bfseries Il silenzio tra le stelle}\\[1.6em]
-{\fontsize{13}{19}\selectfont\itshape\color{gray!70}
-  Frammenti di un universo che non smette di stupirsi}\\[4em]
-{\normalsize\scshape\color{accent}
-  Fisica \quad\textperiodcentered\quad
-  Filosofia \quad\textperiodcentered\quad
-  Matematica \quad\textperiodcentered\quad
-  Mente}\\[5.5em]
-\textcolor{rulecolor}{\rule{0.32\textwidth}{0.4pt}}\\[2.5em]
-{\small\itshape\color{gray!60} Edizione rivista e ampliata}
+\vspace*{5.5cm}
+
+{\fontsize{36}{44}\selectfont\bfseries\color{inkblue}
+  Il silenzio tra le stelle}
+
+\vspace{1.8em}
+
+{\fontsize{12}{18}\selectfont\itshape\color{headink}
+  Frammenti di un universo che non smette di stupirsi}
+
+\vspace{4.5em}
+
+{\footnotesize\scshape\color{captionink}\MakeUppercase{%
+  Fisica \enspace\textperiodcentered\enspace
+  Filosofia \enspace\textperiodcentered\enspace
+  Matematica \enspace\textperiodcentered\enspace
+  Mente%
+}}
+
 \vfill
+
+{\footnotesize\itshape\color{headink} Edizione rivista e ampliata}
+
+\vspace{2cm}
 \end{center}
 \end{titlepage}
 
+% ============================================================
+%  DEDICATION  (verso of title page)
+% ============================================================
 \thispagestyle{empty}
-\vspace*{9cm}
+\vspace*{10cm}
 \begin{center}
-\itshape
-A chi guarda il cielo e si chiede.\\
-A chi fa la domanda sbagliata e scopre che era quella giusta.
+{\small\itshape\color{captionink}
+  A chi guarda il cielo e si chiede.\\[0.3em]
+  A chi fa la domanda sbagliata e scopre che era quella giusta.}
 \end{center}
 \clearpage
 
@@ -637,10 +755,9 @@ In meccanica quantistica relazionale (Capitolo II), le proprietà di un sistema 
 
 Il pattern è troppo consistente per essere casuale. Propongo che questo schema abbia un nome: chiamo il principio che organizza questi risultati il \textit{Principio Relazionale Fondamentale} (PRF). La sua formulazione:
 
-\begin{quote}
-\itshape
+\begin{quoting}
 Nessuna proprietà fisica fondamentale appartiene a un sistema isolato. Ogni proprietà emerge dalla relazione tra sistemi. Le strutture invarianti della realtà sono invarianti \emph{relazionali}: stabili rispetto a tutte le possibili prospettive, non assolute rispetto a nessuna.
-\end{quote}
+\end{quoting}
 
 Il PRF non è una posizione metafisica imposta alla fisica dall'esterno. È la struttura che la fisica ha scoperto, strato dopo strato, nel corso del Novecento, senza averla cercata esplicitamente. Che il PRF emerga indipendentemente in meccanica quantistica, relatività, gravità quantistica, termodinamica, teoria dell'informazione, e linguistica, suggerisce che non descrive una caratteristica della nostra fisica specifica. Descrive una caratteristica della struttura della realtà. Il PRF ha anche una conseguenza che questo libro perseguirà nella Parte Seconda e nella Parte Quarta: se non ci sono proprietà assolute nei sistemi fisici, non ci saranno proprietà assolute neanche nei sistemi cognitivi, nei sistemi sociali, nei sistemi di significato. La mente, l'identità personale, le norme sociali, il significato nel linguaggio: tutte strutture relazionali. Non per analogia con la fisica, ma per la stessa ragione profonda che rende le proprietà fisiche relazionali.
 
