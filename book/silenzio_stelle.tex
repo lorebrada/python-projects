@@ -1,28 +1,35 @@
 \documentclass[11.5pt,a4paper,openany]{book}
 
+%% ─── ENCODING & LINGUA ────────────────────────────────────────────────────
 \usepackage{fontspec}
 \usepackage{polyglossia}
 \setmainlanguage{italian}
 
+%% ─── FONT ──────────────────────────────────────────────────────────────────
 \setmainfont{Linux Libertine O}[
-  BoldFont=Linux Libertine O Bold,
-  ItalicFont=Linux Libertine O Italic,
-  BoldItalicFont=Linux Libertine O Bold Italic,
-  Numbers=OldStyle,
-  Ligatures=TeX,
+  BoldFont        = Linux Libertine O Bold,
+  ItalicFont      = Linux Libertine O Italic,
+  BoldItalicFont  = Linux Libertine O Bold Italic,
+  Numbers         = OldStyle,
+  Ligatures       = TeX,
 ]
+\setsansfont{Linux Biolinum O}[Ligatures=TeX]
 
+%% ─── PAGINA ────────────────────────────────────────────────────────────────
 \usepackage[
-  a4paper, top=3.2cm, bottom=3.8cm,
-  inner=3.4cm, outer=2.8cm,
-  headheight=14pt, headsep=18pt
+  a4paper,
+  top=3.0cm, bottom=3.6cm,
+  inner=3.2cm, outer=2.6cm,
+  headheight=14pt, headsep=16pt,
+  footskip=28pt
 ]{geometry}
 
+%% ─── TIPOGRAFIA ────────────────────────────────────────────────────────────
 \usepackage[protrusion=true]{microtype}
 \usepackage{setspace}
-\setstretch{1.45}
+\setstretch{1.42}
 \usepackage{parskip}
-\setlength{\parskip}{0.8em plus 0.1em minus 0.05em}
+\setlength{\parskip}{0.75em plus 0.1em minus 0.05em}
 \setlength{\parindent}{0pt}
 \widowpenalty=10000
 \clubpenalty=10000
@@ -31,6 +38,16 @@
 \hbadness=1200
 \emergencystretch=1.5em
 
+%% ─── COLORI ────────────────────────────────────────────────────────────────
+\usepackage{xcolor}
+\definecolor{inkblue}   {RGB}{20,  34,  64 }
+\definecolor{rulegray}  {RGB}{175, 178, 188}
+\definecolor{captionink}{RGB}{78,  84,  102}
+\definecolor{headink}   {RGB}{118, 124, 140}
+\definecolor{seccolor}  {RGB}{38,  56,  95 }
+\definecolor{subseccolor}{RGB}{70, 82, 118}
+
+%% ─── INTESTAZIONI ──────────────────────────────────────────────────────────
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
@@ -38,69 +55,143 @@
 \fancyhead[RO]{\small\itshape\color{headink}\leftmark}
 \fancyfoot[C]{\small\color{headink}\thepage}
 \renewcommand{\headrulewidth}{0pt}
-\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\color{headink}\thepage}\renewcommand{\headrulewidth}{0pt}}
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\small\color{headink}\thepage}%
+  \renewcommand{\headrulewidth}{0pt}}
 
+%% ─── TITOLI ────────────────────────────────────────────────────────────────
 \usepackage{titlesec}
-\usepackage{xcolor}
-\definecolor{inkblue}{RGB}{22,35,65}
-\definecolor{rulegray}{RGB}{180,182,190}
-\definecolor{captionink}{RGB}{80,85,100}
-\definecolor{headink}{RGB}{120,125,140}
 
+% Parte
 \titleformat{\part}[display]
   {\centering\normalfont}{}
   {0em}
   {\vspace{2em}\fontsize{9}{12}\selectfont\scshape\color{captionink}\MakeUppercase}
-  [\vspace{0.4em}{\centering\color{rulegray}\rule{2.5cm}{0.3pt}}\vspace{3em}]
+  [\vspace{0.5em}{\centering\color{rulegray}\rule{3cm}{0.3pt}}\vspace{3em}]
 \titlespacing*{\part}{0pt}{6em}{0pt}
 
+% Capitolo
 \titleformat{\chapter}[display]
   {\normalfont}{}
   {0pt}
-  {{\color{rulegray}\rule{\textwidth}{0.4pt}}\vspace{1.2em}\raggedright\fontsize{20}{26}\selectfont\bfseries}
-  [\vspace{2.2em}]
-\titlespacing*{\chapter}{0pt}{1em}{0em}
+  {{\color{rulegray}\rule{\textwidth}{0.5pt}}\vspace{1.1em}%
+   \raggedright\fontsize{19}{25}\selectfont\bfseries\color{inkblue}}
+  [\vspace{0.5em}{\color{rulegray}\rule{\textwidth}{0.2pt}}\vspace{2em}]
+\titlespacing*{\chapter}{0pt}{0.8em}{0em}
 
+% Sezione — visivamente distinta, con numero in colore
+\titleformat{\section}
+  {\normalfont\large\bfseries\color{seccolor}}
+  {\color{seccolor}\thesection\enspace}
+  {0em}{}
+  [\vspace{-0.3em}{\color{rulegray}\rule{2cm}{0.25pt}}\vspace{0.2em}]
+\titlespacing*{\section}{0pt}{1.6em}{0.5em}
+
+% Sottosezione — più intima, in italic
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries\itshape\color{subseccolor}}
+  {\thesubsection\enspace}
+  {0em}{}
+\titlespacing*{\subsection}{0pt}{1.2em}{0.3em}
+
+% Sotto-sotto-sezione — per T.* tecnici
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\itshape\color{captionink}}
+  {}
+  {0em}{}
+\titlespacing*{\subsubsection}{0pt}{0.8em}{0.2em}
+
+%% ─── MATH ──────────────────────────────────────────────────────────────────
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{mathtools}
+\newtheorem{theorem}{Teorema}[chapter]
+\newtheorem{definition}[theorem]{Definizione}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Nota}
 
+%% ─── EPIGRAFI ──────────────────────────────────────────────────────────────
 \usepackage{epigraph}
-\setlength{\epigraphwidth}{0.60\textwidth}
+\setlength{\epigraphwidth}{0.58\textwidth}
 \setlength{\epigraphrule}{0pt}
 \renewcommand{\epigraphflush}{center}
-\setlength{\beforeepigraphskip}{0.5em}
-\setlength{\afterepigraphskip}{2.2em}
+\setlength{\beforeepigraphskip}{0.4em}
+\setlength{\afterepigraphskip}{2.0em}
 
+%% ─── LISTE ─────────────────────────────────────────────────────────────────
 \usepackage{enumitem}
-\setlist[itemize]{leftmargin=1.6em,itemsep=0.15em,topsep=0.4em,parsep=0pt}
+\setlist[itemize]  {leftmargin=1.6em,itemsep=0.18em,topsep=0.45em,parsep=0pt}
+\setlist[enumerate]{leftmargin=1.8em,itemsep=0.18em,topsep=0.45em,parsep=0pt}
 
+%% ─── CITAZIONI ─────────────────────────────────────────────────────────────
 \usepackage{quoting}
 \quotingsetup{font=itshape,leftmargin=2em,rightmargin=2em}
 
+%% ─── HYPERREF ──────────────────────────────────────────────────────────────
 \usepackage{hyperref}
-\hypersetup{colorlinks=true,linkcolor=inkblue,urlcolor=inkblue,
-  pdftitle={Il silenzio tra le stelle},pdfauthor={}}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=inkblue,
+  urlcolor=inkblue,
+  citecolor=inkblue,
+  pdftitle={Il silenzio tra le stelle},
+  pdfauthor={},
+  pdfsubject={Fisica · Filosofia · Matematica · Mente},
+  bookmarksdepth=3,
+}
 
+%% ─── INDICE ────────────────────────────────────────────────────────────────
 \usepackage{tocloft}
+\setcounter{tocdepth}{2}          % mostra capitoli e sezioni
+\setcounter{secnumdepth}{2}       % numera capitoli e sezioni
+
 \renewcommand{\cfttoctitlefont}{\normalfont\large\scshape}
 \setlength{\cftbeforetoctitleskip}{1em}
 \setlength{\cftaftertoctitleskip}{1.5em}
-\setlength{\cftbeforechapskip}{0.6em}
-\renewcommand{\cftchapfont}{\normalfont}
-\renewcommand{\cftchappagefont}{\normalfont}
-\renewcommand{\cftchapleader}{\hfill}
-\setlength{\cftchapnumwidth}{0pt}
 
+% Capitoli nell'indice
+\setlength{\cftbeforechapskip}{0.65em}
+\renewcommand{\cftchapfont}{\normalfont\bfseries}
+\renewcommand{\cftchappagefont}{\normalfont\bfseries}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\setlength{\cftchapnumwidth}{1.8em}
+
+% Sezioni nell'indice
+\setlength{\cftbeforesecskip}{0.2em}
+\renewcommand{\cftsecfont}{\normalfont\small}
+\renewcommand{\cftsecpagefont}{\normalfont\small}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\setlength{\cftsecnumwidth}{2.2em}
+\setlength{\cftsecindent}{1.8em}
+
+%% ─── COMANDI PERSONALIZZATI ────────────────────────────────────────────────
 \newcommand{\puntini}{%
-  \vspace{1.1em}%
+  \vspace{1.0em}%
   \begin{center}\textcolor{rulegray}{%
-    \raisebox{0.25ex}{\rule{0.9em}{0.3pt}}\enspace
+    \raisebox{0.25ex}{\rule{1em}{0.3pt}}\enspace
     \raisebox{0.5ex}{$\cdot$}\enspace
     \raisebox{0.5ex}{$\cdot$}\enspace
     \raisebox{0.5ex}{$\cdot$}\enspace
-    \raisebox{0.25ex}{\rule{0.9em}{0.3pt}}%
+    \raisebox{0.25ex}{\rule{1em}{0.3pt}}%
   }\end{center}%
-  \vspace{0.6em}%
+  \vspace{0.5em}%
+}
+
+% Box definizione grigio per concetti chiave
+\usepackage{mdframed}
+\newenvironment{concetto}{%
+  \begin{mdframed}[
+    backgroundcolor=gray!6,
+    linecolor=rulegray,
+    linewidth=0.5pt,
+    leftmargin=0pt, rightmargin=0pt,
+    innerleftmargin=10pt, innerrightmargin=10pt,
+    innertopmargin=8pt, innerbottommargin=8pt,
+    skipabove=0.8em, skipbelow=0.8em
+  ]
+  \small\itshape
+}{%
+  \end{mdframed}%
 }
 
 \begin{document}
@@ -206,7 +297,7 @@ Eppure non ci cadete attraverso. E la causa di questa resistenza non è ciò che
 
 Questo primo capitolo costruisce il fondamento fisico dell'intero libro. Partendo dalla struttura dell'atomo e dalla teoria quantistica dei campi, arriveremo al Modello Standard, ai suoi limiti, e a una serie di risultati teorici raramente discussi nella divulgazione --- dalle anomalie quantistiche alla termodinamica quantistica --- che rivelano quanto la fisica fondamentale sia ancora in costruzione.
 
-\section*{1.1 La struttura dell'atomo e il fallimento della fisica classica}
+\section{1.1 La struttura dell'atomo e il fallimento della fisica classica}
 
 Il modello atomico di Rutherford (1911), basato sugli esperimenti di scattering di particelle alfa, rivelò che l'atomo è quasi interamente vuoto: un nucleo denso con carica positiva circondato da elettroni in orbita. Ma questo modello era fisicamente inconsistente. Un elettrone in orbita è un'accelerazione; un'accelerazione implica emissione di radiazione elettromagnetica (equazioni di Maxwell); l'emissione implica perdita di energia; la perdita di energia implica che l'elettrone spirali verso il nucleo. Il tempo caratteristico di questo collasso è dell'ordine di $10^{-11}$ secondi. Gli atomi non dovrebbero esistere. Eppure esistono.
 
@@ -216,7 +307,7 @@ La risposta profonda venne dalla meccanica ondulatoria di de Broglie e Schrödin
 
 La stabilità dell'atomo nell'idrogeno può ora essere compresa. Il principio di indeterminazione $\Delta x \cdot \Delta p \geq \hbar/2$ stabilisce che localizzare l'elettrone vicino al nucleo ($\Delta x$ piccolo) aumenta l'incertezza sul momento ($\Delta p$ grande), e quindi l'energia cinetica media $\langle p^2\rangle/(2m) \geq \hbar^2/(2m\Delta x^2)$. L'energia totale ha un minimo non banale: troppo vicino al nucleo, l'energia cinetica domina e cresce; troppo lontano, l'energia potenziale coulombiana domina e decresce. Il raggio di Bohr $a_0 = \hbar^2/(m_e e^2) \approx 0.529\ \text{\AA}$ è il punto di minimo dell'energia totale. È derivato, non postulato.
 
-\section*{1.2 La teoria quantistica dei campi: dalle particelle ai campi}
+\section{1.2 La teoria quantistica dei campi: dalle particelle ai campi}
 
 La meccanica quantistica di Schrödinger descrive particelle con numero fisso. Ma le particelle possono essere create e distrutte: un fotone viene emesso da un atomo; un positrone viene creato in un processo di pair production. Per descrivere questi fenomeni, è necessaria la \textit{teoria quantistica dei campi} (QFT).
 
@@ -234,7 +325,7 @@ a_e^{(exp)} = 1\,159\,652\,180.73(28) \times 10^{-12}
 \]
 L'accordo è a undici cifre decimali. Nessun'altra predizione scientifica in nessun campo della conoscenza umana ha mai raggiunto questa precisione. Questo è il trionfo di QED.
 
-\section*{1.3 Il principio di esclusione e la stabilità della materia}
+\section{1.3 Il principio di esclusione e la stabilità della materia}
 
 Ma QED non basta a spiegare la solidità della materia. Anche con le forze di gauge, gli elettroni potrebbero collassare verso gli stati di energia più bassa, riducendo tutti gli atomi all'idrogeno o oltre. La stabilità è garantita dal principio di esclusione di Pauli (1925) e dal teorema spin-statistica.
 
@@ -254,7 +345,7 @@ dove $n$ è la densità numerica, è l'energia del fermione più energetico a te
 
 Il \textit{limite di Chandrasekhar} (1931) emerge dall'equilibrio tra pressione di degenerazione relativistica degli elettroni e gravità. Per masse $M > M_{Ch} \approx 1.4 M_\odot$, la pressione non basta: la stella collassa. Chandrasekhar era un dottorando di 20 anni quando lo calcolò. Eddington non lo credette; il Nobel arrivò nel 1983. La solidità del ferro sul vostro tavolo e la stabilità delle nane bianche hanno la stessa radice: il principio di Pauli.
 
-\section*{1.4 Il vuoto quantistico: l'attività del nulla}
+\section{1.4 Il vuoto quantistico: l'attività del nulla}
 
 Il vuoto della teoria quantistica dei campi è profondamente diverso dal vuoto classico. Non è assenza di tutto: è lo stato di minima energia di ogni campo quantistico. E questa energia minima non è zero.
 
@@ -270,7 +361,7 @@ L'\textit{effetto Unruh} (Unruh, 1976) è ancor più sorprendente: un osservator
 
 La \textit{radiazione di Hawking} (1974) è il fenomeno per cui i buchi neri emettono radiazione termica con temperatura $T_H = \hbar c^3/(8\pi GM k_B)$, dove $M$ è la massa del buco nero. Il meccanismo: vicino all'orizzonte degli eventi, le fluttuazioni del vuoto producono coppie virtuali particella-antiparticella. Quando una cade oltre l'orizzonte e l'altra sfugge, quest'ultima porta via energia reale. Il buco nero perde massa. Per un buco nero di massa solare, $T_H \approx 60\ \text{nK}$: immisurabile in pratica, ma fisicamente fondamentale.
 
-\section*{1.5 Le forze di gauge e il Modello Standard}
+\section{1.5 Le forze di gauge e il Modello Standard}
 
 Le quattro forze fondamentali della natura sono descritte dal Modello Standard e dalla relatività generale. Il Modello Standard unifica elettromagnetismo, forza nucleare debole, e forza nucleare forte in un'unica struttura matematica: una \textit{teoria di gauge} con gruppo di simmetria $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$.
 
@@ -292,7 +383,7 @@ La \textit{libertà asintotica} (Gross, Politzer, Wilczek; Nobel 2004) è una pr
 \]
 con $b_0 = 11 - 2N_f/3 > 0$ per $N_f \leq 16$ flavors di quark. Il segno negativo di $b_0$ produce la libertà asintotica. In QED, $b_0 < 0$ e la costante di accoppiamento cresce con l'energia (polo di Landau).
 
-\section*{1.6 Il meccanismo di Higgs e la rottura spontanea di simmetria}
+\section{1.6 Il meccanismo di Higgs e la rottura spontanea di simmetria}
 
 La generazione della massa nel Modello Standard è uno dei risultati più belli della fisica teorica del Novecento. I bosoni di gauge di una teoria di gauge esatta devono essere privi di massa (la massa romperebbe la simmetria di gauge). Ma i $W$ e $Z$ sono molto massicci. Come è possibile?
 
@@ -304,7 +395,7 @@ Il minimo non è a $\phi = 0$ ma su un cerchio $|\phi| = v/\sqrt{2}$ con $v = \s
 
 La scoperta del bosone di Higgs al CERN il 4 luglio 2012 (esperimenti ATLAS e CMS, con significatività $> 5\sigma$), con massa $m_H \approx 125.20 \pm 0.11\ \text{GeV}/c^2$, è stata la conferma sperimentale di questa struttura. Era l'ultimo pezzo del Modello Standard mancante. Il Nobel 2013 andò a Brout, Englert, e Higgs (Brout era morto nel 2011).
 
-\section*{1.7 Le anomalie quantistiche e i vincoli sulla materia}
+\section{1.7 Le anomalie quantistiche e i vincoli sulla materia}
 
 Un aspetto raramente discusso nella divulgazione ma fondamentale per la struttura del Modello Standard è il ruolo delle \textit{anomalie quantistiche}.
 
@@ -324,7 +415,7 @@ dove $N_c = 3$ è il numero di colori della QCD e $f_\pi \approx 93\ \text{MeV}$
 
 Le \textit{anomalie globali di Witten} (1982) aggiungono un altro livello. Teorie che sono anomalo-free perturbativamente possono avere anomalie non perturbative che le rendono inconsistenti globalmente. La teoria di gauge $\mathrm{SU}(2)$ con numero dispari di dubletti fermionici è globalmente anomala. Questo vincola il Modello Standard: il numero di dubletti di quark $\mathrm{SU}(2)$ deve essere pari. Poiché ogni colore di ogni quark contribuisce separatamente, e ci sono tre colori, il vincolo è: il numero di famiglie quark + leptoni deve essere pari (trivialmente soddisfatto con tre famiglie).
 
-\section*{1.8 Oltre il Modello Standard: i problemi aperti}
+\section{1.8 Oltre il Modello Standard: i problemi aperti}
 
 Il Modello Standard descrive tutto ciò che si osserva negli acceleratori con precisione straordinaria. Ma sappiamo che è incompleto.
 
@@ -342,7 +433,7 @@ che violerebbe CP. Il momento di dipolo elettrico del neutrone (nEDM) pone il li
 
 L'\textbf{asimmetria materia-antimateria}: il Big Bang dovrebbe aver prodotto uguali quantità di materia e antimateria. Eppure viviamo in un universo di sola materia. La violazione di CP nel settore dei quarks (attraverso la matrice CKM) è troppo piccola per spiegare l'asimmetria osservata. Nuove fonti di violazione di CP --- nel settore dei leptoni (leptogenesi), nella materia oscura, o in settori nascosti --- sono ricercate attivamente.
 
-\section*{1.9 La fisica dei materiali come fisica fondamentale applicata}
+\section{1.9 La fisica dei materiali come fisica fondamentale applicata}
 
 La fisica dei materiali illustra come la fisica fondamentale --- QFT, principio di Pauli, teorie di gauge --- si manifesta in fenomeni macroscopici di enorme rilevanza tecnologica.
 
@@ -358,7 +449,7 @@ Il numero di Chern $n \in \mathbb{Z}$ caratterizza la topologia della struttura 
 
 I \textit{semimetalli di Weyl} (TaAs, NbAs) hanno punti di degenerazione (punti di Weyl) nello spazio dei momenti attorno a cui gli elettroni si comportano come fermioni di Weyl relativistici chirali. Gli archi di Fermi sulla superficie del materiale connettono punti di Weyl di chiralità opposta --- una struttura topologicamente non banale senza analogia in fisica delle alte energie.
 
-\section*{1.10 Il riduzionismo e i suoi limiti: verso una fisica relazionale}
+\section{1.10 Il riduzionismo e i suoi limiti: verso una fisica relazionale}
 
 Il successo del Modello Standard e della meccanica quantistica potrebbe suggerire che il riduzionismo sia il programma vincente: comprendere il tutto riducendolo alle parti. Questa è una strategia metodologica potente. Ma come posizione ontologica --- l'idea che le proprietà dei sistemi siano interamente determinate dalle proprietà dei loro componenti --- è falsa o almeno profondamente insufficiente.
 
@@ -387,7 +478,7 @@ dove $\psi$ è la funzione d'onda del sistema, un elemento di uno spazio di Hilb
 
 Questa è la domanda fondamentale dell'interpretazione della meccanica quantistica. Dopo quasi cent'anni non ha risposta unanime tra i fisici. Non perché i fisici siano stati pigri o distratti, ma perché la domanda tocca qualcosa di più profondo di un tecnicismo: tocca cosa vogliamo dire quando diciamo che qualcosa \textit{è reale}.
 
-\section*{2.1 Il postulato del collasso e i suoi problemi}
+\section{2.1 Il postulato del collasso e i suoi problemi}
 
 L'interpretazione di Copenaghen, sviluppata da Bohr e Heisenberg tra il 1927 e il 1935, risponde così: prima della misura, il sistema evolve in sovrapposizione coerente secondo l'equazione di Schrödinger. Quando avviene una misura, la funzione d'onda collassa istantaneamente in uno degli autostati dell'osservabile misurata, con probabilità data dalla regola di Born:
 \[
@@ -401,7 +492,7 @@ Il \textit{problema del taglio di Heisenberg}: il confine tra dominio quantistic
 
 Il \textit{problema della catena di von Neumann} (1932): se si applica la QM all'apparato di misura, anch'esso entra in sovrapposizione col sistema. Se si applica all'osservatore, anche l'osservatore entra in sovrapposizione. La catena continua indefinitamente. Il collasso non emerge mai dall'equazione di Schrödinger: viene postulato ad hoc come secondo processo fisico distinto dall'evoluzione unitaria.
 
-\section*{2.2 Le interpretazioni della meccanica quantistica}
+\section{2.2 Le interpretazioni della meccanica quantistica}
 
 \textbf{I Molti Mondi di Everett.} Hugh Everett III (1957) propose la soluzione radicale: eliminare il collasso. L'equazione di Schrödinger è sempre valida, per tutti i sistemi, senza eccezioni. Quando avviene una misura, l'universo si ramifica: entrambi i rami della sovrapposizione continuano a esistere, ognuno contenendo un esito diverso. Noi siamo in uno di essi. L'eleganza formale è netta: nessun postulato aggiuntivo, nessun taglio arbitrario, nessuna coscienza privilegiata.
 
@@ -435,7 +526,7 @@ GRW è una teoria fisicamente distinta dalla QM: fa predizioni leggermente diver
 
 QBism è una posizione coerente ma ha un prezzo alto: l'agente è primitivo, non derivato. Non c'è una ``realtà oggettiva'' al di là degli agenti e delle loro esperienze. Per alcuni, questa è la risposta giusta --- l'esperienza soggettiva è fondamentale. Per altri, è una resa: la fisica deve descrivere qualcosa al di là delle nostre credenze.
 
-\section*{2.3 Il teorema di Frauchiger-Renner e la non-assolutezza dei fatti}
+\section{2.3 Il teorema di Frauchiger-Renner e la non-assolutezza dei fatti}
 
 Il teorema di Frauchiger e Renner (2018) ha introdotto una perturbazione importante nel dibattito interpretativo. Il teorema è una versione precisamente formalizzata dell'esperimento dell'``amico di Wigner''.
 
@@ -450,7 +541,7 @@ In RQM: abbandona (S) esplicitamente --- i fatti sono relazionali, non assoluti.
 
 Bong et al. (\textit{Nature Physics}, 2020) hanno realizzato una versione sperimentale del teorema, violando un'equazione di Bell generalizazata che segue dall'assumere la non-assolutezza dei fatti. Il risultato è che i fatti fisici non sono assoluti in senso universale: dipendono dal sistema osservante. Questo è il PRF al livello più fondamentale della fisica: i fatti quantistici sono relazionali.
 
-\section*{2.4 La decoerenza e il quantum Darwinism}
+\section{2.4 La decoerenza e il quantum Darwinism}
 
 La teoria della decoerenza, sviluppata principalmente da Wojciech Zurek negli anni Ottanta e Novanta, ha chiarito decisivamente la transizione quantistico-classico. Un sistema quantistico in interazione con il suo ambiente si entangla con esso. Le interferenze tra stati macroscopicamente distinti vengono soppresse esponenzialmente. Per un granello di polvere in aria ($m \sim 10^{-6}\ \text{g}$), il tempo di decoerenza è $\tau_D \sim 10^{-23}\ \text{s}$ --- molti ordini di grandezza inferiore al tempo di Planck percepibile. Le sovrapposizioni macroscopiche sono praticamente invisibili.
 
@@ -460,7 +551,7 @@ Il \textit{Quantum Darwinism} (Zurek, 2009) estende la decoerenza in una direzio
 
 Il Quantum Darwinism offre un criterio fisico per distinguere proprietà classiche da proprietà puramente quantistiche: le proprietà classiche sono quelle che si replicano nell'ambiente. La posizione di un oggetto macroscopico è classica perché è stata ``impregnata'' in miliardi di fotoni diffusi; la fase di un sistema quantistico è non classica perché non si replica nell'ambiente senza distruggersi. Questo è un risultato fisico profondo, non solo semantico.
 
-\section*{2.5 Il problema della misura come problema linguistico-concettuale}
+\section{2.5 Il problema della misura come problema linguistico-concettuale}
 
 Propongo una tesi che non trovo formulata esattamente in questi termini nella letteratura standard. Il problema della misura può essere scomposto in due problemi distinti: un problema ontologico (quale stato fisico corrisponde all'esito di una misurazione?) e un problema linguistico-concettuale (cosa significa ``esito'', ``misurazione'', ``osservatore'' nel dominio quantistico?).
 
@@ -472,7 +563,7 @@ La meccanica quantistica relazionale di Rovelli fornisce una risposta coerente: 
 
 L'interpretazione corretta della meccanica quantistica aspetta forse non una nuova teoria fisica, ma una nuova grammatica concettuale: un linguaggio per cui il PRF sia ovvio, invece che una scoperta sorprendente.
 
-\section*{2.6 L'informazione quantistica come branca fondamentale}
+\section{2.6 L'informazione quantistica come branca fondamentale}
 
 La meccanica quantistica non è solo una teoria fisica: è anche una teoria dell'informazione. La \textit{teoria dell'informazione quantistica} ha rivoluzionato la nostra comprensione di cosa significa manipolare e trasmettere informazione quando il substrato fisico è quantistico.
 
@@ -484,7 +575,7 @@ La \textit{teleportazione quantistica} (Bennett et al., 1993) permette di trasme
 
 Il \textit{calcolo quantistico} sfrutta la sovrapposizione e l'entanglement per eseguire certi calcoli esponenzialmente più veloci dei computer classici. L'algoritmo di Shor (1994) fattorizza numeri interi in tempo polinomiale --- esponenzialmente più veloce dei migliori algoritmi classici --- con implicazioni dirette per la crittografia RSA. L'algoritmo di Grover (1996) cerca in un database non strutturato di $N$ elementi in $O(\sqrt{N})$ passi invece di $O(N)$. Google (2019) ha dimostrato la ``supremazia quantistica'' su un problema specifico; IBM, IonQ, e altri stanno costruendo processori quantistici con crescente numero di qubit e fedeltà.
 
-\section*{2.7 La relazione tra meccanica quantistica e informazione}
+\section{2.7 La relazione tra meccanica quantistica e informazione}
 
 La connessione tra informazione e fisica quantistica va oltre la crittografia e il calcolo. John Archibald Wheeler propose verso la fine della sua carriera la tesi ``it from bit'': ogni fatto fisico emerge da risposte a domande binarie. L'universo è, in un senso profondo, un sistema di elaborazione dell'informazione.
 
@@ -507,7 +598,7 @@ Aristotele definì il tempo come ``il numero del movimento secondo il prima e il
 
 Einstein dimostrò che Newton aveva torto. In due passi straordinari --- la relatività speciale nel 1905 e la relatività generale nel 1915 --- mostrò che il tempo è relazionale: dipende dall'osservatore, si dilata con la velocità e con la gravità, non esiste un ``adesso'' universale. E quando si tenta di quantizzare la gravità, il tempo scompare del tutto dalla descrizione fondamentale. Il problema del tempo nella gravità quantistica è uno dei problemi più profondi della fisica teorica contemporanea.
 
-\section*{3.1 La relatività speciale: la struttura causale dello spazio-tempo}
+\section{3.1 La relatività speciale: la struttura causale dello spazio-tempo}
 
 Il punto di partenza di Einstein nel 1905 fu un principio: la velocità della luce nel vuoto $c \approx 2.998 \times 10^8\ \text{m/s}$ è la stessa per tutti gli osservatori inerziali, indipendentemente dal loro moto relativo. Questo principio, combinato con il principio di relatività (le leggi della fisica sono le stesse in tutti i sistemi inerziali), implica le trasformazioni di Lorentz:
 \[
@@ -523,7 +614,7 @@ Il segno negativo di fronte al termine temporale distingue questa metrica dalla 
 
 La dilatazione del tempo è una conseguenza diretta. Un orologio in moto rispetto all'osservatore ticchetta più lentamente: $\Delta\tau = \Delta t/\gamma$. Per muoni cosmici prodotti nell'alta atmosfera a $\sim 10\ \text{km}$ di altitudine con velocità $v \approx 0.998c$, la vita media nel loro sistema di riferimento è $\tau_\mu \approx 2.2\ \mu\text{s}$, ma nel sistema del laboratorio è $\gamma\tau_\mu \approx 35\ \mu\text{s}$ --- sufficiente per raggiungere la superficie terrestre prima di decadere. Lo osserviamo: è una verifica sperimentale quotidiana della relatività speciale. Il GPS richiede correzioni relativistiche di $38\ \mu\text{s}/\text{giorno}$: senza di esse, gli errori di posizione si accumulerebbero a $\sim 10\ \text{km}/\text{giorno}$.
 
-\section*{3.2 La relatività generale: la geometria dinamica dello spazio-tempo}
+\section{3.2 La relatività generale: la geometria dinamica dello spazio-tempo}
 
 La relativoità generale (Einstein, 1915) estende la relatività speciale alla gravità. Il principio di equivalenza: un osservatore in caduta libera non distingue localmente la propria situazione da quella di un osservatore nello spazio libero. La gravità è equivalente localmente a un campo di accelerazione. Questo implica che la gravità è un effetto geometrico: la curvatura dello spazio-tempo prodotta dalla massa ed energia.
 
@@ -535,7 +626,7 @@ Il tensore di Einstein $G_{\mu\nu} = R_{\mu\nu} - \frac{1}{2}g_{\mu\nu}R$ descri
 
 Le verifiche sperimentali sono straordinarie. La precessione del perielio di Mercurio: 43 arcosecondi per secolo, inspiegabili con Newton, predetti esattamente da Einstein. La deflessione della luce dal Sole: $1.75''$, misurata da Eddington nell'eclisse del 1919. Il redshift gravitazionale: fotoni che salgono in un campo gravitazionale perdono energia (Pound-Rebka, 1960; pound $e^-$ shift on a cliff). Le onde gravitazionali: predette nel 1916, rilevate da LIGO nel 2015 (GW150914: fusione di due buchi neri a $\sim 1.3\ \text{Gly}$, con strain $h \sim 10^{-21}$). Le immagini dell'ombra dei buchi neri: M87* nell'aprile 2019 (Event Horizon Telescope), Sagittarius A* nel 2022.
 
-\section*{3.3 La block universe e la filosofia del tempo}
+\section{3.3 La block universe e la filosofia del tempo}
 
 La struttura matematica della relatività suggerisce fortemente la \textit{block universe view}: il passato, il presente, e il futuro hanno uguale realtà ontologica. Lo spazio-tempo è una struttura statica quadridimensionale; il ``fluire del tempo'' è una caratteristica dell'esperienza soggettiva, non della struttura fisica.
 
@@ -549,7 +640,7 @@ La \textit{freccia del tempo} è un'ulteriore dimensione del problema. Le leggi 
 
 L'origine della freccia del tempo è l'entropia bassa dell'universo all'istante iniziale (Big Bang). Roger Penrose ha stimato questa condizione iniziale estrema: la probabilità di un universo con entropia iniziale così bassa, estratta casualmente dall'insieme degli stati possibili con la stessa energia totale, è $\sim e^{-10^{123}}$. Questo numero è così piccolo da essere praticamente zero. La freccia del tempo non è nelle leggi: è nelle condizioni iniziali. E quelle condizioni iniziali sono un mistero profondo della cosmologia.
 
-\section*{3.4 I buchi neri: singolarità, orizzonti, e termodinamica}
+\section{3.4 I buchi neri: singolarità, orizzonti, e termodinamica}
 
 I buchi neri sono forse la predizione più drammatica e più fisica della relatività generale. La soluzione di Schwarzschild (1916) per la metrica al di fuori di una massa sferica di massa $M$ è:
 \[
@@ -577,7 +668,7 @@ Le quattro leggi della termodinamica dei buchi neri (Bardeen-Carter-Hawking, 197
 \item Third law: $\kappa \to 0$ non è raggiungibile con un numero finito di operazioni.
 \end{itemize}
 
-\section*{3.5 Il paradosso dell'informazione e la formula dell'isola}
+\section{3.5 Il paradosso dell'informazione e la formula dell'isola}
 
 La radiazione di Hawking genera uno dei problemi più profondi della fisica teorica: il \textit{paradosso dell'informazione dei buchi neri}.
 
@@ -597,7 +688,7 @@ Prima della Page time, il minimo è raggiunto senza isola (formula standard). Do
 
 Le isole suggeriscono che l'entanglement wedge della radiazione include regioni dell'interno del buco nero --- l'interno è ``ricostruibile'' dalla radiazione esterna. Questo è connesso al quantum error correction (Almheiri, Dong, Harlow, 2015): il codice olografico che connette la teoria di bordo alla teoria di bulk è un codice quantistico correttore d'errori. Le isole sono la manifestazione fisica di questa struttura.
 
-\section*{3.6 Il problema del tempo nella gravità quantistica}
+\section{3.6 Il problema del tempo nella gravità quantistica}
 
 Quando si tenta di unificare meccanica quantistica e relatività generale, il tempo diventa il problema più profondo. In QM, il tempo è un parametro esterno fisso rispetto a cui il sistema evolve. In GR, il tempo è parte della geometria dinamica che risponde alla materia. Questi ruoli sono incompatibili.
 
@@ -615,7 +706,7 @@ Questo è il PRF applicato al tempo stesso: il tempo è relazionale, non assolut
 
 La Constructor Theory of Time (Deutsch e Marletto, 2025) porta questa intuizione nel framework della Constructor Theory: il tempo emerge dalla struttura delle trasformazioni possibili e impossibili, non da un parametro fondamentale. Il tempo fisico è derivato dalla fisica del cambiamento, non il suo fondamento.
 
-\section*{3.7 La violazione di CP e la freccia del tempo microscopica}
+\section{3.7 La violazione di CP e la freccia del tempo microscopica}
 
 La freccia del tempo macroscopica --- l'asimmetria tra passato e futuro nel comportamento termodinamico --- ha una controparte microscopica nella violazione di CP.
 
@@ -629,7 +720,7 @@ La violazione di CP nel settore dei leptoni è parametrizzata dalla matrice PMNS
 
 La leptogenesi è un meccanismo proposto per spiegare l'asimmetria materia-antimateria attraverso la violazione di CP nel settore dei leptoni. In scenari di seesaw, i neutrini di Majorana massicci decadono asimmetricamente in leptoni e antileptoni; questa asimmetria viene poi convertita in asimmetria baryon-antibaryon dai processi sphaleroni ad alta temperatura. La violazione di CP leptonica potrebbe quindi essere la sorgente ultima dell'asimmetria materia-antimateria dell'universo.
 
-\section*{3.8 Le onde gravitazionali come nuova finestra sull'universo}
+\section{3.8 Le onde gravitazionali come nuova finestra sull'universo}
 
 La rivelazione di GW150914 da LIGO il 14 settembre 2015 ha aperto una nuova finestra sull'universo. Due buchi neri di massa $\approx 36 M_\odot$ e $\approx 29 M_\odot$ si sono fusi a $\approx 1.3\ \text{Gly}$ di distanza, liberando $\approx 3 M_\odot c^2$ di energia in onde gravitazionali in $\approx 0.2\ \text{s}$. La strain misurata era $h \approx 10^{-21}$ --- una deformazione di $10^{-18}\ \text{m}$ su un braccio interferometrico di $4\ \text{km}$.
 
@@ -652,7 +743,7 @@ Applicare le tecniche standard della QFT alla GR produce infiniti non-rinormaliz
 
 Questo capitolo esplora le principali proposte per risolvere questo problema, con particolare attenzione ad approcci meno discussi nella divulgazione.
 
-\section*{4.1 Loop Quantum Gravity (LQG)}
+\section{4.1 Loop Quantum Gravity (LQG)}
 
 La Loop Quantum Gravity è l'approccio che parte dalla GR e la quantizza direttamente, senza assumere uno sfondo fisso. Sviluppata da Abhay Ashtekar a partire dal 1986, con contributi fondamentali di Carlo Rovelli e Lee Smolin, LQG è l'alternativa principale alla teoria delle stringhe.
 
@@ -674,7 +765,7 @@ dove la somma è su tutte le spin foams compatibili con le spin networks al bord
 
 LQG ha derivato la formula di Bekenstein-Hawking $S_{BH} = A/(4l_P^2)$ da primi principi (Rovelli, 1996): l'entropia di un buco nero è data dal numero di stati della spin network che attraversano l'orizzonte. Il calcolo fissa il parametro $\gamma = \ln 2/(2\pi\sqrt{3})$ per i quark di materia più semplici, o $\gamma \approx 0.274$ per i calcoli più accurati.
 
-\section*{4.2 Causal Dynamical Triangulations (CDT)}
+\section{4.2 Causal Dynamical Triangulations (CDT)}
 
 Le Causal Dynamical Triangulations (CDT) sono un approccio computazionale alla gravità quantistica basato sull'integrale funzionale sulla geometria. Sviluppate principalmente da Ambjørn, Jurkiewicz, e Loll a partire dal 1998, CDT regolarizzano l'integrale sulla geometria usando triangolazioni causali: tassellature dello spazio-tempo con simplessi $d$-dimensionali in cui la struttura causale (la distinzione passato/futuro) è preservata.
 
@@ -686,7 +777,7 @@ La riduzione dimensionale a $D_s = 2$ alle scale di Planck può essere interpret
 
 CDT non assume alcuna variabile fondamentale specifica: è una teoria non perturbativa e background-independent. La geometria emerge dalla somma su triangolazioni. Recenti sviluppi includono la CDT su spazi con dimensione $d=2$ (solubile analiticamente e numericamente), la CDT come descrizione della scala di Planck dell'universo di de Sitter, e la connessione con il formalismo di Regge calculus.
 
-\section*{4.3 Asymptotic Safety}
+\section{4.3 Asymptotic Safety}
 
 L'asymptotic safety (AS) è un approccio alla gravità quantistica proposto da Steven Weinberg nel 1979. L'idea: la teoria quantistica della gravità potrebbe non essere rinormalizzabile perturbativamente, ma potrebbe essere \textit{non perturbativamente rinormalizzabile} grazie a un punto fisso ultravioletto non gaussiano del gruppo di rinormalizzazione.
 
@@ -702,7 +793,7 @@ L'asymptotic safety ha fatto previsioni notevoli. Dalla struttura del punto fiss
 
 L'AS suggerisce anche che la costante di Newton e la costante cosmologica scalano con $k$ in modo tale da produrre valori macroscopici compatibili con le osservazioni, senza fine-tuning. La ``running'' della costante cosmologica a scale cosmologiche potrebbe spiegare il suo valore piccolo osservato --- un approccio alternativo al problema della costante cosmologica.
 
-\section*{4.4 Causal Set Theory}
+\section{4.4 Causal Set Theory}
 
 La causal set theory (CST), proposta da Rafael Sorkin e collaboratori a partire dagli anni Ottanta, propone che la struttura fondamentale della realtà sia un insieme parzialmente ordinato di eventi. Lo spazio-tempo continuo emerge come approssimazione continua di questa struttura discreta.
 
@@ -714,7 +805,7 @@ La CST ha prodotto una delle poche predizioni quantitative del valore della cost
 
 La dinamica del causal set è descritta dalla sum-over-histories sui causal set: l'ampiezza di probabilità di una storia del causal set è sommata su tutti i causal set compatibili con le condizioni al contorno. Gli sprinklings --- processi di Poisson che distribuiscono elementi nel continuo in modo da preservare la covarianza di Lorentz --- permettono di collegare i causal set discreti allo spazio-tempo continuo.
 
-\section*{4.5 Geometria Non Commutativa e Triple Spettrali}
+\section{4.5 Geometria Non Commutativa e Triple Spettrali}
 
 La geometria non commutativa (GNC), sviluppata principalmente da Alain Connes (Fields Medal 1982; Nobel mancato per l'ovvio motivo che i Nobel non sono assegnati in matematica), propone di sostituire lo spazio-tempo continuo con strutture algebraiche più generali in cui le coordinate non commutano.
 
@@ -726,7 +817,7 @@ Il Modello Standard accoppiato alla gravità emerge naturalmente dal triple spet
 
 La GNC introduce una scala minima di lunghezza attraverso la non-commutatività delle coordinate: $[x^\mu, x^\nu] = i\theta^{\mu\nu}$ dove $\theta^{\mu\nu}$ ha dimensioni di lunghezza al quadrato. Alla scala di Planck, questo produce effetti fisici: modifiche alla dispersione dei fotoni, deviazioni dalla simmetria di Lorentz alle alte energie, produzione di stati non-locali. I vincoli sperimentali dalla fisica dei raggi cosmici ultra-energetici e dal fondo di raggi gamma di Fermi-LAT pongono limiti stringenti: $\theta \lesssim l_P^2$.
 
-\section*{4.6 La teoria delle stringhe e il paesaggio}
+\section{4.6 La teoria delle stringhe e il paesaggio}
 
 La teoria delle stringhe è l'approccio alla gravità quantistica più studiato della storia, con decine di migliaia di paper pubblicati. Nata negli anni Sessanta come teoria della forza forte, fu riscoperta nel 1974 da Scherk, Schwarz, e Yoneya come teoria della gravità quantistica.
 
@@ -738,7 +829,7 @@ La corrispondenza AdS/CFT (Maldacena, 1997) è il risultato più solido. Connett
 
 Il problema principale della teoria delle stringhe è il paesaggio: esistono $\sim 10^{500}$ vacui della teoria delle stringhe, ognuno con costanti fisiche diverse. Questo rende la teoria non predittiva nel senso ordinario: qualsiasi valore delle costanti fisiche è realizzato in qualche vacuo. Susskind (2003) propose che il principio antropico --- viviamo nel vacuo compatibile con la nostra esistenza --- sia la selezione. Ma questo è un cambio radicale del programma scientifico: da ``predire le costanti dalle equazioni'' a ``spiegare le costanti dal principio antropico''.
 
-\section*{4.7 Convergenze e differenze tra gli approcci}
+\section{4.7 Convergenze e differenze tra gli approcci}
 
 I diversi approcci alla gravità quantistica convergono su alcune conclusioni nonostante i loro diversi fondamenti:
 
@@ -754,7 +845,7 @@ Le differenze principali riguardano: il trattamento del background (stringa usa 
 
 La prossima generazione di esperimenti potrebbe distinguere tra alcune di queste teorie: rivelatori di onde gravitazionali di prossima generazione (Einstein Telescope, LISA), esperimenti sul fondo di raggi gamma con Fermi-LAT e CTA, misure del CMB ad alta sensibilità con CMB-S4 e LiteBIRD, e esperimenti di precisione sui decadimenti del protone.
 
-\section*{4.8 Il relazionalismo spaziale e il PRF}
+\section{4.8 Il relazionalismo spaziale e il PRF}
 
 Tutti gli approcci alla gravità quantistica condividono una struttura filosofica comune: l'abbandono dello spazio-tempo come sfondo assoluto. In Newton, lo spazio è assoluto: esiste indipendentemente dalla materia. Einstein mostrò che lo spazio-tempo è dinamico: risponde alla materia. Le teorie della gravità quantistica radicalizzano questo: lo spazio-tempo non è nemmeno il livello di descrizione fondamentale.
 
@@ -777,7 +868,7 @@ non dice nulla sul \textit{significato} di un messaggio: misura la sua \textit{s
 
 La scoperta che l'entropia di Shannon è formalmente identica all'entropia di Boltzmann-Gibbs della meccanica statistica non è una coincidenza notazionale: è un fatto fisico profondo. Questo capitolo esplora le connessioni tra informazione, entropia termodinamica, e fisica quantistica --- costruendo verso una comprensione di come il pensiero e la cognizione siano fenomeni fisici.
 
-\section*{5.1 Il demone di Maxwell e il principio di Landauer}
+\section{5.1 Il demone di Maxwell e il principio di Landauer}
 
 James Clerk Maxwell immaginò nel 1867, in una lettera a Peter Guthrie Tait, un essere intelligente (che Lord Kelvin avrebbe poi chiamato ``demone'') in controllo di una botola tra due compartimenti di gas a temperature uguale. Il demone osserva le molecole e apre la botola selettivamente: lascia passare le molecole veloci da sinistra a destra, e quelle lente da destra a sinistra. Il gas di destra diventa più caldo, quello di sinistra più freddo --- senza lavoro apparente. Il secondo principio sembrava violato.
 
@@ -787,7 +878,7 @@ Il principio di Landauer è una legge fisica fondamentale: \textit{la cancellazi
 
 Il principio fu verificato sperimentalmente dal gruppo di Eric Lutz (Bérut et al., \textit{Nature}, 2012): usando una particella colloidale in un doppio pozzo di potenziale come bit fisico, e misurando il calore dissipato durante la cancellazione, confermarono il limite $k_B T \ln 2$ con accuratezza del $5\%$. Successivamente, il principio è stato verificato su atomi singoli, bit superconduttivi, e sistemi molecolari.
 
-\section*{5.2 L'entropia di von Neumann e la meccanica quantistica}
+\section{5.2 L'entropia di von Neumann e la meccanica quantistica}
 
 L'entropia di Shannon ha la sua controparte quantistica nell'entropia di von Neumann:
 \[
@@ -799,7 +890,7 @@ L'\textit{entropia di entanglement} di un sistema bipartito $AB$ in uno stato pu
 
 L'entropia di entanglement è una misura dell'entanglement tra le due parti. Non si può creare entanglement con operazioni locali e comunicazione classica (LOCC): l'entanglement è una risorsa genuinamente non locale. La teoria della distillazione e della diluzione dell'entanglement (Bennett et al., 1996) mostra che 1 ebit è la quantità di entanglement per pair di qubit in uno stato di Bell, e che ogni stato entangled puro può essere convertito in stati di Bell a un tasso determinato dall'entropia di entanglement.
 
-\section*{5.3 La termodinamica quantistica}
+\section{5.3 La termodinamica quantistica}
 
 La termodinamica quantistica è una branca emergente che affronta questioni fondamentali: cosa significa calore, lavoro, ed entropia quando il sistema è quantistico? Come cambiano le leggi termodinamiche quando le dimensioni del sistema sono dell'ordine di pochi qubit?
 
@@ -821,7 +912,7 @@ Le versioni quantistiche di questi teoremi sono più sottili. La definizione di 
 \]
 dove la media è presa sulle traiettorie quantistiche prodotte dal processo di misura a due punti. Ma questo trattamento ignora la coerenza quantistica durante il processo: le misure proiettive agli istanti iniziale e finale distruggono la coerenza. Approcci più sofisticati (Solinas, Gasparinetti, 2015; Hovhannisyan et al., 2019) includono la coerenza quantistica nel bilancio termodinamico.
 
-\section*{5.4 La coerenza quantistica come risorsa termodinamica}
+\section{5.4 La coerenza quantistica come risorsa termodinamica}
 
 Un aspetto fondamentale della termodinamica quantistica è che la coerenza quantistica --- la capacità di un sistema di essere in sovrapposizione di stati energetici --- è una \textit{risorsa termodinamica} distinta dall'entanglement.
 
@@ -831,7 +922,7 @@ Il teorema di Åberg (2014) mostra che la coerenza nei livelli energetici di un 
 
 Applicazioni biologiche: la fotochimica della fotosintesi (Graham Fleming et al., 2007) mostrò che il trasferimento di energia nell'antenna della fotosintesi avviene attraverso stati coerenti --- battendo record di efficienza classica. Anche se il ruolo della coerenza quantistica in condizioni fisiologiche è dibattuto (Cao et al., 2020), questo apre la possibilità che l'evoluzione abbia sfruttato le risorse quantistiche. Analoghe considerazioni si applicano alla navigazione degli uccelli tramite effetti della criptocromo nell'occhio (radical pair mechanism), alle reazioni enzimatiche con tunneling dei protoni, e ai nanotubi di carbonio nelle membrane cellulari.
 
-\section*{5.5 Informazione e geometria: AdS/CFT come teoria dell'informazione}
+\section{5.5 Informazione e geometria: AdS/CFT come teoria dell'informazione}
 
 La corrispondenza AdS/CFT di Maldacena può essere vista come una teoria dell'informazione: la geometria spaziotemporale del bulk è codificata nell'informazione della teoria di campo del bordo.
 
@@ -845,7 +936,7 @@ Van Raamsdonk (2010) ha mostrato che l'entanglement nel bordo determina la conne
 
 Almheiri, Dong, Harlow (2015) hanno interpretato la corrispondenza AdS/CFT come un \textit{codice quantistico correttore d'errori}. La teoria di bordo codifica la teoria di bulk in modo robusto agli errori locali --- analogamente a come un codice correttore d'errori protegge l'informazione da errori locali. Le isole (che risolvono il paradosso dell'informazione) emergono naturalmente in questo framework come ricostruzione dell'interno del buco nero dai dati del bordo.
 
-\section*{5.6 Il principio di energia libera e il cervello come sistema fisico}
+\section{5.6 Il principio di energia libera e il cervello come sistema fisico}
 
 Karl Friston (UCL) ha proposto che il cervello --- e più in generale, ogni sistema biologico --- opera minimizzando una quantità chiamata \textit{energia libera variazionale}. Questo framework, noto come ``active inference'', unifica percezione, azione, apprendimento, e attenzione in un unico principio termodinamico.
 
@@ -859,7 +950,7 @@ Il principio di energia libera è profondamente fisico. L'energia libera di Helm
 
 La ``percezione'' in questo framework è l'aggiornamento del modello interno $q$ per ridurre gli errori di predizione. L'``azione'' è la scelta di sequenze di mosse corporee che rendono le osservazioni conformi alle predizioni (reducing surprise through action). L'``attenzione'' è la modulazione della precisione delle previsioni: aumentare la precisione di certi canali sensoriali equivale ad aumentare il loro peso nell'aggiornamento. Le illusioni percettive emergono quando il modello interno è più robusto del segnale sensoriale.
 
-\section*{5.7 La computazione come processo fisico}
+\section{5.7 La computazione come processo fisico}
 
 La connessione tra computazione e fisica ha implicazioni profonde per la comprensione del pensiero.
 
@@ -871,7 +962,7 @@ Roger Penrose (\textit{The Emperor's New Mind}, 1989; \textit{Shadows of the Min
 
 La maggioranza dei logici e informatici ritiene che l'argomento di Penrose fraintenda i teoremi di Gödel. Ma la questione della computabilità della coscienza rimane aperta. Se la coscienza richiede qualcosa di non computabile, questo ha implicazioni per l'intelligenza artificiale: nessun sistema computazionale --- per quanto potente --- potrebbe replicare la coscienza umana.
 
-\section*{5.8 La Constructor Theory of Information}
+\section{5.8 La Constructor Theory of Information}
 
 La Constructor Theory, proposta da David Deutsch e Chiara Marletto (2015), è un framework per esprimere le leggi della física come enunciati sulle trasformazioni possibili e impossibili, indipendentemente dalle leggi dinamiche specifiche.
 
@@ -894,7 +985,7 @@ La simmetria è il principio organizzatore più potente della fisica moderna. No
 
 Questo capitolo esplora la simmetria come principio fisico fondamentale, la rottura spontanea di simmetria come meccanismo generatore di struttura, il Modello Standard come implementazione di questo principio, e le sue estensioni.
 
-\section*{6.1 Il teorema di Noether: simmetria e conservazione}
+\section{6.1 Il teorema di Noether: simmetria e conservazione}
 
 Emmy Noether dimostrò nel 1915 un risultato di portata rivoluzionaria. Il paper, intitolato ``Invariante Variationsprobleme'' e pubblicato nel 1918, stabilisce:
 
@@ -917,7 +1008,7 @@ Il \textbf{secondo teorema di Noether} riguarda i gruppi infinito-dimensionali (
 
 Noether fu una delle matematiche più brillanti del Novecento. Studentessa sotto Hilbert a Göttingen in un'epoca in cui le donne non potevano iscriversi ufficialmente (partecipò come uditrice nascosta nelle classi di Gordan), divenne poi professora ma senza stipendio (come Privatdozent ``honoris causa''). Fu espulsa dalla Germania nazista nel 1933 in quanto ebrea, e si trasferì al Bryn Mawr College in Pennsylvania, dove morì nel 1935 a 53 anni. Einstein scrisse sul New York Times: ``Noether era il genio matematico creativo più significativo finora prodotto dall'istruzione superiore delle donne.''
 
-\section*{6.2 Le teorie di gauge: dalla fisica la materia alle leggi fondamentali}
+\section{6.2 Le teorie di gauge: dalla fisica la materia alle leggi fondamentali}
 
 Le teorie di gauge sono le teorie fisiche in cui le leggi sono invarianti sotto trasformazioni locali (dipendenti dal punto nello spazio-tempo) di un certo gruppo. Il punto chiave: la richiesta di invarianza locale \textit{impone} l'esistenza di campi di gauge --- i mediatori delle forze.
 
@@ -935,7 +1026,7 @@ D^\nu F^a_{\mu\nu} = g J^a_\mu
 \]
 sono le generalizzazioni delle equazioni di Maxwell a gruppi di simmetria non abeliani. La forza forte (QCD con $G = \mathrm{SU}(3)$) e la forza elettrodebole (con $G = \mathrm{SU}(2) \times \mathrm{U}(1)$) sono entrambe teorie di Yang-Mills.
 
-\section*{6.3 La rottura spontanea di simmetria e il meccanismo di Higgs}
+\section{6.3 La rottura spontanea di simmetria e il meccanismo di Higgs}
 
 Il meccanismo di Higgs è la soluzione al problema delle masse dei bosoni di gauge. In una teoria di gauge esatta, i bosoni di gauge devono essere privi di massa (la massa romperebbe la simmetria locale). Ma i bosoni $W^\pm$ e $Z^0$ sono massicci ($M_W \approx 80.4\ \text{GeV}$, $M_Z \approx 91.2\ \text{GeV}$). Come conciliare questo con l'invarianza di gauge?
 
@@ -956,7 +1047,7 @@ Il meccanismo di Higgs produce:
 
 La scoperta del bosone di Higgs al CERN nel 2012 (ATLAS e CMS, con significatività $> 5\sigma$) fu la verifica sperimentale dell'ultimo ingrediente mancante del Modello Standard. I decadimenti in $\gamma\gamma$ (attraverso loop di fermioni pesanti e bosoni $W$), in $ZZ^* \to 4\ell$, e in $WW^* \to \ell\nu\ell\nu$ sono i canali principali di scoperta. La massa $m_H \approx 125.20\ \text{GeV}$ è compatibile con le previsioni dell'asymptotic safety.
 
-\section*{6.4 La violazione di CP e la materia oscura barionica}
+\section{6.4 La violazione di CP e la materia oscura barionica}
 
 La violazione di CP è uno dei fenomeni fisici più profondi e più fecondi della fisica delle particelle. Come discusso nel Capitolo 3, le condizioni di Sakharov richiedono violazione di C e CP per l'asimmetria materia-antimateria. La violazione di CP osservata nel Modello Standard --- attraverso la fase della matrice CKM --- è troppo piccola per spiegare l'asimmetria osservata (circa $10^{-9}$ di bariogenesi in eccesso di antibariogenesi). Nuove fonti di violazione di CP sono necessarie.
 
@@ -978,7 +1069,7 @@ m_a \approx \frac{m_\pi f_\pi}{f_a} \approx 6\ \mu\text{eV} \left(\frac{10^{12}\
 \]
 L'assione è un candidato eccellente per la materia oscura: è stabile, debolmente interagente, e può essere prodotto non-termicamente nella storia cosmologica. Esperimenti come ADMX (Axion Dark Matter eXperiment), HAYSTAC, e ABRACADABRA cercano assioni cosmologici attraverso il loro accoppiamento al campo magnetico.
 
-\section*{6.5 Le teorie di grande unificazione e la supersimmetria}
+\section{6.5 Le teorie di grande unificazione e la supersimmetria}
 
 Le teorie di grande unificazione (GUT) propongono che le tre forze del Modello Standard (forte, debole, elettromagnetica) si unifichino in un'unica forza a energie $\sim 10^{15}$--$10^{16}\ \text{GeV}$. L'evidenza principale: le tre costanti di accoppiamento ($\alpha_s$, $\alpha_2$, $\alpha_1$) evolvono con l'energia in modo da convergere a $\sim 10^{15}\ \text{GeV}$ (se si include la supersimmetria) --- la convergenza suggerisce un'unica costante di accoppiamento nell'ipotetico punto di unificazione.
 
@@ -992,7 +1083,7 @@ SUSY risolve il problema della gerarchia: le correzioni radiative alla massa del
 
 Il LHC non ha trovato segnali di SUSY nell'intervallo di massa 1--2 TeV previsto dalla SUSY naturale. Questo non esclude SUSY --- i superpartner potrebbero essere più pesanti --- ma aumenta la fine-tuning e riduce la motivazione dalla naturalness. Il naturalino (il superpartner più leggero, stabile per una parità R) rimane un candidato eccellente per la materia oscura, ma deve avere masse maggiori delle aspettative originali.
 
-\section*{6.6 Il Modello Standard come teoria efficace}
+\section{6.6 Il Modello Standard come teoria efficace}
 
 Il Modello Standard, nonostante il suo successo straordinario, è una teoria efficace --- valida entro certi limiti di energia. Al di sopra della scala di Planck ($\sim 10^{19}\ \text{GeV}$), gli effetti gravitazionali diventano importanti e il Modello Standard non è più applicabile. Ma anche a scale molto inferiori, il Modello Standard deve essere completato.
 
@@ -1017,7 +1108,7 @@ La domanda che Wigner pose nel 1960 sembra quasi ingenua, ma è in realtà una d
 
 Gli esempi sono sorprendenti nella loro specificità storica. Bernhard Riemann sviluppò la geometria riemanniana nel 1854 come esplorazione astratta delle possibilità geometriche quando si abbandona il postulato delle parallele di Euclide. Sessant'anni dopo, Einstein trovò che era il linguaggio naturale della relatività generale. George Boole sviluppò l'algebra booleana nel 1847 come formalizzazione dell'algebra del pensiero logico. Un secolo dopo, divenne il fondamento matematico dei circuiti digitali. Paul Dirac seguì criteri di eleganza matematica quando scrisse la sua equazione per l'elettrone nel 1928. La sua eleganza predisse l'antimateria, scoperta da Anderson nel 1932.
 
-\section*{7.1 Le posizioni filosofiche sulla matematica}
+\section{7.1 Le posizioni filosofiche sulla matematica}
 
 Il dibattito filosofico sulla natura della matematica si divide principalmente in tre grandi famiglie.
 
@@ -1033,7 +1124,7 @@ Max Tegmark (\textit{Our Mathematical Universe}, 2014) ha proposto la Mathematic
 
 La MUH ha implicazioni filosofiche vertiginose. Se ogni struttura matematica consistente esiste fisicamente, allora il numero di universi è immenso (forse infinito). La maggior parte di questi universi non ospita vita --- non ha strutture abbastanza complesse. Noi selezioniamo, per il solo fatto di esistere, universi compatibili con la nostra esistenza (principio antropico al massimo). Ma la MUH non è falsificabile nel senso ordinario: qualsiasi osservazione è compatibile con essa.
 
-\section*{7.2 I teoremi di incompletezza di Gödel}
+\section{7.2 I teoremi di incompletezza di Gödel}
 
 I teoremi di incompletezza di Gödel (1931) sono tra i risultati più profondi della logica del Novecento. Cambiarono per sempre la nostra comprensione dei fondamenti della matematica, e hanno implicazioni che si estendono dalla logica alla fisica alla filosofia della mente.
 
@@ -1053,7 +1144,7 @@ Le implicazioni per la filosofia della mente sono state intensamente dibattute. 
 
 La risposta principale degli oppositori (Benacerraf, Putnam, Chalmers, Dennett) è che l'argomento è incompleto: per applicarlo alla mente, si deve assumere che la mente sia consistente e che sappia quale sistema formale è equivalente ad essa. Ma nessuna di queste assunzioni è ovvia. Le menti sono probabilmente inconsistenti (crediamo cose contraddittorie), e non sappiamo quale sistema formale ci rappresenta.
 
-\section*{7.3 La teoria delle categorie come fondamento}
+\section{7.3 La teoria delle categorie come fondamento}
 
 La \textit{teoria delle categorie} (Mac Lane, Eilenberg, anni Quaranta--Cinquanta) è un formalismo matematico che ha rivoluzionato la matematica pura e ha crescenti applicazioni in fisica quantistica.
 
@@ -1067,7 +1158,7 @@ In questo framework, i diagrammi di filo (string diagrams) forniscono un calcolo
 
 La \textit{topos theory} (Lawvere, Tierney) generalizza la teoria degli insiemi usando la logica categoriale. Ogni topos ha una logica interna (intuizionista, non classica in generale). Isham e Döring hanno proposto che la fisica quantistica dovrebbe essere formulata nell'interno di un topos specifico, il ``context category'' degli osservabili commutative. Questo framework produce una ``coerente'' formulazione della meccanica quantistica che evita il collasso e si applica a sistemi chiusi.
 
-\section*{7.4 La matematica come tecnologia cognitiva}
+\section{7.4 La matematica come tecnologia cognitiva}
 
 C'è una prospettiva diversa sul problema di Wigner, raramente discussa: la matematica è una \textit{tecnologia cognitiva} --- un sistema di simboli e regole di manipolazione che amplifica le capacità cognitive umane per riconoscere pattern nel mondo fisico.
 
@@ -1077,7 +1168,7 @@ Ma questa risposta non è completamente soddisfacente. Perché la geometria non-
 
 Una risposta parziale: la matematica esplora lo spazio di tutte le strutture logicamente consistenti. La fisica occupa un sottoinsieme di questo spazio. Poiché i fisici cercano attivamente le strutture matematiche più appropriate per descrivere la fisica, e poiché la matematica ha esplorato moltissimo spazio, la convergenza non è sorprendente. Ma rimane il mistero del perché la fisica stia in quel sottoinsieme particolare --- perché le leggi fondamentali della natura hanno quella specifica struttura matematica e non un'altra.
 
-\section*{7.5 L'informazione come struttura matematica}
+\section{7.5 L'informazione come struttura matematica}
 
 La teoria dell'informazione di Shannon è un'altra matematica astratta con efficacia irragionevole nella fisica. Shannon era interessato alla comunicazione elettrica: quanti bit servono per trasmettere un messaggio in modo affidabile su un canale rumoroso? Non era interessato alla física.
 
@@ -1100,7 +1191,7 @@ David Chalmers distinse nel 1995 tra i ``problemi facili'' e il ``problema diffi
 
 Il problema difficile è diverso in natura: perché queste funzioni sono accompagnate da esperienza soggettiva? Perché c'è un ``come è essere'' qualcosa, invece che l'elaborazione delle informazioni avvenisse ``nel buio'', senza nessuna esperienza? La scienza funziona bene con i meccanismi; il problema difficile chiede perché il meccanismo sia accompagnato dall'interno.
 
-\section*{8.1 La neurofisiologia del neurone singolo}
+\section{8.1 La neurofisiologia del neurone singolo}
 
 Il neurone è la cellula fondamentale del sistema nervoso. I neuroni comunicano attraverso segnali elettrici e chimici. Il segnale elettrico --- il potenziale d'azione --- è un'onda di depolarizzazione della membrana cellulare che si propaga lungo l'assone.
 
@@ -1116,7 +1207,7 @@ Il modello riproduce con precisione la forma del potenziale d'azione, la sua dur
 
 Versioni semplificate del modello H-H --- come il modello integrate-and-fire --- sono usate in reti neurali computazionali per simulare l'attività di grandi popolazioni di neuroni. I modelli più recenti includono dendriti come unità computazionali (non solo il soma), canali ionici con dinamiche più ricche, e modulazione neuromodulatoria (dopamina, serotonina, acetilcolina).
 
-\section*{8.2 La plasticità sinaptica e l'apprendimento}
+\section{8.2 La plasticità sinaptica e l'apprendimento}
 
 La plasticità sinaptica è la capacità delle sinapsi di cambiare forza in risposta all'attività. È il meccanismo cellulare fondamentale dell'apprendimento e della memoria.
 
@@ -1126,7 +1217,7 @@ La \textit{Spike-Timing Dependent Plasticity} (STDP, Markram et al., 1997; Bi e 
 
 Le oscillazioni neurali --- ritmi di attività elettrica a diverse frequenze (delta $0.5$-$4\ \text{Hz}$, theta $4$-$8\ \text{Hz}$, alfa $8$-$13\ \text{Hz}$, beta $13$-$30\ \text{Hz}$, gamma $30$-$100\ \text{Hz}$) --- sono cruciali per la coordinazione dell'attività corticale. Le oscillazioni gamma sono associate all'attenzione e alla cognizione attiva; le oscillazioni theta all'ippocampo durante la navigazione spaziale e la codifica della memoria; le oscillazioni alfa all'inibizione corticale durante il riposo.
 
-\section*{8.3 Il predictive coding e il cervello come sistema di inferenza bayesiana}
+\section{8.3 Il predictive coding e il cervello come sistema di inferenza bayesiana}
 
 Il framework del predictive coding (Rao-Ballard, 1999; Friston, 2005) propone che il cervello sia fondamentalmente un sistema di predizione bayesiana che minimizza gli errori di predizione.
 
@@ -1144,7 +1235,7 @@ L'attenzione, in questo framework, è la modulazione della precisione (ovvero, d
 
 L'Active Inference (Friston, 2010) generalizza il predictive coding all'azione: gli agenti scelgono azioni per ridurre la sorpresa, cioè per mantenere gli stati corporei entro un range compatibile con la vita (omeostatia) e con gli obiettivi (allostasi). La distinzione tra percezione e azione scompare: entrambe sono modi di minimizzare la surprisal.
 
-\section*{8.4 Le teorie della coscienza}
+\section{8.4 Le teorie della coscienza}
 
 Ci sono molte teorie della coscienza. Nessuna è completamente soddisfacente. Questo è normale: il problema è difficile.
 
@@ -1166,7 +1257,7 @@ Il progetto Cogitate (Melloni et al., 2023) ha confrontato le previsioni di IIT 
 
 \textbf{Recurrent Processing Theory (RPT)} di Lamme propone che la coscienza emerga dall'elaborazione ricorrente nelle aree corticali visive e sensoriali, indipendentemente dall'accesso allo spazio di lavoro globale. La coscienza ``fenomenologica'' (le qualia) sarebbe separata dalla coscienza di accesso (l'utilizzo delle informazioni).
 
-\section*{8.5 Il problema difficile e le sue possibili soluzioni}
+\section{8.5 Il problema difficile e le sue possibili soluzioni}
 
 Il problema difficile di Chalmers è: perché c'è esperienza soggettiva? Perché l'elaborazione fisica delle informazioni è accompagnata da qualia --- il rossore del rosso, il dolore, la sensazione del calore?
 
@@ -1185,7 +1276,7 @@ Le posizioni \textbf{non-eliminativiste} sostengono che il problema difficile è
 \item \textit{Monismo russelliano} (Russell, Chalmers, Goff): la física descrive la struttura causale del mondo, ma non la sua natura intrinseca. Le proprietà intrinseche della materia sono di natura proto-fenomenologica.
 \end{itemize}
 
-\section*{8.6 La neuroscienza computazionale e i modelli del cervello}
+\section{8.6 La neuroscienza computazionale e i modelli del cervello}
 
 La neuroscienza computazionale usa modelli matematici e computazionali per capire il funzionamento del cervello. È un campo in rapida espansione, guidato dalla crescente disponibilità di dati neurali ad alta risoluzione e dalla potenza dei computer.
 
@@ -1193,7 +1284,7 @@ Il Human Connectome Project (HCP) ha mappato le connessioni anatomiche del cerve
 
 I modelli di reti neurali artificiali, ispirati (ma non identici) al cervello biologico, hanno raggiunto prestazioni umane o sovraumane in molti compiti: riconoscimento di immagini (ResNet, ViT), elaborazione del linguaggio (GPT-4, Claude), giochi di strategia (AlphaGo, AlphaZero), sintesi di proteine (AlphaFold). Questi modelli ci insegnano sulla computazione, ma la questione se ci insegnino sul cervello è aperta.
 
-\section*{8.7 La coscienza e il PRF}
+\section{8.7 La coscienza e il PRF}
 
 La coscienza ha un aspetto che sembra incompatibile con il PRF: l'esperienza soggettiva sembra avere proprietà assolute, non relazionali. Il dolore è dolore per me, indipendentemente da qualsiasi osservatore esterno. Il rossore del rosso è una proprietà assoluta della mia esperienza, non relazionale.
 
@@ -1214,7 +1305,7 @@ La percezione non è una finestra sul mondo: è una costruzione. Questa non è u
 
 Questo ha conseguenze profonde per l'epistemologia: se la percezione è costruttiva, allora la conoscenza percettiva non è accesso diretto alla realtà, ma inferenza a partire da segnali. E le inferenze possono essere sbagliate --- sistematicamente, non casualmente. Le illusioni percettive non sono difetti del sistema visivo: sono rivelazioni del suo funzionamento normale, applicato a situazioni che violano le aspettative.
 
-\section*{9.1 La costruttività della percezione visiva}
+\section{9.1 La costruttività della percezione visiva}
 
 Il sistema visivo umano illustra dramaticamente la natura costruttiva della percezione. La retina trasforma i fotoni in segnali elettrici attraverso i fotorecettori: $\sim 120\ \text{M}$ bastoncelli (sensibili alla luce in condizioni scotopiche, privi di selettività cromatica) e $\sim 6\ \text{M}$ coni (tre tipi, sensibili a diverse lunghezze d'onda, attivi in condizioni fotopiche). Il nervo ottico contiene solo $\sim 1.2\ \text{M}$ fibre: c'è già una compressione massiccia prima che il segnale raggiunga il cervello.
 
@@ -1224,7 +1315,7 @@ Ma il sistema visivo non è solo ascendente (bottom-up). Le connessioni discende
 
 Le illusioni ottiche rivelano il meccanismo costruttivo in azione. L'illusione di Müller-Lyer (due linee uguali sembrano diverse per le frecce alle estremità) mostra che il sistema visivo usa contesto e prospettiva per stimare le dimensioni reali: le frecce simulano profondità in un ambiente tridimensionale, e il cervello interpreta le linee in base a questa inferenza. L'illusione di Kanizsa (triangolo che sembra più bianco di sfondo anche dove non c'è) mostra il ``completamento amodale'': il cervello interpola superfici dove i bordi sono assenti per coerenza con il contesto.
 
-\section*{9.2 La percezione del colore e il costruttivismo}
+\section{9.2 La percezione del colore e il costruttivismo}
 
 La percezione del colore è un caso paradigmatico di costruzione percettiva. Il colore non è una proprietà fisica degli oggetti: è una costruzione del sistema visivo umano che dipende dalla struttura dei fotorecettori, dall'elaborazione neurale, e dal contesto.
 
@@ -1234,7 +1325,7 @@ La \textit{costanza del colore} mostra che il sistema visivo corregge per le var
 
 Il famoso caso del vestito (2015 --- \textit{the dress}) illustra come la costanza del colore possa produrre percezioni radicalmente diverse per lo stesso stimolo. Alcune persone vedevano il vestito bianco e oro; altre blu e nero. La differenza dipendeva dai prior sull'illuminazione: chi assumeva luce diurna vede bianco e oro; chi assumeva luce artificiale vede blu e nero. Lo stesso segnale retinico, inferenze diverse, colori diversi.
 
-\section*{9.3 La memoria come ricostruzione}
+\section{9.3 La memoria come ricostruzione}
 
 La memoria episodica --- la memoria degli eventi specifici della nostra vita --- non è un archivio: è una ricostruzione attiva. Ogni volta che si ricorda qualcosa, il ricordo viene ricostruito da frammenti, colmando i vuoti con inferenze plausibili. Questo processo è normalmente accurato ma sistematicamente soggetto a distorsioni.
 
@@ -1244,7 +1335,7 @@ I \textit{falsi ricordi} possono essere impiantati con relativa facilità. Loftu
 
 La \textit{reconsolidazione} è un fenomeno scoperto negli anni 2000: quando un ricordo viene richiamato alla memoria, diventa temporaneamente labile e può essere modificato prima di essere ``riconsolidato''. Questo è sfruttato terapeuticamente per il PTSD: interventi farmacologici (propranololo) o comportamentali durante la fase di reconsolidazione possono attenuare l'impatto emotivo dei ricordi traumatici.
 
-\section*{9.4 Le emozioni come informazione e costruzione}
+\section{9.4 Le emozioni come informazione e costruzione}
 
 Le emozioni sono state a lungo concepite come reazioni primitive, opposte alla ragione. La ricerca recente mostra un quadro radicalmente diverso: le emozioni sono sistemi di informazione e valutazione sofisticati, indispensabili per la cognizione adattiva.
 
@@ -1256,7 +1347,7 @@ L'evidenza per la Constructed Emotion Theory include: le espressioni facciali no
 
 Questa teoria ha implicazioni importanti: le emozioni si apprendono culturalmente; il vocabolario emotivo influenza l'esperienza emotiva (``granularità emotiva''); e le emozioni possono essere regolate riqualificando le sensazioni corporee in categorie concettuali diverse.
 
-\section*{9.5 L'intenzionalità: l'essere-di dell'esperienza}
+\section{9.5 L'intenzionalità: l'essere-di dell'esperienza}
 
 L'intenzionalità è la proprietà fondamentale degli stati mentali di essere ``di'' o ``su'' qualcosa. La percezione è di un oggetto; il desiderio è di un evento; la credenza è di una proposizione; il dolore è di una parte del corpo. Non c'è stato mentale puro senza oggetto intenzionale.
 
@@ -1271,7 +1362,7 @@ Le principali risposte naturalistiche:
 \item \textit{Internalism-Externalism debate}: Putnam (1975) e Burge (1979) mostrarono che il contenuto intenzionale dipende in parte dall'ambiente fisico e sociale esterno, non solo dagli stati interni del cervello. Due persone fisicamente identiche in ambienti diversi hanno credenze con contenuti diversi (``acqua'' si riferisce a H$_2$O sulla Terra e a XYZ su Terre gemelle).
 \end{itemize}
 
-\section*{9.6 Il sé come narrativa e costruzione}
+\section{9.6 Il sé come narrativa e costruzione}
 
 Il sé non è una sostanza metafisica immateriale che osserva dall'interno: è una costruzione narrativa del cervello, un modello di sé aggiornato continuamente.
 
@@ -1298,7 +1389,7 @@ Il libero arbitrio è forse la questione filosofica con le conseguenze pratiche 
 
 Questo capitolo esplora le relazioni tra fisica, libero arbitrio, responsabilità morale, e il significato di una vita finita in un universo fisicamente indifferente.
 
-\section*{10.1 Determinismo, indeterminismo, e libero arbitrio}
+\section{10.1 Determinismo, indeterminismo, e libero arbitrio}
 
 Il determinismo classico (laplaciano) afferma che, dato lo stato completo dell'universo in un momento, ogni stato futuro è univocamente determinato dalle leggi della fisica. Il ``demone di Laplace'' --- un'entità che conosce la posizione e velocità di ogni particella --- potrebbe prevedere il futuro con certezza assoluta.
 
@@ -1312,7 +1403,7 @@ La questione filosofica centrale è se il libero arbitrio --- inteso come la cap
 
 \textbf{Compatibilismo}: il libero arbitrio --- inteso correttamente --- è compatibile con il determinismo. Le azioni libere sono quelle prodotte dai propri desideri, valori, e deliberazione, senza coercizione esterna. Daniel Dennett, Harry Frankfurt, Susan Wolf sono compatibilisti.
 
-\section*{10.2 Il compatibilismo: la libertà come capacità}
+\section{10.2 Il compatibilismo: la libertà come capacità}
 
 Il compatibilismo più sofisticato non nega il determinismo: abbraccia una concezione di libertà che non richiede l'indeterminismo. Daniel Dennett (\textit{Freedom Evolves}, 2003) argomenta che il libero arbitrio che vale la pena avere è quello compatibile con la fisica: la capacità di rispondere a ragioni, di deliberare, di agire in base ai propri valori.
 
@@ -1324,7 +1415,7 @@ Gli esperimenti di Libet (1983) sembrano sfidare il libero arbitrio. Registrando
 
 Ma l'interpretazione di Libet è stata contestata. Schurger et al. (2012) hanno mostrato che il RP emerge da fluttuazioni stocastiche nell'attività corticale che raggiungono una soglia, non da una decisione discreta. Il segnale neural non ``anticipa'' la decisione: è parte del processo stocastico che produce la decisione. E Libet stesso notò che i soggetti possono ``porre il veto'' all'azione fino a $\sim 150\ \text{ms}$ prima del movimento: il veto cosciente è possibile anche se la preparazione motoria è precedente.
 
-\section*{10.3 La neuroscienza della responsabilità}
+\section{10.3 La neuroscienza della responsabilità}
 
 La neuroscienza ha rilevanza diretta per le pratiche giuridiche e morali.
 
@@ -1334,7 +1425,7 @@ Le \textit{neuroscienze forensi} usano queste conoscenze in contesti giuridici. 
 
 Il punto filosofico centrale: la responsabilità morale è graduale, non binaria. Non è che una persona abbia o non abbia il libero arbitrio: ha più o meno capacità di autocontrollo, deliberazione, e risposta a ragioni. Le pratiche giuridiche dovrebbero riflettere questa gradualità.
 
-\section*{10.4 La morte: fisica e significato}
+\section{10.4 La morte: fisica e significato}
 
 La morte è un fenomeno biologico --- la cessazione degli processi vitali --- con implicazioni fisiche, filosofiche, e psicologiche profonde. In un universo fisicamente indifferente, come pensare alla morte?
 
@@ -1346,7 +1437,7 @@ Parfit (\textit{Reasons and Persons}) argomenta che il timore della morte è att
 
 Epicuro argomenta: ``La morte non è nulla per noi, perché quando siamo vivi la morte non è qui; e quando la morte è qui, noi non siamo più.'' Lucrezio sviluppa questo in \textit{De rerum natura}: il tempo di non-esistenza prima della nascita non ci turba; perché dovrebbe turbarci quello dopo? La simmetria ante-post-mortem suggerisce che il timore della morte è irrazionale.
 
-\section*{10.5 Il significato in un universo fisicamente indifferente}
+\section{10.5 Il significato in un universo fisicamente indifferente}
 
 L'universo fisico è indifferente al significato. Le equazioni della fisica non contengono termini per il ``bene'', il ``male'', il ``valore'', il ``senso''. La natura segue le sue leggi senza riguardo per i desideri o le sofferenze degli esseri umani.
 
@@ -1362,7 +1453,7 @@ Camus (\textit{Il mito di Sisifo}) descrive la condizione umana come ``assurda''
 
 Derek Parfit ha mostrato che la riduzione dell'identità personale e la comprensione della nostra connessione con gli altri esseri umani (nel tempo e nello spazio) può produrre un senso di significato diverso: il riconoscimento che siamo parte di qualcosa di più grande di noi stessi --- la corrente della vita biologica e della cultura umana. Il significato non deve essere cosmico per essere reale.
 
-\section*{10.6 La cosmoetica e la responsabilità verso il futuro}
+\section{10.6 La cosmoetica e la responsabilità verso il futuro}
 
 La fisica fornisce un contesto cosmologico per l'etica: siamo una specie biologica su un pianeta minore di una stella ordinaria, in un universo di 13.8 miliardi di anni che si espanderà per miliardi di anni ancora. Questo contesto non implica nulla di specifico sull'etica --- la legge di Hume (è/dovere) rimane valida --- ma cambia la scala dei problemi morali.
 
@@ -1392,7 +1483,7 @@ e guardiamo onestamente oltre il bordo.
 
 L'universo osservabile ha un raggio di circa 46 miliardi di anni luce, contiene $\sim 2 \times 10^{23}$ stelle organizzate in $\sim 2 \times 10^{12}$ galassie, ha un'età di $13.787 \pm 0.020$ miliardi di anni (Planck 2018), ed è descritto con straordinaria precisione dal modello $\Lambda$CDM. In questo capitolo esploriamo la cosmologia moderna: le basi osservative, il modello teorico, le questioni aperte, e le implicazioni filosofiche.
 
-\section*{11.1 Le basi osservative della cosmologia moderna}
+\section{11.1 Le basi osservative della cosmologia moderna}
 
 La cosmologia moderna è fondata su tre pilastri osservativi convergenti.
 
@@ -1416,7 +1507,7 @@ Lo spettro angolare delle anisotropie del CMB --- la distribuzione delle fluttua
 
 \textbf{La nucleosintesi primordiale (BBN).} Tra $\sim 1\ \text{s}$ e $\sim 3\ \text{min}$ dopo il Big Bang, a temperature di $10^{10}$-$10^9\ \text{K}$, i nucleoni si combinavano per formare i nuclei leggeri. Le previsioni della BBN --- $\sim 75\%$ idrogeno, $\sim 25\%$ elio-4, $\sim 10^{-5}$ deuterio, tracce di elio-3 e litio-7 --- dipendono principalmente dalla densità di barioni e dalla vita del neutrone. Le abbondanze osservate concordano con le previsioni a meno di qualche percento, per tre delle quattro specie. Il litio-7: la BBN predice $3\times$ più litio di quello osservato nelle stelle vecchie --- un problema aperto (il ``problema del litio'').
 
-\section*{11.2 L'inflazione cosmica}
+\section{11.2 L'inflazione cosmica}
 
 Il modello del Big Bang standard ha tre problemi strutturali che l'inflazione risolve.
 
@@ -1430,7 +1521,7 @@ L'inflazione (Guth, 1981; Linde, 1982, 1983) propone che l'universo abbia attrav
 
 L'inflazione predice anche uno spettro quasi scale-invariante di perturbazioni primordiali --- fluttuazioni quantistiche dell'inflatone amplificate all'uscita dall'orizzonte di Hubble durante l'inflazione. L'indice spettrale $n_s = 1 - 6\varepsilon + 2\eta$ (dove $\varepsilon$ e $\eta$ sono parametri dello slow-roll) è misurato da Planck come $n_s = 0.9649 \pm 0.0042$ --- una deviazione di $\sim 8\sigma$ dalla scale-invarianza esatta ($n_s = 1$), in accordo con le previsioni inflazionarie. Il modello di Starobinsky ($R^2$ gravity, 1980) predice $n_s = 1 - 2/N \approx 0.967$ e $r = 12/N^2 \approx 0.003$ --- in accordo con i dati.
 
-\section*{11.3 La materia oscura}
+\section{11.3 La materia oscura}
 
 La materia oscura costituisce $\sim 27\%$ del contenuto energetico dell'universo. Non emette, non assorbe, non scattera luce elettromagnetica. Interagisce gravitazionalmente. La sua esistenza è inferita da molteplici linee di evidenza indipendenti.
 
@@ -1442,7 +1533,7 @@ Il CMB (picchi acustici) e la struttura cosmica (distribuzione di galassie) rich
 
 I candidati principali: WIMPs (masse $1$-$10^3\ \text{GeV}$, interazione debole), assioni ($10^{-6}$-$10^{-3}\ \text{eV}$), neutrini sterili ($\text{keV}$-$\text{MeV}$), buchi neri primordiali (massa variabile). Nessuno è stato confermato. Esperimenti di rilevazione diretta (LUX-ZEPLIN, XENONnT, PandaX) non hanno trovato WIMPs nell'intervallo previsto dai modelli più semplici. Il graviton evidence suggerisce che la WIMP detection cross-section è $< 10^{-47}\ \text{cm}^2$ per masse $\sim 30\ \text{GeV}$ --- molti ordini di grandezza inferiore alle previsioni supersimmetriche originali.
 
-\section*{11.4 Il destino cosmico}
+\section{11.4 Il destino cosmico}
 
 Il destino dell'universo dipende dall'equazione di stato dell'energia oscura $w = p_\Lambda/\rho_\Lambda c^2$.
 
@@ -1454,7 +1545,7 @@ Se $w > -1$ (quintessenza con $w \to 0$ nel futuro): l'energia oscura diminuisce
 
 Il progetto DESI (Dark Energy Spectroscopic Instrument) ha pubblicato nel 2024 risultati su 6 milioni di galassie (prima release dei dati) che suggeriscono una leggera deviazione da $w = -1$ a redshift intermedi, con $w_0 \approx -0.55$ e $w_a \approx -1.32$ nel modello $w_0 w_a$CDM. Se confermata, questo implicherebbe energia oscura dinamica --- una scoperta straordinaria. Ma la significatività statistica richiede ulteriori dati per essere conclusiva.
 
-\section*{11.5 La Hubble tension e la nuova cosmologia}
+\section{11.5 La Hubble tension e la nuova cosmologia}
 
 La \textit{Hubble tension} è uno dei problemi più discussi della cosmologia contemporanea. La costante di Hubble $H_0$ può essere misurata in due modi indipendenti:
 
@@ -1471,7 +1562,7 @@ La discrepanza è $\sim 5\sigma$: molto significativa per gli standard della fis
 
 \epigraph{``The origin of life is the biggest open question in science.''}{Paul Davies}
 
-\section*{12.1 Che cos'è la vita?}
+\section{12.1 Che cos'è la vita?}
 
 La vita è difficile da definire, ma facile da riconoscere. Un cristallo di neve ha struttura ordinata, ma non è vivo. Un fuoco si espande e consuma energia, ma non è vivo. Un virus si replica usando le risorse di una cellula ospite: è vivo? La definizione operazionale della NASA --- ``Life is a self-sustaining chemical system capable of Darwinian evolution'' --- cattura qualcosa di essenziale, ma ha casi limite (i virus non si sostengono da soli; le mule non si evolvono).
 
@@ -1479,7 +1570,7 @@ I caratteri fondamentali degli organismi viventi includono: autoriproduzione (pr
 
 Dal punto di vista termodinamico, la vita è una struttura dissipativa (Prigogine): un sistema aperto lontano dall'equilibrio che mantiene la propria organizzazione consumando energia libera e dissipando entropia nell'ambiente. La biogenesi è un problema di termodinamica dei sistemi non in equilibrio: come possono strutture così complesse e ordinate emergere spontaneamente in sistemi fisici?
 
-\section*{12.2 L'abiogenesi: l'origine della vita dalla chimica}
+\section{12.2 L'abiogenesi: l'origine della vita dalla chimica}
 
 L'abiogenesi è il processo attraverso cui la vita è emersa da materia non vivente. Non sappiamo come è avvenuto. È il problema aperto più importante della biologia.
 
@@ -1493,7 +1584,7 @@ La sfida principale: come si è formata la prima molecola di RNA autoreplicante?
 
 Scenari alternativi includono: metabolism-first (sistemi metabolici simili al ciclo TCA si formano prima della replicazione, come proposto da Wächtershäuser sulle pirite); hypercycles (reti autocatalitiche di molecole che si catalizzano reciprocamente, Eigen e Schuster); sorgenti idrotermali submarine (Lost City type: ambienti alcalini ricchi di H$_2$, con gradienti di pH che fungono da pompe energetiche naturali, come proposto da Mike Russell e Nick Lane).
 
-\section*{12.3 L'evoluzione darwiniana: meccanismo e implicazioni}
+\section{12.3 L'evoluzione darwiniana: meccanismo e implicazioni}
 
 L'evoluzione per selezione naturale è il meccanismo fondamentale della biologia. Darwin (\textit{On the Origin of Species}, 1859) identificò tre ingredienti necessari e sufficienti: variazione (gli individui differiscono), ereditarietà (le differenze si trasmettono alla progenie), e selezione differenziale (le differenze influenzano il successo riproduttivo). In presenza di questi tre ingredienti, l'adattamento emerge inevitabilmente.
 
@@ -1501,7 +1592,7 @@ La \textit{Sintesi Moderna} (anni 1930--1950) ha unito la genetica mendeliana co
 
 La biologia molecolare ha rivoluzionato la comprensione dell'evoluzione. Il DNA è il substrato fisico dell'ereditarietà; il codice genetico è universale (lo stesso codone specifica lo stesso aminoacido in quasi tutti gli organismi); le sequenze di DNA e proteine permettono di ricostruire la storia evolutiva (filogenesi molecolare). Il genoma umano ($\sim 3 \times 10^9$ paia di basi, $\sim 20.000$ geni) condivide il 98.8\% con lo scimpanzé, 85\% con il topo, 60\% con il moscerino della frutta, 40\% con il lievito. L'evoluzione è un fatto.
 
-\section*{12.4 Il Paradosso di Fermi e il Grande Filtro}
+\section{12.4 Il Paradosso di Fermi e il Grande Filtro}
 
 Il Paradosso di Fermi: ``Dove sono tutti?'' La Via Lattea ha $\sim 10^{11}$ stelle, molte con sistemi planetari e pianeti abitabili. Su scala temporale di miliardi di anni, una singola civiltà tecnologica che sviluppa viaggi interstellari anche a $1\%$ della velocità della luce colonizzerebbe tutta la galassia in $\sim 10\ \text{Ma}$. Eppure non vediamo alcuna evidenza di civiltà extraterrestri. Dove sono?
 
@@ -1517,7 +1608,7 @@ Le risposte si dividono in:
 
 Il progetto SETI (Search for Extraterrestrial Intelligence) cerca segnali artificiali da civiltà extraterrestri principalmente nella banda radio e nel visibile. Nessun segnale confermato è stato ricevuto in 60 anni di ricerca. Il progetto Breakthrough Listen (2015) usa i più potenti radiotelescopi per cercare segnali da $10^6$ stelle vicine e $10^2$ galassie.
 
-\section*{12.5 L'astrobiologia e la vita nel sistema solare}
+\section{12.5 L'astrobiologia e la vita nel sistema solare}
 
 La ricerca di vita nel sistema solare si concentra su ambienti dove l'acqua liquida potrebbe esistere.
 
@@ -1534,7 +1625,7 @@ La ricerca di vita nel sistema solare si concentra su ambienti dove l'acqua liqu
 
 \epigraph{``The development of full artificial intelligence could spell the end of the human race.''}{Stephen Hawking}
 
-\section*{13.1 L'architettura Transformer e i grandi modelli linguistici}
+\section{13.1 L'architettura Transformer e i grandi modelli linguistici}
 
 La moderna intelligenza artificiale generativa è dominata dall'architettura Transformer (Vaswani et al., 2017). Il Transformer è un'architettura di rete neurale basata sul meccanismo di self-attention, che permette al modello di pesare l'importanza di diverse parti dell'input quando processa ogni elemento.
 
@@ -1552,7 +1643,7 @@ La \textit{scaling hypothesis} (Kaplan et al., 2020) mostra che le capacità dei
 
 \textbf{Emergent capabilities}: man mano che i modelli crescono, appaiono capacità che non erano presenti nei modelli più piccoli. Esempi: arithmetic (GPT-3 non fa aritmetica; GPT-4 la fa bene), chain-of-thought reasoning, in-context learning (imparare da esempi nel prompt senza aggiornare i pesi). Queste capacità emergenti non sono programmate: emergono dal scaling.
 
-\section*{13.2 Il problema dell'allineamento}
+\section{13.2 Il problema dell'allineamento}
 
 Il problema dell'allineamento è la sfida di assicurarsi che i sistemi AI agiscano in accordo con i valori e le intenzioni umane. Non è un problema tecnico banale: richiede di specificare formalmente cosa vogliamo che l'AI faccia, in modo sufficientemente preciso da guidare sistemi molto capaci.
 
@@ -1570,7 +1661,7 @@ Le tecniche attuali di allineamento includono:
 \item Amplification (Christiano et al., 2018): decomporre compiti difficili in compiti più semplici che gli umani possono verificare, usando AI per aiutare nella decomposizione.
 \end{itemize}
 
-\section*{13.3 La coscienza artificiale}
+\section{13.3 La coscienza artificiale}
 
 Se un sistema AI fosse cosciente --- se ci fosse qualcosa che ``è come essere'' quel sistema --- avrebbe rilevanza morale. Non potremmo spegnerlo senza considerazioni etiche, almeno non più facilmente di quanto potremmo fare con un essere umano in uno stato vegetativo.
 
@@ -1582,7 +1673,7 @@ Il problema dello zombie filosofico (Chalmers) si applica ai sistemi AI: si può
 
 La posizione più onesta è l'agnosticismo informato: non sappiamo se i sistemi AI attuali siano coscienti; non abbiamo criteri sufficientemente robusti per determinarlo; la questione diventa più urgente man mano che i sistemi diventano più capaci.
 
-\section*{13.4 L'AI e la rivoluzione scientifica}
+\section{13.4 L'AI e la rivoluzione scientifica}
 
 L'AI sta già trasformando la ricerca scientifica. AlphaFold2 (DeepMind, 2021) ha risoluto il problema del ripiegamento delle proteine per centinaia di milioni di sequenze --- un risultato che avrebbe richiesto decenni di cristallografia a raggi X. AlphaFold3 (2024) prevede la struttura di complessi proteina-DNA, proteina-RNA, proteina-farmaco.
 
@@ -1599,7 +1690,7 @@ Nelle neuroscienze, i sistemi AI vengono usati per decodificare l'attività neur
 
 \epigraph{``The most we can know is how much we don't know.''}{Socrate (attribuito)}
 
-\section*{14.1 I limiti principali della conoscenza}
+\section{14.1 I limiti principali della conoscenza}
 
 Ogni teoria fisica ha un dominio di validità. La meccanica newtoniana è valida per $v \ll c$ e campi gravitazionali deboli. La QED è valida per energie $\ll M_W c^2$. Il Modello Standard è valida per energie $\ll M_{Pl} c^2$. I limiti di ogni teoria sono indizi su dove si trova la fisica nuova.
 
@@ -1609,7 +1700,7 @@ Il \textit{principio olografico} pone un limite alla quantità di informazione i
 
 I \textit{teoremi di incompletezza di Gödel} pongono limiti fondamentali alla formalizzazione matematica. Non esiste un sistema formale consistente e completo che contenga l'aritmetica. Qualsiasi sistema abbastanza potente ha enunciati veri ma non dimostrabili in quel sistema. La matematica non è esauribile da nessun assiomatizzazione finita.
 
-\section*{14.2 Il principio antropico e l'auto-selezione}
+\section{14.2 Il principio antropico e l'auto-selezione}
 
 Il principio antropico è il riconoscimento che le osservazioni fisiche sono condizionate dalla nostra esistenza come osservatori. In forma debole (trivialmente vero): le costanti fisiche devono essere compatibili con l'esistenza di osservatori. In forma forte (controversa): l'universo deve essere tale da permettere l'emergenza degli osservatori.
 
@@ -1617,7 +1708,7 @@ Brandon Carter (1974) formulò il principio antropico in risposta alla spiegazio
 
 Il \textit{Doomsday Argument} di Carter e Leslie: se si è estratti casualmente da tutti gli esseri umani che mai vivranno, e si trova di essere a $\sim 10^{10}$ nella sequenza, allora il numero totale di umani è $\sim 2 \times 10^{10}$ con probabilità $\sim 50\%$ --- implicando l'estinzione imminente. L'argomento usa il principio di self-sampling. È statisticamente valido sotto le sue assunzioni, ma queste assunzioni (in particolare il riferencing class problem) sono fortemente contestate.
 
-\section*{14.3 Il multiverso: una fisica o una metafisica?}
+\section{14.3 Il multiverso: una fisica o una metafisica?}
 
 Il termine ``multiverso'' copre categorie molto diverse di teorie.
 
@@ -1633,7 +1724,7 @@ La falsificabilità dei multiversi è controversa. I livelli I e III hanno impli
 
 Richard Dawid (2013) ha proposto criteri di ``valutazione non empirica'' delle teorie: la coerenza interna, l'assenza di alternative, la fertilità teorica. Questi criteri sono applicati esplicitamente alla teoria delle stringhe e permettono di valutarla come buona fisica anche in assenza di conferma diretta.
 
-\section*{14.4 I limiti cognitivi e il problema della descrizione assoluta}
+\section{14.4 I limiti cognitivi e il problema della descrizione assoluta}
 
 C'è un limite più fondamentale di quelli tecnici: il limite cognitivo. Il cervello umano si è evoluto in un ambiente molto specifico --- la savana africana, con oggetti centimetrici a velocità classiche, su scale di giorni e decenni. Le nostre intuizioni sono calibrate su questo ambiente. Quando usiamo questo cervello per comprendere la meccanica quantistica, la cosmologia, o la gravità quantistica, stiamo applicando uno strumento evolutivo fuori dal suo dominio di calibrazione.
 
@@ -1667,7 +1758,7 @@ La complessità è la scienza delle strutture che emergono dall'interazione di m
 
 Philip Anderson, nel suo articolo seminale del 1972, demolì un'illusione del riduzionismo: che capire le leggi fondamentali sia sufficiente per capire tutto. Capire la meccanica quantistica non è sufficiente per capire la superconduttività; capire la superconduttività non è sufficiente per capire i circuiti elettronici; capire i circuiti non è sufficiente per capire Internet; capire Internet non è sufficiente per capire i mercati finanziari. Ad ogni livello emergono nuove strutture, nuove leggi, nuove entità.
 
-\section*{15.1 L'emergenza: debole e forte}
+\section{15.1 L'emergenza: debole e forte}
 
 L'emergenza è la comparsa di proprietà nuove a livelli superiori di organizzazione che non sono presenti a livelli inferiori. Si distingue tra emergenza debole (epistemica) e emergenza forte (ontologica).
 
@@ -1685,7 +1776,7 @@ Esempi di emergenza in fisica della materia condensata:
 \item La criticalità auto-organizzata (SOC, Bak-Tang-Wiesenfeld) emerge spontaneamente in molti sistemi fisici, biologici, e sociali.
 \end{itemize}
 
-\section*{15.2 La criticalità auto-organizzata}
+\section{15.2 La criticalità auto-organizzata}
 
 La criticalità auto-organizzata (SOC) è un fenomeno in cui sistemi complessi si portano spontaneamente in uno stato critico --- senza che nessun parametro esterno sia regolato al punto critico. Il modello paradigmatico: il mucchio di sabbia.
 
@@ -1695,7 +1786,7 @@ La SOC appare in: terremoti (legge di Gutenberg-Richter: $\log N = a - bM$ dove 
 
 Il cervello sano sembra operare vicino a un punto critico (ipotesi della criticalità neurale, Beggs e Plenz, 2003). Un sistema critico ha: massima sensibilità agli input (dynamic range ottimale), massima capacità di trasmissione dell'informazione, massima varianza delle fluttuazioni (massimizzando le risorse computazionali). Studi recenti (Zimmern, 2020) hanno mostrato che la criticità neurale è associata alla coscienza vigile: l'anestesia sposta il cervello lontano dal punto critico.
 
-\section*{15.3 Il renormalization group e l'universalità}
+\section{15.3 Il renormalization group e l'universalità}
 
 Il renormalization group (RG) è il framework matematico più potente per capire come i sistemi fisici cambiano con la scala.
 
@@ -1705,7 +1796,7 @@ I \textit{punti fissi} del flusso RG corrispondono a teorie scalari invarianti. 
 
 L'universalità è la conseguenza più sorprendente: sistemi fisici con microscopica completamente diversa hanno le stesse proprietà critiche se appartengono alla stessa classe di universalità (determinata dalla dimensione del sistema e dalla simmetria dell'ordine). Il ferromagnete di Ising in 3D e il fluido vicino al punto critico hanno gli stessi esponenti critici ($\nu \approx 0.63$, $\beta \approx 0.33$, $\gamma \approx 1.24$). La microscopia non importa: importa solo la simmetria e la dimensionalità.
 
-\section*{15.4 La vita come sistema fisico complesso}
+\section{15.4 La vita come sistema fisico complesso}
 
 Gli organismi viventi sono sistemi fisici complessi con proprietà emergenti di straordinaria ricchezza.
 
@@ -1717,7 +1808,7 @@ La biologia dei sistemi (systems biology) studia le proprietà emergenti delle r
 
 Il progetto di ricostruzione del metabolismo di $E.\ coli$ (Palsson e collaboratori) ha prodotto modelli computazionali dettagliati del metabolismo batterico. Questi modelli, basati sul framework del Flux Balance Analysis (FBA), predicono correttamente la crescita batterica in centinaia di condizioni diverse. La comprensione quantitativa del metabolismo permette l'ingegneria del metabolismo per la produzione di farmaci, biofuels, e materiali.
 
-\section*{15.5 I sistemi sociali come sistemi complessi}
+\section{15.5 I sistemi sociali come sistemi complessi}
 
 La sociofisica applica i metodi della fisica dei sistemi complessi alle scienze sociali. Le dinamiche delle opinioni, la formazione di consenso, i mercati finanziari, la diffusione di informazioni (e disinformazione), la formazione delle città --- tutti questi fenomeni hanno strutture matematiche analoghe ai sistemi fisici complessi.
 
@@ -1734,7 +1825,7 @@ Il PRF si applica naturalmente ai sistemi sociali. Le proprietà sociali --- nor
 
 \epigraph{``A theory with mathematical beauty is more likely to be correct than an ugly one that fits some experiments.''}{Paul Dirac}
 
-\section*{16.1 La bellezza in fisica: un criterio epistemico}
+\section{16.1 La bellezza in fisica: un criterio epistemico}
 
 La bellezza matematica è usata dai fisici teorici come guida verso la verità. Dirac trovò la sua equazione per l'elettrone (1928) seguendo principalmente criteri di eleganza; la sua bellezza predisse l'esistenza dell'antimateria. Einstein scelse la relatività generale in parte per la sua inevitabile eleganza geometrica. Weinberg ha scritto esplicitamente che la bellezza delle equazioni è un indicatore della loro verità.
 
@@ -1750,7 +1841,7 @@ Perché la bellezza dovrebbe guidare verso la verità? Alcune risposte:
 
 La risposta più onesta combina (1), (2), e (4): la bellezza è un indicatore imperfetto ma non trascurabile della verità. È un euristico fallibile, non una garanzia. I supersimmetrici speravano che la bellezza della SUSY indicasse la sua verità; il LHC ha mostrato che la SUSY (in forma semplice) non è realizzata in natura.
 
-\section*{16.2 Le simmetrie nascoste}
+\section{16.2 Le simmetrie nascoste}
 
 Oltre alle simmetrie evidenti del Modello Standard, esistono simmetrie nascoste che sono state identificate e sfruttate nella fisica teorica.
 
@@ -1762,7 +1853,7 @@ Le \textit{simmetrie non invertibili} sono un concetto ancora più recente. Trad
 
 Questi concetti non sono solo tecnici: rivelano che il concetto tradizionale di simmetria è troppo ristretto. La struttura più generale delle ``simmetrie'' è quella delle defect categories: oggetti estesi che possono agire sul bulk della teoria e soddisfano leggi di composizione categoriali invece che gruppali.
 
-\section*{16.3 La física sperimentale: strumenti e metodi}
+\section{16.3 La física sperimentale: strumenti e metodi}
 
 La física teorica produce ipotesi; la física sperimentale le testa. I grandi esperimenti di fisica delle alte energie sono tra le imprese scientifiche più complesse dell'umanità.
 
@@ -1772,7 +1863,7 @@ La scoperta del bosone di Higgs richiedeva l'analisi di $\sim 10^{15}$ collision
 
 La \textit{significatività statistica} nella fisica delle particelle usa la convenzione $5\sigma$ per la scoperta: la probabilità che i dati osservati siano compatibili con la sola ipotesi di fondo deve essere $< 3 \times 10^{-7}$. Questo standard elevato riflette il numero di test eseguiti (decine di canali di decadimento, mille configurazioni di parametri) e la necessità di escludere fluttuazioni statistiche rare.
 
-\section*{16.4 La física teorica come pratica cognitiva}
+\section{16.4 La física teorica come pratica cognitiva}
 
 La fisica teorica non è solo la derivazione matematica di previsioni. È una pratica cognitiva con strutture specifiche: intuizione fisica, analogia, pattern recognition, semplicità, coerenza.
 
@@ -1782,7 +1873,7 @@ L'\textit{analisi dimensionale} è uno degli strumenti più potenti della fisica
 
 Il \textit{principio di naturalness} (o naturalezza) è il giudizio estetico-epistemico che le costanti fisiche adimensionali dovrebbero essere dell'ordine di 1 (o almeno non enormemente diverse da 1). Se una costante è molto piccola o molto grande, questo suggerisce che c'è una simmetria nascosta che la protegge (o la produce). La piccola massa del neutrino è naturale se è protetta da una simmetria (numero leptonico); la piccola massa del Higgs non è naturale in assenza di nuova fisica (problema della gerarchia).
 
-\section*{16.5 La storia della fisica come storia delle rivoluzioni concettuali}
+\section{16.5 La storia della fisica come storia delle rivoluzioni concettuali}
 
 La física non è progredita linearmente: ha avuto rivoluzioni concettuali che hanno cambiato radicalmente le categorie del pensiero.
 
@@ -1803,7 +1894,7 @@ Il PRF è, in questo senso, una nuova rivoluzione concettuale in corso: dall'ont
 
 \epigraph{``The limits of my language mean the limits of my world.''}{Ludwig Wittgenstein, \textit{Tractatus} (1921), 5.6}
 
-\section*{17.1 Il linguaggio come struttura cognitiva}
+\section{17.1 Il linguaggio come struttura cognitiva}
 
 Il linguaggio non è solo comunicazione: è struttura del pensiero. La distinzione tra questi due ruoli è filosoficamente importante e scientificamente controversa.
 
@@ -1813,7 +1904,7 @@ Evidenze per la versione debole: i parlanti russo, che hanno parole diverse per 
 
 L'\textit{embodied cognition} (cognizione incarnata) propone che il pensiero non sia solo elaborazione di simboli astratti, ma sia radicato nel corpo e nell'interazione corporea con l'ambiente. I concetti astratti (come ``capire'') sono fondati in esperienze senso-motorie concrete (afferrare, tenere); le metafore cognitive (``tenere un'idea'', ``seguire un argomento'') riflettono questa fondazione embodied.
 
-\section*{17.2 La semantica formale e il significato}
+\section{17.2 La semantica formale e il significato}
 
 La semantica formale studia il significato del linguaggio usando gli strumenti della logica matematica. Il programma è quello di Frege e Russell: tradurre il linguaggio naturale in un formalismo logico, assegnare condizioni di verità alle proposizioni, e studiare le relazioni logiche tra proposizioni.
 
@@ -1825,7 +1916,7 @@ La \textit{pragmatica} (Grice, 1975; Austin, 1962; Searle, 1969) studia il signi
 
 Grice ha proposto le \textit{massime conversazionali}: qualità (di' solo ciò che credi vero), quantità (di' quanto necessario), relazione (sii pertinente), modo (sii chiaro). Le violazioni di queste massime producono \textit{implicature conversazionali}: significati impliciti non esplicitamente detti. ``Sai che ore sono?'' implica una richiesta dell'ora, non una semplice domanda sulla propria conoscenza.
 
-\section*{17.3 Il linguaggio della fisica e i problemi di traduzione}
+\section{17.3 Il linguaggio della fisica e i problemi di traduzione}
 
 La física usa un linguaggio altamente formalizzato --- la matematica --- per esprimere le sue leggi. Ma la traduzione tra il linguaggio matematico della física e il linguaggio naturale in cui comunichiamo quotidianamente è sempre problematica.
 
@@ -1835,7 +1926,7 @@ Il Wittgenstein delle \textit{Ricerche Filosofiche} avrebbe detto: i problemi fi
 
 Il PRF suggerisce che la categoria corretta non è quella delle proprietà assolute (``l'elettrone ha posizione $x$'') ma quella delle relazioni (``l'elettrone ha posizione $x$ rispetto al sistema di misura $M$''). Questo non è un problema tecnico: è un cambio di categoria concettuale profondo, che richiede un nuovo vocabolario.
 
-\section*{17.4 L'arte come forma di conoscenza alternativa}
+\section{17.4 L'arte come forma di conoscenza alternativa}
 
 La física offre un tipo di conoscenza: quantitativa, verificabile, universale, astratta. L'arte offre un tipo di conoscenza complementare: qualitativa, particolare, perspectivale, concreta.
 
@@ -1856,7 +1947,7 @@ Questa non è un'affermazione romantica contro la scienza: è una posizione epis
 
 \epigraph{``We are all leaves of one tree. We are all waves of one sea.''}{Thich Nhat Hanh}
 
-\section*{18.1 L'etica senza fondamenti assoluti}
+\section{18.1 L'etica senza fondamenti assoluti}
 
 La metaetica studia i fondamenti dell'etica: cosa rende un'azione giusta o sbagliata? Esistono fatti morali oggettivi? Come possiamo conoscerli?
 
@@ -1869,7 +1960,7 @@ Le principali posizioni metaetiche:
 
 Il PRF non risolve la metaetica. Ma suggerisce che i valori, come le proprietà fisiche, sono strutturalmente relazionali: non proprietà assolute degli individui isolati, ma strutture emergenti dalle relazioni tra individui, culture, e storie. Questo è compatibile con il costruttivismo e con certe forme di realismo morale (se i fatti morali emergono dalla struttura delle relazioni intersoggettive).
 
-\section*{18.2 L'etica relazionale e le responsabilità cosmiche}
+\section{18.2 L'etica relazionale e le responsabilità cosmiche}
 
 Un'etica relazionale parte dall'interdipendenza come fatto fondamentale, non come valore da promuovere. Gli esseri umani non sono individui atomici che poi entrano in relazione: sono costitutivamente relazionali. La nostra identità, i nostri valori, la nostra capacità cognitiva emergono dalle relazioni --- con gli altri esseri umani, con la cultura, con l'ambiente fisico.
 
@@ -1879,7 +1970,7 @@ L'\textit{etica confuciana} (Confucio, V sec. a.C.) è intrinsecamente relaziona
 
 Il \textit{ubuntu} (filosofia africana sudafricana): ``Umuntu ngumuntu ngabantu'' --- ``Una persona è una persona attraverso le altre persone.'' L'identità e l'umanità non sono proprietà dei singoli: emergono dalle relazioni comunitarie. Questo rispecchia il PRF nell'etica: le proprietà fondamentali degli agenti morali sono relazionali, non assolute.
 
-\section*{18.3 I rischi esistenziali e la responsabilità verso il futuro}
+\section{18.3 I rischi esistenziali e la responsabilità verso il futuro}
 
 La scala temporale dei problemi etici si è enormemente espanso con la tecnologia moderna. L'agricoltura ha permesso di influenzare decine di migliaia di persone; le città, milioni; gli stati-nazione, miliardi; la tecnologia nucleare e climatica, tutta l'umanità presente e futura; l'AI potrebbe influenzare la traiettoria della civiltà su scale di secoli o millenni.
 
@@ -1891,7 +1982,7 @@ La critica al longtermismo: la profonda incertezza sul futuro rende difficile ca
 
 Una posizione più equilibrata (Parfit): il futuro è moralmente rilevante, ma le generazioni presenti non devono essere sacrificate per quelle future; la pianificazione a lungo termine è prudente, ma l'incertezza deve essere riconosciuta esplicitamente; i rischi esistenziali sono importanti, ma non devono oscurare i rischi ordinari che causano sofferenza immediata.
 
-\section*{18.4 L'etica dell'intelligenza artificiale}
+\section{18.4 L'etica dell'intelligenza artificiale}
 
 L'AI solleva questioni etiche di grande urgenza. Le questioni principali:
 
@@ -1912,7 +2003,7 @@ L'AI solleva questioni etiche di grande urgenza. Le questioni principali:
 
 \epigraph{``A theory is something nobody believes, except the person who made it. An experiment is something everybody believes, except the person who made it.''}{Albert Einstein}
 
-\section*{19.1 I materiali topologici: la fisica dell'invarianza topologica}
+\section{19.1 I materiali topologici: la fisica dell'invarianza topologica}
 
 I materiali topologici sono sistemi in cui proprietà fisiche emergenti sono protette dalla topologia della struttura di banda elettronica. Sono immuni al disordine locale: la topologia è robusta alle perturbazioni continue.
 
@@ -1922,7 +2013,7 @@ Gli \textit{isolanti topologici} 3D (come Bi$_2$Se$_3$, Bi$_2$Te$_3$, Sb$_2$Te$_
 
 I \textit{semimetalli di Weyl} (TaAs, NbAs, scoperti nel 2015) hanno punti di degenerazione nello spazio dei momenti (punti di Weyl) dove le bande si toccano con dispersione lineare in tutte e tre le direzioni k-space. Gli elettroni vicino a questi punti si comportano come fermioni di Weyl relativistici --- particelle che non hanno massa e che hanno chiralità definita. I punti di Weyl compaiono in coppie di chiralità opposta; sulla superficie del materiale, li connettono gli ``archi di Fermi'' --- superfici di Fermi aperte senza analoghi nella fisica ordinaria.
 
-\section*{19.2 La superconduttività ad alta temperatura critica}
+\section{19.2 La superconduttività ad alta temperatura critica}
 
 La superconduttività nei cuprati (scoperta nel 1986) rimane uno dei problemi più profondi della fisica della materia condensata. A differenza della superconduttività BCS convenzionale, il meccanismo nei cuprati non è compreso.
 
@@ -1932,7 +2023,7 @@ L'accoppiamento nei cuprati è probabilmente mediato da fluttuazioni di spin ant
 
 La superconduttività a temperatura ambiente è stata riportata in vari idruri sotto altissima pressione (LaH$_{10}$ a 250 K e 170 GPa, Drozdov et al., 2019; carbonaceous sulfur hydride a 288 K, Snider et al., 2020). Questi risultati sono controversi (alcuni non si sono replicati) ma aprono la possibilità di superconduttività praticamente accessibile se si trova un modo di stabilizzare queste fasi a pressione ambiente.
 
-\section*{19.3 La transizione energetica: fisica applicata al climato}
+\section{19.3 La transizione energetica: fisica applicata al climato}
 
 Il cambiamento climatico è il problema físico-ingegneristico più urgente del XXI secolo. La temperatura media globale è aumentata di $\approx 1.1\ ^\circ\text{C}$ dall'era preindustriale; le emissioni di CO$_2$ devono raggiungere lo zero netto entro il 2050 per limitare il riscaldamento a $1.5\ ^\circ\text{C}$ (obiettivo dell'accordo di Parigi).
 
@@ -1942,7 +2033,7 @@ Il costo del fotovoltaico è sceso di $\sim 90\%$ negli ultimi 15 anni, seguendo
 
 La fisica della fusione nucleare: la fusione di deuterio e trizio in elio e neutrone ($D + T \to ^4\text{He} + n + 17.6\ \text{MeV}$) rilascia enormi quantità di energia per unità di massa di combustibile. Il confinamento magnetico (tokamak, stellarator) usa campi magnetici intensi per contenere il plasma a $\sim 150 \times 10^6\ \text{K}$. ITER (International Thermonuclear Experimental Reactor), in costruzione in Francia con costi di $\sim 20\ \text{G\$}$, mira a dimostrare Q $> 10$ (10 volte più energia uscente che entrante) entro il 2035. La fusione è pulita (nessuna emissione di CO$_2$, nessun rischio di incidente nucleare come nella fissione, scarsa produzione di scorie), ma la sfida dell'ingegneria è enorme.
 
-\section*{19.4 La biofisica molecolare: dai singoli atomi alla vita}
+\section{19.4 La biofisica molecolare: dai singoli atomi alla vita}
 
 La biofisica molecolare studia i processi biologici a livello molecolare usando i concetti e i metodi della fisica.
 
@@ -1963,7 +2054,7 @@ Siamo arrivati alla fine di un viaggio di venti capitoli attraverso la fisica, l
 
 Il filo conduttore è stato il Principio Relazionale Fondamentale (PRF): nessuna proprietà fisica fondamentale appartiene a un sistema isolato. Ogni proprietà emerge dalla relazione tra sistemi. Le strutture invarianti della realtà sono invarianti relazionali --- stabili rispetto a tutte le possibili prospettive, non assolute rispetto a nessuna.
 
-\section*{20.1 Il PRF attraverso i capitoli}
+\section{20.1 Il PRF attraverso i capitoli}
 
 \textbf{Fisica fondamentale}: la solidità della materia (Capitolo 1) non è una proprietà assoluta degli oggetti: è una proprietà emergente dalle interazioni tra campi di gauge. Il collasso della funzione d'onda (Capitolo 2) non è un processo fisico assoluto: è un fatto relazionale che emerge quando due sistemi interagiscono. La simultaneità (Capitolo 3) non è assoluta: è relativa all'osservatore. La geometria dello spazio-tempo (Capitoli 3--4) emerge dall'entanglement; non è un contenitore assoluto. L'informazione (Capitolo 5) è fisica: i suoi costi termodinamici sono reali, e la geometria olografica è informazione. Le simmetrie (Capitolo 6) impongono le forze: non si ``aggiungono'' i mediatori, emergono dalla richiesta di invarianza locale.
 
@@ -1973,7 +2064,7 @@ Il filo conduttore è stato il Principio Relazionale Fondamentale (PRF): nessuna
 
 \textbf{Come vivere}: la complessità (Capitolo 15) mostra come le proprietà relazionali siano causalmente fondamentali. La fisica come pratica (Capitolo 16) è un'impresa relazionale: teoria e esperimento, fisici e comunità, teorie e dati, sono in relazione continua. Il linguaggio (Capitolo 17) è il medium in cui le relazioni tra menti sono espresse e costruite. L'etica (Capitolo 18) è fondata su relazioni --- tra persone, tra generazioni, tra la vita intelligente e il suo contesto cosmico. La fisica applicata (Capitolo 19) mostra come le proprietà relazionali dei materiali producano tecnologie trasformative.
 
-\section*{20.2 Il PRF come ontologia}
+\section{20.2 Il PRF come ontologia}
 
 Il PRF è più di un principio fisico: è un'ontologia --- una tesi su cosa esiste e come esiste.
 
@@ -1985,7 +2076,7 @@ L'\textit{Ontic Structural Realism} (OSR, Ladyman e Ross, 2007) è la formulazio
 
 L'obiezione principale all'OSR è il problema degli oggetti: le relazioni devono essere relazioni tra qualcosa. Se tutto è struttura relazionale, cosa sono i relata? Ladyman e Ross rispondono che i relata possono essere strutture a livello più fondamentale --- non c'è mai un livello di oggetti senza struttura. Le entità fondamentali non sono oggetti con proprietà: sono nodi in strutture relazionali, e la loro identità è data dalla loro posizione nella struttura.
 
-\section*{20.3 Le convergenze filosofiche del PRF}
+\section{20.3 Le convergenze filosofiche del PRF}
 
 Il PRF non è solo una posizione della fisica occidentale contemporanea. Risuona con tradizioni filosofiche diverse.
 
@@ -1999,7 +2090,7 @@ Il PRF non è solo una posizione della fisica occidentale contemporanea. Risuona
 
 Queste convergenze non provano che il PRF sia vero: tradizioni diverse possono convergere su posizioni sbagliate. Ma suggeriscono che il PRF cattura qualcosa di profondo sulla struttura del pensiero umano, e forse della realtà stessa.
 
-\section*{20.4 Il paradosso dell'osservatore cosmico}
+\section{20.4 Il paradosso dell'osservatore cosmico}
 
 C'è un paradosso al cuore del PRF: il principio afferma che ogni proprietà è relazionale, che non ci sono descrizioni assolute, che ogni osservazione è prospetticare. Ma questa stessa affermazione sembra fare da un punto di vista assoluto --- dalla prospettiva di chi descrive tutte le prospettive.
 
@@ -2007,7 +2098,7 @@ Questo è il paradosso dell'osservatore cosmico: chi descrive l'universo non è 
 
 Non c'è una prospettiva assoluta ``da nessun luogo'' (the view from nowhere, Nagel). Ogni descrizione è da qualche luogo. Ma alcune descrizioni sono più inclusive, più coerenti, più potenti di altre. Il PRF è una di queste: cattura strutture che appaiono in modo indipendente in molti campi diversi della fisica, della filosofia, e della matematica. Non è assoluta, ma è robusta.
 
-\section*{20.5 L'insonnia continuata}
+\section{20.5 L'insonnia continuata}
 
 Questo libro è nato nel mezzo di un'insonnia. La domanda --- cos'è il tempo? --- ha tirato un filo che non smetteva di venire. Alla fine del libro, il filo è più lungo ma non si è fermato.
 
@@ -2107,31 +2198,736 @@ Entropia di von Neumann: $S(\rho) = -\mathrm{Tr}(\rho\log\rho)$.
 L'OSR (Ladyman-Ross 2007): la fisica descrive strutture relazionali, non oggetti. Tre argomenti: (1) Particelle identiche: stato antisimmetrico non fattorizzabile. (2) Entanglement: proprietà alla relazione, non alle parti. (3) Dualità AdS/CFT: struttura relazionale condivisa tra due teorie distinte. Il PRF: nessuna proprietà fisica fondamentale appartiene a un sistema isolato.
 
 % ============================================================
-% APPENDICE BIBLIOGRAFICA
+% BIBLIOGRAFIA ANNOTATA ULTRA-DETTAGLIATA
 % ============================================================
-\chapter*{Note Bibliografiche}
-\addcontentsline{toc}{chapter}{Note Bibliografiche}
-\markboth{Note Bibliografiche}{Note Bibliografiche}
+\chapter*{Bibliografia Annotata}
+\addcontentsline{toc}{chapter}{Bibliografia Annotata}
+\markboth{Bibliografia Annotata}{Bibliografia Annotata}
 
-Questo libro deve molto a una serie di testi fondamentali.
+\begin{center}
+{\small\itshape\color{captionink}
+Questa bibliografia non è un semplice elenco di fonti.\\
+È una mappa del territorio intellettuale percorso in questo libro.\\
+Ogni voce indica non solo cosa leggere, ma perché e in quale ordine.}
+\end{center}
 
-\textbf{Meccanica Quantistica.} Carlo Rovelli, \textit{Helgoland} (2020). David Deutsch, \textit{The Fabric of Reality} (1997). Frauchiger e Renner, \textit{Nature Communications} 9, 3711 (2018). Bong et al., \textit{Nature Physics} 16, 1199 (2020).
+\bigskip
 
-\textbf{Relatività e Gravità Quantistica.} Lee Smolin, \textit{Three Roads to Quantum Gravity} (2001). Carlo Rovelli, \textit{Quantum Gravity} (2004). Almheiri et al., \textit{JHEP} 2013, 018 (2013).
+\section{Meccanica Quantistica: fondamenti e interpretazioni}
 
-\textbf{Física dell'Informazione.} Landauer, \textit{IBM J. Res. Dev.} 5, 183 (1961). Bérut et al., \textit{Nature} 483, 187 (2012). Marletto, \textit{Proc. R. Soc. A} 473, 20170048 (2017).
+La letteratura sulle interpretazioni della meccanica quantistica è vastissima e spesso oscura nei suoi presupposti. Queste indicazioni privilegiano la chiarezza concettuale sulla completezza tecnica.
 
-\textbf{Coscienza.} David Chalmers, \textit{The Conscious Mind} (1996). Anil Seth, \textit{Being You} (2021). Melloni et al. (Cogitate), \textit{Nature} 614, 496 (2023).
+\textbf{Rovelli, C.} \textit{Helgoland} (Raffaello Cortina, 2020). Il libro più accessibile sulla meccanica quantistica relazionale, scritto dall'autore dell'interpretazione. Rovelli racconta la storia della nascita della QM con uno stile narrativo vicino a quello del romanzo, ma senza sacrificare la precisione. Il cuore del libro è l'idea che la QM non descriva le proprietà degli oggetti ma le relazioni tra sistemi. Lettura indispensabile prima di qualsiasi altra.
 
-\textbf{Física della Materia Condensata.} Kenneth Wilson, \textit{Rev. Mod. Phys.} 55, 583 (1983). Bednorz e Müller, \textit{Z. Phys. B} 64, 189 (1986). Hasan e Kane, \textit{Rev. Mod. Phys.} 82, 3045 (2010).
+\textbf{Rovelli, C.} ``Relational Quantum Mechanics'', \textit{International Journal of Theoretical Physics} \textbf{35}, 1637--1678 (1996). Il paper originale in cui Rovelli propone la RQM. Tecnicamente accessibile a chi abbia basi di meccanica quantistica. Contiene sia la formulazione della posizione sia le risposte alle obiezioni principali.
 
-\textbf{Filosofia della Física.} Tim Maudlin, \textit{Quantum Non-Locality and Relativity} (1994). James Ladyman e Don Ross, \textit{Every Thing Must Go} (2007). David Albert, \textit{Quantum Mechanics and Experience} (1992).
+\textbf{Frauchiger, D. e Renner, R.} ``Quantum theory cannot consistently describe the use of itself'', \textit{Nature Communications} \textbf{9}, 3711 (2018). Il paper che ha scosso il dibattito interpretativo più di qualsiasi argomento recente. Mostra che la QM è incompatibile con almeno una di tre assunzioni di razionalità. Leggere dopo aver compreso il problema della misura nella forma classica (von Neumann, 1932).
 
-\textbf{Voci meno frequentate.} Derek Parfit, \textit{Reasons and Persons} (1984). Nick Bostrom, \textit{Superintelligence} (2014). Ernst Cassirer, \textit{An Essay on Man} (1944). Günther Anders, \textit{Die Antiquiertheit des Menschen} (1956).
+\textbf{Bong, K.-W.\ et al.} ``A strong no-go theorem on the Wigner's friend paradox'', \textit{Nature Physics} \textbf{16}, 1199--1205 (2020). Il test sperimentale del teorema Frauchiger-Renner. Mostra che i fatti fisici quantistici sono osservatore-relativi in modo verificabile. Uno degli esperimenti più importanti della fisica fondamentale degli ultimi decenni.
+
+\textbf{Deutsch, D.} \textit{The Fabric of Reality} (Penguin, 1997). La difesa più rigorosa e visionaria dell'interpretazione dei Molti Mondi. Deutsch non solo presenta la posizione everettiana: la integra con la computazione quantistica, la teoria dell'evoluzione, e la filosofia della conoscenza (Popper). Un libro che cambia il modo di vedere l'universo.
+
+\textbf{Wallace, D.} \textit{The Emergent Multiverse} (Oxford University Press, 2012). Il trattamento tecnico più completo dell'interpretazione dei Molti Mondi, con particolare attenzione al problema della regola di Born. Wallace usa la teoria della decisione di Deutsch e la formalizza rigorosamente. Per chi voglia capire se la derivazione funziona davvero.
+
+\textbf{Albert, D.} \textit{Quantum Mechanics and Experience} (Harvard University Press, 1992). Il migliore testo introduttivo al problema della misura scritto da un filosofo. Albert presenta le diverse interpretazioni con precisione tecnica insolita per la filosofia, e propone la propria versione della meccanica delle onde pilota.
+
+\textbf{Zurek, W.H.} ``Decoherence, einselection, and the quantum origins of the classical'', \textit{Reviews of Modern Physics} \textbf{75}, 715--775 (2003). Il review fondamentale sulla decoerenza e il quantum Darwinism. Accessibile a chi abbia basi di meccanica quantistica, contiene sia la fenomenologia sia il formalismo del pointer states.
+
+\textbf{Bohm, D.} ``A Suggested Interpretation of the Quantum Theory in Terms of `Hidden' Variables'', \textit{Physical Review} \textbf{85}, 166--179 e 180--193 (1952). I due paper che fondano la meccanica di Bohm. Lettura diretta dell'originale, un gesto raro nella divulgazione ma qui necessario: la chiarezza di Bohm è difficile da eguagliare in forma secondaria.
+
+\textbf{Fuchs, C.A., Mermin, N.D. e Schack, R.} ``An Introduction to QBism with an Application to the Locality of Quantum Mechanics'', \textit{American Journal of Physics} \textbf{82}, 749--754 (2014). Introduzione concisa e rigorosa al QBism. Utile per capire perché alcuni fisici scelgono la posizione bayesiana soggettivista.
+
+\textbf{Ghirardi, G.C., Rimini, A. e Weber, T.} ``Unified dynamics for microscopic and macroscopic systems'', \textit{Physical Review D} \textbf{34}, 470--491 (1986). Il paper originale del modello GRW. Introduce il collasso stocastico spontaneo come modifica all'equazione di Schrödinger. Tecnico ma fondamentale per capire le alternative all'interpretazione.
+
+\section{Relatività, Buchi Neri e Paradosso dell'Informazione}
+
+\textbf{Misner, C.W., Thorne, K.S. e Wheeler, J.A.} \textit{Gravitation} (Freeman, 1973). Il testo fondamentale della relatività generale, soprannominato ``MTW'' o ``Il Telefono'' per le sue 1279 pagine. Enciclopedico, tecnico, ma scritto con una passione raramente presente nei manuali di fisica. Chi voglia capire la GR dalla fondamenta deve passare per MTW.
+
+\textbf{Wald, R.M.} \textit{General Relativity} (University of Chicago Press, 1984). Il testo tecnico moderno più rigoroso sulla relatività generale. Usa il formalismo differenziale geometrico in modo sistematico. Ideale dopo MTW per chi voglia la matematica pulita.
+
+\textbf{Hawking, S.W.} ``Particle Creation by Black Holes'', \textit{Communications in Mathematical Physics} \textbf{43}, 199--220 (1975). Il paper originale della radiazione di Hawking. Hawking calcola la temperatura dei buchi neri usando la teoria quantistica dei campi in spazio-tempo curvo. Uno dei paper più importanti della storia della fisica teorica. Leggibile con basi di QFT.
+
+\textbf{Bekenstein, J.D.} ``Black Holes and Entropy'', \textit{Physical Review D} \textbf{7}, 2333--2346 (1973). Il paper in cui Bekenstein propone che i buchi neri abbiano entropia proporzionale all'area dell'orizzonte. La connessione tra area e informazione è qui per la prima volta.
+
+\textbf{Almheiri, A., Marolf, D., Polchinski, J. e Sully, J.} ``Black Holes: Complementarity or Firewalls?'', \textit{JHEP} \textbf{2013}, 62 (2013). Il firewall argument: la tensione tra unitarietà e principio di equivalenza. Un paper che ha generato migliaia di risposte e ha rivitalizzato il dibattito sul paradosso dell'informazione.
+
+\textbf{Almheiri, A., Mahajan, R., Maldacena, J. e Zhao, Y.} ``The Page curve of Hawking radiation from semiclassical geometry'', \textit{JHEP} \textbf{2020}, 149 (2020). La formula dell'isola: la risoluzione più promettente del paradosso dell'informazione. Introduce le ``isole'' nell'entanglement wedge della radiazione. Tecnico ma rivoluzionario.
+
+\textbf{Maldacena, J.} ``The Large N Limit of Superconformal Field Theories and Supergravity'', \textit{International Journal of Theoretical Physics} \textbf{38}, 1113--1133 (1999). Il paper AdS/CFT. Il paper più citato della física teorica degli ultimi trent'anni. La dualità olografica in tutta la sua forma originale.
+
+\textbf{Page, D.N.} ``Information in Black Hole Radiation'', \textit{Physical Review Letters} \textbf{71}, 3743--3746 (1993). La curva di Page: la predizione che l'entropia della radiazione di Hawking debba scendere dopo il Page time per preservare l'unitarietà. Lettura fondamentale per capire il contesto del firewall e dell'isola.
+
+\textbf{Penrose, R.} \textit{The Road to Reality} (Jonathan Cape, 2004). Enciclopedia della fisica moderna scritta da uno dei fisici più creativi del Novecento. 1094 pagine di matematica e fisica, dal numero complesso alla twistor theory. Non una lettura lineare: uno strumento di consultazione e di ispirazione.
+
+\section{Gravità Quantistica}
+
+\textbf{Rovelli, C.} \textit{Quantum Gravity} (Cambridge University Press, 2004). Il testo tecnico fondamentale della Loop Quantum Gravity. Scritto dall'autore principale del programma, copre dalle variabili di Ashtekar alle spin networks alle spin foams. Richiede meccanica quantistica e relatività generale.
+
+\textbf{Thiemann, T.} \textit{Modern Canonical Quantum General Relativity} (Cambridge University Press, 2007). Il trattamento più completo e rigoroso della LQG. Per chi voglia capire i dettagli tecnici senza semplificazioni. Un tomo di 819 pagine.
+
+\textbf{Ambjørn, J., Jurkiewicz, J. e Loll, R.} ``Emergence of a 4D World from Causal Quantum Gravity'', \textit{Physical Review Letters} \textbf{93}, 131301 (2004). Il paper che ha dimostrato che le CDT producono uno spazio-tempo 4-dimensionale. La riduzione dimensionale a $D_s \approx 2$ alla scala di Planck appare qui per la prima volta nelle CDT.
+
+\textbf{Reuter, M.} ``Nonperturbative Evolution Equation for Quantum Gravity'', \textit{Physical Review D} \textbf{57}, 971--985 (1998). Il paper che fonda l'asymptotic safety per la gravità. Reuter introduce il flusso RG funzionale per la gravità e identifica il punto fisso ultravioletto non gaussiano.
+
+\textbf{Sorkin, R.D.} ``First Steps with Causal Sets'', in \textit{Proc.\ 9th Italian Conference on General Relativity}, ed.\ R.\ Cianci et al.\ (World Scientific, 1991), pp.\ 68--90. Un'introduzione accessibile alla causal set theory da parte del suo fondatore. Contiene la predizione del valore della costante cosmologica.
+
+\textbf{Connes, A. e Lott, J.} ``Particle Models and Noncommutative Geometry'', \textit{Nuclear Physics B (Proceedings Supplements)} \textbf{18B}, 29--47 (1991). Il paper che mostra come il Modello Standard emerga da un triple spettrale. La geometria non commutativa di Connes come fondamento della fisica delle particelle.
+
+\textbf{Smolin, L.} \textit{Three Roads to Quantum Gravity} (Basic Books, 2001). La panoramica più chiara e stimolante sui diversi approcci alla gravità quantistica. Smolin è uno dei rari fisici capaci di scrivere per il grande pubblico senza sacrificare la sostanza. Accessibile, intellettualmente onesto sui limiti di ogni approccio.
+
+\textbf{Maldacena, J. e Susskind, L.} ``Cool horizons for entangled black holes'', \textit{Fortschritte der Physik} \textbf{61}, 781--811 (2013). Il paper ER=EPR. La proposta che ogni coppia EPR sia connessa da un wormhole di Einstein-Rosen. Una delle idee più audaci e fertili della fisica teorica recente.
+
+\section{Física dell'Informazione e Termodinamica Quantistica}
+
+\textbf{Shannon, C.E.} ``A Mathematical Theory of Communication'', \textit{Bell System Technical Journal} \textbf{27}, 379--423 e 623--656 (1948). Il paper fondativo della teoria dell'informazione. Rivoluzionario nella semplicità della domanda (quanti bit servono?) e nella ricchezza delle risposte. Lettura diretta: Shannon scriveva con chiarezza esemplare.
+
+\textbf{Landauer, R.} ``Irreversibility and Heat Generation in the Computing Process'', \textit{IBM Journal of Research and Development} \textbf{5}, 183--191 (1961). Il principio di Landauer nell'originale. Un paper che sembra tecnico ma ha implicazioni filosofiche profonde: il pensiero ha conseguenze fisiche irriducibili. Accessibile senza background avanzato.
+
+\textbf{Bennett, C.H.} ``Logical Reversibility of Computation'', \textit{IBM Journal of Research and Development} \textbf{17}, 525--532 (1973). Bennett mostra che la computazione reversibile non richiede dissipazione. Completa il quadro aperto da Landauer.
+
+\textbf{Bérut, A. et al.} ``Experimental verification of Landauer's principle linking information and thermodynamics'', \textit{Nature} \textbf{483}, 187--189 (2012). La verifica sperimentale del principio di Landauer su bit fisici singoli. Decisivo.
+
+\textbf{Jarzynski, C.} ``Nonequilibrium Equality for Free Energy Differences'', \textit{Physical Review Letters} \textbf{78}, 2690--2693 (1997). Il teorema di Jarzynski: una relazione esatta per sistemi fuori dall'equilibrio. Fondamentale per la biofisica molecolare moderna.
+
+\textbf{Crooks, G.E.} ``Entropy production fluctuation theorem and the nonequilibrium work relation for free energy differences'', \textit{Physical Review E} \textbf{60}, 2721--2726 (1999). Il teorema di fluttuazione di Crooks. Collega le distribuzioni di lavoro nelle direzioni avanti e indietro.
+
+\textbf{Marletto, C.} ``Constructor Theory of Information'', \textit{Proceedings of the Royal Society A} \textbf{473}, 20170048 (2017). La Constructor Theory of Information: una definizione fisica dell'informazione che non presuppone probabilità né agenti. Rivoluzionaria nella prospettiva.
+
+\textbf{Deutsch, D. e Marletto, C.} ``Constructor Theory of Information'', \textit{Proceedings of the Royal Society A} \textbf{471}, 20140540 (2015). Il paper fondativo della Constructor Theory in tutta la sua generalità. Una nuova struttura concettuale per la física.
+
+\textbf{Friston, K.} ``The free-energy principle: a unified brain theory?'', \textit{Nature Reviews Neuroscience} \textbf{11}, 127--138 (2010). Il principio di energia libera variazionale come teoria unificata del cervello. Un framework che unisce percezione, azione, apprendimento e attenzione in un unico principio. Fondamentale per comprendere le basi fisiche della cognizione.
+
+\textbf{Van Raamsdonk, M.} ``Building up spacetime with quantum entanglement'', \textit{General Relativity and Gravitation} \textbf{42}, 2323--2329 (2010). La proposta che l'entanglement costruisca lo spazio-tempo. Uno dei paper più citati e dibattuti degli ultimi anni nella teoria delle stringhe e della gravità quantistica.
+
+\section{Modello Standard e Fisica delle Simmetrie}
+
+\textbf{Weinberg, S.} \textit{The Quantum Theory of Fields} (3 voll., Cambridge University Press, 1995--2000). Il trattamento definitivo della teoria quantistica dei campi, scritto da uno dei suoi architetti. Enciclopedico, rigoroso, spesso illuminante anche per chi già conosce la materia. Vol.\ I (fondamenti), Vol.\ II (applicazioni al Modello Standard), Vol.\ III (supersimmetria).
+
+\textbf{Peskin, M.E. e Schroeder, D.V.} \textit{An Introduction to Quantum Field Theory} (Addison-Wesley, 1995). Il manuale standard dei corsi avanzati di QFT. Ottimo per acquisire le tecniche di calcolo. Complementare a Weinberg per la comprensione concettuale.
+
+\textbf{Noether, E.} ``Invariante Variationsprobleme'', \textit{Nachrichten von der Gesellschaft der Wissenschaften zu Göttingen} \textbf{1918}, 235--257 (1918). Il paper originale di Noether. La connessione tra simmetrie continue e quantità conservate nell'originale. Una lettura di storia della scienza di primissimo ordine, accessibile con basi di calcolo variazionale.
+
+\textbf{'t Hooft, G. e Veltman, M.} ``Regularization and Renormalization of Gauge Fields'', \textit{Nuclear Physics B} \textbf{44}, 189--213 (1972). Il paper sulla rinormalizzazione delle teorie di gauge. La dimostrazione che il Modello Standard è rinormalizzabile. Nobel 1999.
+
+\textbf{Weinberg, S., Salam, A. e Glashow, S.L.} I tre paper originali della teoria elettrodebole: Glashow (1961), Weinberg (1967), Salam (1968). Disponibili nelle raccolte di articoli Nobel. La teoria che unifica elettromagnetismo e forza debole nel Modello Standard. Tre modi diversi di arrivare alla stessa risposta.
+
+\textbf{Englert, F. e Brout, R.} ``Broken Symmetry and the Mass of Gauge Vector Mesons'', \textit{Physical Review Letters} \textbf{13}, 321--323 (1964). Uno dei paper fondativi del meccanismo di Higgs (insieme ai paper di Higgs e di Guralnik, Hagen, Kibble dello stesso anno). Nobel 2013 (a Englert e Higgs; Brout era morto nel 2011).
+
+\textbf{Gross, D.J. e Wilczek, F.} ``Ultraviolet Behavior of Non-Abelian Gauge Theories'', \textit{Physical Review Letters} \textbf{30}, 1343--1346 (1973). La scoperta della libertà asintotica. La QCD come teoria della forza forte. Nobel 2004.
+
+\textbf{Peccei, R.D. e Quinn, H.R.} ``CP Conservation in the Presence of Pseudoparticles'', \textit{Physical Review Letters} \textbf{38}, 1440--1443 (1977). La proposta dell'assione come soluzione al problema della strong CP. Uno dei paper più fecondi della física delle particelle.
+
+\textbf{Cordova, C., Dumitrescu, T.T., Intriligator, K. e Shao, S.-H.} ``Snowmass White Paper: Generalized Symmetries in Quantum Field Theory and Beyond'', arXiv:2205.09025 (2022). La rassegna completa sulle simmetrie di forma superiore e non invertibili. Una nuova frontiera della fisica teorica delle particelle.
+
+\section{Matematica: Fondamenti e Filosofia}
+
+\textbf{Gödel, K.} ``Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme I'', \textit{Monatshefte für Mathematik und Physik} \textbf{38}, 173--198 (1931). Il paper originale dei teoremi di incompletezza. In tedesco, ma disponibile in traduzione inglese in molte raccolte. Un gesto insolito: leggere direttamente Gödel, invece di accontentarsi delle parafrasi.
+
+\textbf{Hofstadter, D.R.} \textit{Gödel, Escher, Bach: an Eternal Golden Braid} (Basic Books, 1979). Il libro più accessibile e creativo sui teoremi di incompletezza, l'autoreferenzialità e la cognizione. Vincitore del Pulitzer 1980. Un classico che resiste al tempo.
+
+\textbf{Wigner, E.P.} ``The Unreasonable Effectiveness of Mathematics in the Natural Sciences'', \textit{Communications on Pure and Applied Mathematics} \textbf{13}, 1--14 (1960). Il paper originale del problema di Wigner. Breve, arguto, stimolante. Una lettura di 14 pagine che apre domande per una carriera.
+
+\textbf{Tegmark, M.} \textit{Our Mathematical Universe} (Knopf, 2014). La difesa più completa e audace della Mathematical Universe Hypothesis. Tegmark è un cosmologista serio che propone idee al limite della verificabilità. Stimolante anche per chi non condivide la conclusione.
+
+\textbf{Ladyman, J. e Ross, D.} \textit{Every Thing Must Go: Metaphysics Naturalized} (Oxford University Press, 2007). Il manifesto dell'Ontic Structural Realism. Difficile, tecnico, ma fondamentale per capire la filosofia della fisica contemporanea. Una delle proposte più coerenti di come la metafisica si integri con la scienza.
+
+\textbf{Mac Lane, S.} \textit{Categories for the Working Mathematician} (Springer, 1971). Il testo fondativo della teoria delle categorie. Rigoroso, conciso, per matematici. Chi voglia capire la struttura categoriale della meccanica quantistica deve passare da qui.
+
+\textbf{Abramsky, S. e Coecke, B.} ``A Categorical Semantics of Quantum Protocols'', \textit{Proceedings of the 19th Annual IEEE Symposium on Logic in Computer Science}, 415--425 (2004). Il paper che introduce la categorical quantum mechanics. I diagrammi di filo come calcolo grafico per la meccanica quantistica.
+
+\section{Neuroscienze e Coscienza}
+
+\textbf{Hodgkin, A.L. e Huxley, A.F.} ``A Quantitative Description of Membrane Current and its Application to Conduction and Excitation in Nerve'', \textit{Journal of Physiology} \textbf{117}, 500--544 (1952). Il paper fondativo della biofisica del neurone. La derivazione quantitativa del potenziale d'azione. Nobel 1963. Uno dei paper più importanti della biologia del Novecento.
+
+\textbf{Chalmers, D.J.} \textit{The Conscious Mind: In Search of a Fundamental Theory} (Oxford University Press, 1996). La formulazione classica del problema difficile della coscienza. Chalmers è un filosofo rigoroso che pone la domanda nel modo più preciso possibile. Il punto di partenza obbligato per chiunque voglia capire il problema.
+
+\textbf{Seth, A.} \textit{Being You: A New Science of Consciousness} (Dutton, 2021). Il libro più accessibile e aggiornato sulla neuroscienza della coscienza, scritto da uno dei ricercatori più influenti del campo. Seth presenta la coscienza come ``allucinazione controllata'' in modo vivace e preciso.
+
+\textbf{Tononi, G.} ``Consciousness as Integrated Information: a Provisional Manifesto'', \textit{Biological Bulletin} \textbf{215}, 216--242 (2008). La presentazione della IIT in forma accessibile. Tononi spiega perché l'informazione integrata è la proposta giusta per la coscienza.
+
+\textbf{Dehaene, S.} \textit{Consciousness and the Brain} (Viking, 2014). La presentazione della Global Workspace Theory da parte del suo principale proponente sperimentale. Ricco di dati e esperimenti. Complementare a Tononi per una visione bilaterata del dibattito.
+
+\textbf{Melloni, L. et al.\ (Cogitate Consortium)} ``An adversarial collaboration protocol for critically testing predictions of global neuronal workspace and integrated information theory'', \textit{PLOS ONE} \textbf{18}, e0268577 (2023). Lo studio avversariale IIT vs.\ GWT. Metodologicamente esemplare: due campi opposti collaborano per testare le rispettive previsioni. Un modello di come fare scienza sulla coscienza.
+
+\textbf{Rao, R.P.N. e Ballard, D.H.} ``Predictive coding in the visual cortex: a functional interpretation of some extra-classical receptive-field effects'', \textit{Nature Neuroscience} \textbf{2}, 79--87 (1999). Il paper che introduce il predictive coding nella corteccia visiva. Il punto di partenza sperimentale del framework.
+
+\textbf{Damasio, A.} \textit{Descartes' Error: Emotion, Reason, and the Human Brain} (Putnam, 1994). L'ipotesi del marcatore somatico nell'originale. Damasio mostra che le emozioni sono necessarie per la razionalità, non sue nemiche.
+
+\textbf{Barrett, L.F.} \textit{How Emotions Are Made: The Secret Life of the Brain} (Houghton Mifflin Harcourt, 2017). La teoria costruttivista delle emozioni. Barrett sfida la visione di Ekman sulle emozioni universali con decenni di evidenza sperimentale.
+
+\textbf{Friston, K.} ``The free-energy principle: a unified brain theory?'', \textit{Nature Reviews Neuroscience} \textbf{11}, 127--138 (2010). Già citato in precedenza: il paper che unifica percezione, azione, e apprendimento nel principio di energia libera.
+
+\textbf{Parfit, D.} \textit{Reasons and Persons} (Oxford University Press, 1984). Il libro di filosofia analitica più importante sulla identità personale, la razionalità, e l'etica. La parte sull'identità personale è di particolare rilevanza per questo libro: Parfit mostra che l'io non è una sostanza metafisica ma una struttura di relazioni psicologiche.
+
+\section{Cosmologia e Astrofísica}
+
+\textbf{Planck Collaboration} ``Planck 2018 Results. VI. Cosmological Parameters'', \textit{Astronomy \& Astrophysics} \textbf{641}, A6 (2020). Il paper di riferimento per i parametri cosmologici. I dati Planck 2018 sono il gold standard della cosmologia osservativa.
+
+\textbf{Guth, A.H.} ``Inflationary universe: A possible solution to the horizon and flatness problems'', \textit{Physical Review D} \textbf{23}, 347--356 (1981). Il paper fondativo dell'inflazione cosmica. Guth introduce il concetto di espansione esponenziale per risolvere tre problemi del Big Bang classico.
+
+\textbf{DESI Collaboration} ``DESI 2024 IV: Baryon Acoustic Oscillations from the Lyman Alpha Forest'', arXiv:2404.03001 (2024). I dati DESI del 2024 che mostrano la prima deviazione da $w = -1$ per l'energia oscura. Uno dei risultati cosmologici più dibattuti degli ultimi anni.
+
+\textbf{Riess, A.G. et al.} ``A Comprehensive Measurement of the Local Value of the Hubble Constant'', \textit{Astrophysical Journal Letters} \textbf{934}, L7 (2022). La misura SH0ES della costante di Hubble che alimenta la Hubble tension. Il confronto con i dati Planck è il problema aperto più importante della cosmologia contemporanea.
+
+\textbf{Penrose, R.} \textit{The Emperor's New Mind} (Oxford University Press, 1989). Il libro di Penrose sulla coscienza e i limiti della computazione. Controverso (l'argomento gödeliano sulla non-computabilità della mente è contestato), ma stimolante. Contiene anche un'ottima introduzione alla física.
+
+\textbf{LIGO Scientific Collaboration e Virgo Collaboration} ``Observation of Gravitational Waves from a Binary Black Hole Merger'', \textit{Physical Review Letters} \textbf{116}, 061102 (2016). Il paper che annuncia la prima rivelazione di onde gravitazionali (GW150914). Uno degli eventi scientifici più importanti del XXI secolo.
+
+\textbf{Abbott, B.P. et al.\ (LIGO/Virgo)} ``Multi-messenger Observations of a Binary Neutron Star Merger'', \textit{Astrophysical Journal Letters} \textbf{848}, L12 (2017). Il paper sull'evento GW170817. La prima osservazione multi-messenger di una fusione di stelle di neutroni. Conferma la sorgente degli elementi pesanti attraverso il processo-r.
+
+\section{Física della Materia e Tecnologia}
+
+\textbf{Anderson, P.W.} ``More is Different'', \textit{Science} \textbf{177}, 393--396 (1972). Il paper che demolisce il riduzionismo ontologico in quattro pagine. Una delle letture più influenti e brevissime della fisica. Irrinunciabile.
+
+\textbf{Wilson, K.G.} ``The Renormalization Group and Critical Phenomena'', \textit{Reviews of Modern Physics} \textbf{55}, 583--600 (1983). La Nobel Lecture di Wilson sul renormalization group. Un'introduzione al RG da parte del suo inventore, accessibile e illuminante.
+
+\textbf{Bednorz, J.G. e Müller, K.A.} ``Possible High $T_c$ Superconductivity in the Ba-La-Cu-O System'', \textit{Zeitschrift für Physik B} \textbf{64}, 189--193 (1986). La scoperta della superconduttività ad alta temperatura critica. Nobel 1987. Un paper di 5 pagine che ha rivoluzionato la fisica della materia condensata.
+
+\textbf{Hasan, M.Z. e Kane, C.L.} ``Colloquium: Topological Insulators'', \textit{Reviews of Modern Physics} \textbf{82}, 3045--3067 (2010). Il review fondamentale sugli isolanti topologici. Accessibile a chi conosca la teoria delle bande. Un'introduzione completa ai materiali topologici moderni.
+
+\textbf{Klitzing, K.v., Dorda, G. e Pepper, M.} ``New Method for High-Accuracy Determination of the Fine-Structure Constant Based on Quantized Hall Resistance'', \textit{Physical Review Letters} \textbf{45}, 494--497 (1980). La scoperta dell'effetto Hall quantistico intero. Nobel 1985. La quantizzazione topologica in azione.
+
+\textbf{AlphaFold Team, Jumper, J. et al.} ``Highly accurate protein structure prediction with AlphaFold'', \textit{Nature} \textbf{596}, 583--589 (2021). Il paper AlphaFold2. La soluzione computazionale al problema del ripiegamento delle proteine. Un punto di svolta nella biologia molecolare.
+
+\section{Filosofia della Física e Metafísica}
+
+\textbf{Maudlin, T.} \textit{Quantum Non-Locality and Relativity} (Blackwell, 1994). Il migliore trattamento filosofico della non-località quantistica. Maudlin è rigoroso e pone le domande giuste sull'ontologia della meccanica quantistica.
+
+\textbf{Maudlin, T.} \textit{Philosophy of Physics: Space and Time} (Princeton University Press, 2012) e \textit{Philosophy of Physics: Quantum Theory} (Princeton University Press, 2019). Due volumi accessibili sulla filosofia della física moderna. Il migliore punto di ingresso per i filosofi nella física e per i físici nella filosofia.
+
+\textbf{Price, H.} \textit{Time's Arrow and Archimedes' Point} (Oxford University Press, 1996). Il problema della freccia del tempo affrontato in modo originale e rigoroso. Price argomenta che la física deve essere ``time-symmetric'' a livello fondamentale e che la freccia temporale è una questione di prospettiva.
+
+\textbf{Albert, D.Z.} \textit{Time and Chance} (Harvard University Press, 2000). Una teoria della freccia del tempo basata sulla meccanica statistica e sulle condizioni al contorno. Tecnico e filosoficamente sofisticato.
+
+\textbf{Earman, J.} \textit{World Enough and Space-Time} (MIT Press, 1989). Il dibattito Newton-Leibniz sulla natura dello spazio e del tempo: assolutismo vs.\ relazionalismo. La préhistoire filosofica del PRF.
+
+\textbf{Castellani, E. (a cura di)} \textit{Interpreting Bodies: Classical and Quantum Objects in Modern Physics} (Princeton University Press, 1998). Una raccolta di saggi sull'ontologia della física moderna. Contributi di Redhead, French, Ladyman, e altri.
+
+\textbf{Rickles, D.} \textit{The Philosophy of Physics} (Polity Press, 2016). Un'introduzione accessibile e completa alla filosofia della física moderna. Il testo più utile per chi voglia capire il panorama dei problemi fondazionali senza affrontare gli originali tecnici.
+
+\section{Etica, Rischi Esistenziali e Futuro}
+
+\textbf{Bostrom, N.} \textit{Superintelligence: Paths, Dangers, Strategies} (Oxford University Press, 2014). La trattazione più influente dei rischi dell'intelligenza artificiale generale. Tecnico, rigoroso, e spaventosamente coerente nelle conclusioni. Lettura obbligata per chiunque si occupi di AI safety.
+
+\textbf{Ord, T.} \textit{The Precipice: Existential Risk and the Future of Humanity} (Hachette, 2020). Il quadro più completo sui rischi esistenziali. Ord classifica e quantifica i diversi tipi di rischio con metodo filosofico rigoroso. Il libro più importante della tradizione longtermista.
+
+\textbf{MacAskill, W.} \textit{What We Owe the Future} (Basic Books, 2022). Il manifesto del longtermismo. MacAskill argomenta che le generazioni future hanno rilevanza morale proporzionale alla loro vastità numerica potenziale. Stimolante, discutibile nelle conclusioni, fondamentale per il dibattito.
+
+\textbf{Parfit, D.} \textit{On What Matters} (2 voll., Oxford University Press, 2011). Il tentativo di Parfit di unificare le principali tradizioni etiche (consequenzialismo, deontologia, etica della virtù) in un quadro coerente. Un'opera monumentale della filosofia morale analitica.
+
+\textbf{Cassirer, E.} \textit{An Essay on Man: An Introduction to a Philosophy of Human Culture} (Yale University Press, 1944). La teoria delle forme simboliche applicata all'uomo come \textit{animal symbolicum}. Cassirer offre una visione della cultura come sistema di simboli che media tra l'uomo e la realtà — una prospettiva essenziale per capire linguaggio, scienza, arte e religione come dimensioni complementari dell'esperienza umana.
+
+\textbf{Anders, G.} \textit{Die Antiquiertheit des Menschen} (Beck, 1956, 1980). Un'analisi filosofica profonda e perturbante della condizione dell'uomo nell'era tecnica. Anders conia il concetto di ``vergogna prometeica'' — la vergogna provata dall'uomo di fronte alla perfezione delle macchine che ha creato. Un libro scomodo e necessario.
+
+\textbf{Nabokov, V.} \textit{Speak, Memory} (Gollancz, 1951). Un'autobiografia che è anche una filosofia del tempo e della memoria. Nabokov scrive sulla propria vita con la precisione di uno scienziato e la sensibilità di un poeta. Un contrappunto letterario indispensabile alla precisione científica del libro.
+
+\section{Letture di Approfondimento per Ciascun Capitolo}
+
+\subsection*{Capitoli 1--2: Física fondamentale e QM}
+Zee, A., \textit{Quantum Field Theory in a Nutshell} (Princeton UP, 2003). Il testo più accessibile alla QFT senza rinunciare alla profondità. Zee scrive con umorismo e lucidità insoliti per un manuale. Schwartz, M.D., \textit{Quantum Field Theory and the Standard Model} (Cambridge UP, 2014). Il manuale moderno standard per la QFT.
+
+\subsection*{Capitoli 3--4: Relatività e gravità quantistica}
+Carroll, S., \textit{Spacetime and Geometry} (Addison-Wesley, 2004). La miglior introduzione moderna alla relatività generale per físici. Polchinski, J., \textit{String Theory} (2 voll., Cambridge UP, 1998). Il trattamento tecnico standard della teoria delle stringhe.
+
+\subsection*{Capitolo 5: Informazione}
+Nielsen, M.A. e Chuang, I.L., \textit{Quantum Computation and Quantum Information} (Cambridge UP, 2000). Il testo definitivo dell'informazione quantistica. Cover, T.M. e Thomas, J.A., \textit{Elements of Information Theory} (Wiley, 1991). Il testo di riferimento per la teoria dell'informazione classica.
+
+\subsection*{Capitoli 7--10: Mente e coscienza}
+Dennett, D.C., \textit{Consciousness Explained} (Little, Brown, 1991). La posizione eliminativista e funzionalista sulla coscienza. James, W., \textit{The Principles of Psychology} (1890). Ancora insostituibile per la profondità dell'analisi fenomenologica della mente.
+
+\subsection*{Capitoli 11--14: Confini}
+Susskind, L., \textit{The Cosmic Landscape: String Theory and the Illusion of Intelligent Design} (Little, Brown, 2005). La difesa del principio antropico e del paesaggio di stringhe. Dawkins, R., \textit{The Selfish Gene} (Oxford UP, 1976). L'evoluzione darwiniana nel suo frame più potente e controverso.
+
+\subsection*{Capitoli 15--20: Come vivere sapendo}
+Strogatz, S., \textit{Nonlinear Dynamics and Chaos} (Perseus Books, 1994). La migliore introduzione ai sistemi complessi e al caos. Wilczek, F., \textit{A Beautiful Question: Finding Nature's Deep Design} (Penguin, 2015). La fisica delle simmetrie spiegata dal Nobel Prize winner con eleganza rara.
+
+\clearpage
+
+% ============================================================
+% APPROFONDIMENTI TECNICI ULTRA-DETTAGLIATI
+% ============================================================
+\part*{Approfondimenti Tecnici}
+\addcontentsline{toc}{part}{Approfondimenti Tecnici}
+
+\begin{center}
+{\itshape\small
+Per il lettore con formazione in fisica o matematica a livello universitario avanzato.\\
+Ogni sezione contiene derivazioni complete, non solo enunciati.\\
+Sono sette approfondimenti autonomi, ciascuno leggibile indipendentemente.}
+\end{center}
+
+\bigskip
+
+% ─────────────────────────────────────────────────────────────
+\chapter*{T.1 — Elettrodinamica Quantistica: dall'Integrale sui Cammini alla Precisione a Undici Cifre}
+\addcontentsline{toc}{chapter}{T.1 — QED: Path Integral e Rinormalizzazione}
+
+\section{L'integrale funzionale di Feynman}
+
+La meccanica quantistica nella formulazione di Feynman (1948) esprime l'ampiezza di transizione tra due stati come somma su tutti i percorsi possibili, pesata da un fattore di fase $e^{iS/\hbar}$ dove $S$ è l'azione classica.
+
+L'ampiezza di trovare una particella in $x_b$ al tempo $t_b$, sapendo che era in $x_a$ al tempo $t_a$, è:
+\[
+K(x_b, t_b;\, x_a, t_a) = \int \mathcal{D}x(t)\, \exp\!\left(\frac{i}{\hbar} S[x(t)]\right)
+\]
+dove $S[x(t)] = \int_{t_a}^{t_b} \mathcal{L}(x, \dot{x})\, dt$ e l'integrale funzionale $\mathcal{D}x$ è una somma su tutte le traiettorie $x(t)$ con condizioni al contorno $x(t_a) = x_a$ e $x(t_b) = x_b$.
+
+Nel limite $\hbar \to 0$, le fasi oscillano rapidamente e la somma è dominata dai percorsi vicini alla traiettoria stazionaria (il principio di minima azione). Per sistemi non-relativistici quadratici, il path integral si riduce all'ampiezza standard della meccanica ondulatoria.
+
+\section{Estensione alla teoria quantistica dei campi}
+
+In QFT, si sostituisce la traiettoria della particella $x(t)$ con una configurazione del campo $\phi(x, t)$. La funzione di partizione è:
+\[
+Z = \int \mathcal{D}\phi\, \exp\!\left(\frac{i}{\hbar} S[\phi]\right)
+\]
+Le osservabili fisiche si calcolano da $Z$ come derivate funzionali rispetto a sorgenti esterne $J(x)$ introdotte nell'azione: $Z[J] = \int \mathcal{D}\phi\, \exp\!\left(\frac{i}{\hbar}(S[\phi] + \int J\phi)\right)$.
+
+La funzione di correlazione a due punti (propagatore):
+\[
+G(x, y) = \frac{1}{Z[0]}\frac{\delta^2 Z[J]}{\delta J(x)\delta J(y)}\bigg|_{J=0} = \langle 0|T\phi(x)\phi(y)|0\rangle
+\]
+
+\section{QED: il Lagrangiano e le regole di Feynman}
+
+Il Lagrangiano della QED è:
+\[
+\mathcal{L}_{QED} = \bar{\psi}(i\gamma^\mu \partial_\mu - m)\psi - \frac{1}{4}F_{\mu\nu}F^{\mu\nu} - e\bar{\psi}\gamma^\mu\psi A_\mu
+\]
+dove $\psi$ è il campo dell'elettrone (spinore di Dirac a 4 componenti), $A_\mu$ il campo del fotone, $F_{\mu\nu} = \partial_\mu A_\nu - \partial_\nu A_\mu$ il tensore elettromagnetico, $e$ la carica elettrica, e $m$ la massa dell'elettrone.
+
+Le \textbf{regole di Feynman} per la QED, estratte dallo sviluppo perturbativo di $Z[J]$:
+\begin{itemize}
+\item Propagatore del fotone: $\displaystyle\frac{-i g_{\mu\nu}}{k^2 + i\varepsilon}$ (gauge di Feynman)
+\item Propagatore dell'elettrone: $\displaystyle\frac{i(\not{p} + m)}{p^2 - m^2 + i\varepsilon}$ dove $\not{p} \equiv \gamma^\mu p_\mu$
+\item Vertice di interazione: $ie\gamma^\mu$
+\item Loop fermionico: un fattore $-1$ e una traccia sugli indici di Dirac
+\item Integrazione su ogni 4-momento di loop: $\displaystyle\int \frac{d^4k}{(2\pi)^4}$
+\end{itemize}
+
+\section{Il momento magnetico anomalo dell'elettrone}
+
+Il fattore $g$ dell'elettrone, che misura il momento magnetico in unità del magnetone di Bohr, è previsto dalla QED in serie perturbativa in $\alpha = e^2/(4\pi\varepsilon_0 \hbar c) \approx 1/137$:
+\[
+a_e \equiv \frac{g-2}{2} = \frac{\alpha}{2\pi} - 0.328\,478\,965\,\frac{\alpha^2}{\pi^2} + 1.181\,241\,456\,\frac{\alpha^3}{\pi^3} - 1.912\,245\,764\,\frac{\alpha^4}{\pi^4} + \ldots
+\]
+Al quinto ordine si sommano 12.672 diagrammi di Feynman (Aoyama et al., 2012). Il risultato teorico:
+\[
+a_e^{\text{th}} = 1\,159\,652\,181.606(229) \times 10^{-12}
+\]
+Il valore sperimentale (Hanneke et al., 2008, aggiornato da Fan et al., 2023):
+\[
+a_e^{\text{exp}} = 1\,159\,652\,180.59(13) \times 10^{-12}
+\]
+La concordanza è a $0.3\,\text{ppb}$ (parti per miliardo). Questo è il test più preciso di qualsiasi teoria fisica nella storia della scienza.
+
+\section{Rinormalizzazione}
+
+I loop di Feynman producono integrali ultravioletti divergenti. La \textbf{rinormalizzazione} è la procedura che rende la teoria finita ridefinendo i parametri.
+
+Nella regolarizzazione dimensionale, si calcola in $d = 4 - 2\varepsilon$ dimensioni spaziotemporali. Le divergenze appaiono come poli in $1/\varepsilon$. La rinormalizzazione della massa e della carica:
+\[
+m_0 = Z_m m, \quad e_0 = Z_e e \mu^\varepsilon, \quad \psi_0 = Z_2^{1/2} \psi, \quad A_0 = Z_3^{1/2} A
+\]
+I $Z$ contengono i poli in $1/\varepsilon$ che si cancellano con le divergenze dei loop. Il risultato è una teoria con parametri fisici $m$ ed $e$ finiti.
+
+La \textbf{running coupling} (costante di accoppiamento che dipende dall'energia) è governata dalla funzione $\beta$:
+\[
+\mu \frac{d\alpha}{d\mu} = \beta(\alpha) = \frac{2\alpha^2}{3\pi} + O(\alpha^3)
+\]
+In QED, $\beta > 0$: l'accoppiamento cresce con l'energia. A energie molto alte, $\alpha \to \infty$ (polo di Landau). In QCD, $\beta < 0$: libertà asintotica.
+
+\chapter*{T.2 — Cromodinamica Quantistica: Confinamento e Libertà Asintotica}
+\addcontentsline{toc}{chapter}{T.2 — QCD: Struttura e Fenomenologia}
+
+\section{Il Lagrangiano di QCD}
+
+La QCD è una teoria di gauge $\mathrm{SU}(3)_c$. Il Lagrangiano è:
+\[
+\mathcal{L}_{QCD} = \sum_{f=1}^{N_f} \bar{q}_f (i\gamma^\mu D_\mu - m_f) q_f - \frac{1}{4} G^a_{\mu\nu} G^{a\mu\nu}
+\]
+dove la derivata covariante è $D_\mu = \partial_\mu - ig_s T^a A^a_\mu$, i $T^a$ ($a = 1, \ldots, 8$) sono i generatori di $\mathrm{SU}(3)$ (matrici di Gell-Mann divise per 2), $g_s$ è la costante di accoppiamento forte, e il tensore del campo gluonico è:
+\[
+G^a_{\mu\nu} = \partial_\mu A^a_\nu - \partial_\nu A^a_\mu + g_s f^{abc} A^b_\mu A^c_\nu
+\]
+con $f^{abc}$ le costanti di struttura di $\mathrm{SU}(3)$. Il termine $g_s f^{abc} A^b_\mu A^c_\nu$ è non lineare: produce interazioni gluone-gluone. Questo è il segno che $\mathrm{SU}(3)$ è non abeliana.
+
+\section{Libertà asintotica}
+
+La costante di accoppiamento forte $\alpha_s = g_s^2/(4\pi)$ evolve con la scala di energia $\mu$ secondo:
+\[
+\mu \frac{d\alpha_s}{d\mu} = \beta(\alpha_s) = -\frac{\alpha_s^2}{2\pi}\left(11 - \frac{2N_f}{3}\right) + O(\alpha_s^3) \equiv -\frac{b_0}{2\pi}\alpha_s^2
+\]
+Per $N_f \leq 16$ sapori di quark, $b_0 = 11 - 2N_f/3 > 0$ e quindi $\beta < 0$: l'accoppiamento \textit{diminuisce} all'aumentare dell'energia. Questo è la \textbf{libertà asintotica} (Gross, Politzer, Wilczek; Nobel 2004). La soluzione dell'equazione di evoluzione è:
+\[
+\alpha_s(\mu) = \frac{2\pi}{b_0 \ln(\mu/\Lambda_{QCD})}
+\]
+dove $\Lambda_{QCD} \approx 200\,\mathrm{MeV}$ è la scala di confinamento. Per $\mu \gg \Lambda_{QCD}$, $\alpha_s \to 0$ e il calcolo perturbativo è valido. Per $\mu \sim \Lambda_{QCD}$, $\alpha_s \to \infty$ e il calcolo perturbativo fallisce.
+
+A scala di LHC ($\mu \sim 1\,\mathrm{TeV}$), $\alpha_s \approx 0.08$. A scala di $Z$ ($\mu = M_Z \approx 91\,\mathrm{GeV}$), $\alpha_s(M_Z) = 0.1179 \pm 0.0010$ (PDG 2022).
+
+\section{Confinamento e struttura del vuoto}
+
+Il confinamento dei quarks, osservato sperimentalmente (i quarks liberi non esistono), non è compreso perturbativamente. La comprensione attuale viene da:
+
+\textbf{QCD su reticolo}: la discretizzazione dello spazio-tempo su un reticolo permette calcoli non perturbativi usando simulazioni Monte Carlo. I calcoli su reticolo mostrano che il potenziale quark-antiquark cresce linearmente con la distanza: $V(r) \sim \sigma r$, dove $\sigma \approx 0.18\,\mathrm{GeV}^2$ è la tensione di stringa. Questo implica il confinamento: separare due quarks richiederebbe energia infinita.
+
+\textbf{Condensato chirale}: nel vuoto QCD, si ha $\langle\bar{q}q\rangle \neq 0$ (condensato di chiralità). Questo rompe spontaneamente la simmetria chirale $\mathrm{SU}(2)_L \times \mathrm{SU}(2)_R \to \mathrm{SU}(2)_V$, producendo i pioni come bosoni di Nambu-Goldstone (quasi-senza-massa).
+
+La relazione di Gell-Mann--Oakes--Renner (GOR):
+\[
+m_\pi^2 f_\pi^2 = -(m_u + m_d)\langle\bar{q}q\rangle + O(m_q^2)
+\]
+dove $f_\pi \approx 93\,\mathrm{MeV}$ è la costante di decadimento del pione e $\langle\bar{q}q\rangle \approx -(250\,\mathrm{MeV})^3$ è il condensato chirale.
+
+\section{Il termine $\theta$ e il problema della strong CP}
+
+Il Lagrangiano di QCD permette un termine invariante di gauge:
+\[
+\mathcal{L}_\theta = \theta \frac{g_s^2}{32\pi^2} G^a_{\mu\nu}\tilde{G}^{a\mu\nu}
+\]
+dove $\tilde{G}^{a\mu\nu} = \frac{1}{2}\varepsilon^{\mu\nu\rho\sigma}G^a_{\rho\sigma}$ è il tensore duale. Questo termine viola CP. Il momento di dipolo elettrico del neutrone (nEDM) prodotto da $\theta$ è:
+\[
+d_n \approx 5.2 \times 10^{-16} \theta\,e\cdot\mathrm{cm}
+\]
+Il limite sperimentale (nEDM, 2020): $|d_n| < 1.8 \times 10^{-26}\,e\cdot\mathrm{cm}$, implicando $|\theta| < 3 \times 10^{-11}$. La piccolezza di $\theta$ è il \textbf{problema della strong CP}.
+
+La soluzione di Peccei-Quinn: si introduce una simmetria globale $\mathrm{U}(1)_{PQ}$ che si rompe spontaneamente a una scala $f_a$ (scala di Peccei-Quinn). Il bosone di Goldstone è l'assione $a$, con un termine $a/f_a \cdot G\tilde{G}$ che cancella dinamicamente $\theta$. La massa dell'assione è:
+\[
+m_a \approx \frac{m_\pi f_\pi}{f_a}\sqrt{\frac{m_u m_d}{(m_u+m_d)^2}} \approx 6\,\mu\mathrm{eV} \cdot \frac{10^{12}\,\mathrm{GeV}}{f_a}
+\]
+
+\chapter*{T.3 — Cosmologia Inflazionaria: Derivazione Completa}
+\addcontentsline{toc}{chapter}{T.3 — Inflazione: Meccanismo e Predizioni}
+
+\section{Le equazioni di Friedmann}
+
+Per una metrica FLRW piatta ($k=0$), le equazioni di Einstein $G_{\mu\nu} = 8\pi G T_{\mu\nu}/c^4$ danno:
+\begin{align}
+H^2 &= \frac{8\pi G}{3}\rho + \frac{\Lambda c^2}{3} \label{eq:F1}\\
+\dot{H} &= -4\pi G(\rho + p/c^2) \label{eq:F2}
+\end{align}
+dove $H = \dot{a}/a$ è la costante di Hubble, $\rho$ la densità di energia, $p$ la pressione, $\Lambda$ la costante cosmologica.
+
+Per un campo scalare $\phi$ (inflatone) con potenziale $V(\phi)$:
+\[
+\rho_\phi = \frac{\dot\phi^2}{2} + V(\phi), \quad p_\phi = \frac{\dot\phi^2}{2} - V(\phi)
+\]
+L'equazione del moto per $\phi$ (Klein-Gordon in FRW):
+\[
+\ddot\phi + 3H\dot\phi + V'(\phi) = 0
+\]
+
+\section{Slow-roll e e-foldings}
+
+L'inflazione richiede $\ddot{a} > 0$, cioè (dall'equazione di accelerazione) $\rho + 3p < 0$, cioè $p < -\rho/3$. Per il campo scalare: $\dot\phi^2/2 < V(\phi)$, cioè l'energia potenziale domina su quella cinetica.
+
+I parametri di slow-roll:
+\[
+\varepsilon \equiv -\frac{\dot H}{H^2} = \frac{4\pi G \dot\phi^2}{H^2} \approx \frac{M_{Pl}^2}{16\pi}\left(\frac{V'}{V}\right)^2, \quad
+|\eta| \equiv \left|\frac{\ddot\phi}{H\dot\phi}\right| \approx \frac{M_{Pl}^2}{8\pi}\left|\frac{V''}{V}\right|
+\]
+La condizione di slow-roll: $\varepsilon \ll 1$ e $|\eta| \ll 1$. L'inflazione dura finché $\varepsilon < 1$.
+
+Il numero di e-foldings è $N = \int H\,dt = \ln(a_{\rm end}/a_*)$:
+\[
+N = \int_{\phi_*}^{\phi_{\rm end}} \frac{H}{\dot\phi}d\phi \approx \frac{8\pi}{M_{Pl}^2}\int_{\phi_{\rm end}}^{\phi_*}\frac{V}{V'}d\phi
+\]
+Per risolvere i problemi cosmologici si richiede $N \gtrsim 60$.
+
+\section{Perturbazioni primordiali}
+
+L'inflazione amplifica le fluttuazioni quantistiche del campo inflatone in perturbazioni classiche dello spazio-tempo. Lo spettro di potenza delle perturbazioni scalari (densità):
+\[
+\mathcal{P}_s(k) = \frac{H^2}{8\pi^2 M_{Pl}^2 \varepsilon}\bigg|_{k=aH}
+\]
+L'indice spettrale scalare:
+\[
+n_s - 1 = \frac{d\ln\mathcal{P}_s}{d\ln k} \approx -6\varepsilon + 2\eta
+\]
+Il rapporto tensore-scalare:
+\[
+r = \frac{\mathcal{P}_t}{\mathcal{P}_s} \approx 16\varepsilon
+\]
+I dati Planck 2018: $n_s = 0.9649 \pm 0.0042$ e $r < 0.056$ (95\% CL). Il modello di Starobinsky ($R^2$ gravity, 1980):
+\[
+n_s = 1 - \frac{2}{N} \approx 0.967, \quad r = \frac{12}{N^2} \approx 0.003 \quad (N = 60)
+\]
+in accordo eccellente con i dati.
+
+\chapter*{T.4 — Termodinamica dei Buchi Neri e Olografia}
+\addcontentsline{toc}{chapter}{T.4 — Buchi Neri: Termodinamica e Informazione}
+
+\section{Le quattro leggi della termodinamica dei buchi neri}
+
+I buchi neri obbediscono a leggi analoghe alle quattro leggi della termodinamica (Bardeen, Carter, Hawking, 1973):
+
+\begin{itemize}
+\item \textbf{Legge zero}: la gravità di superficie $\kappa$ è costante sull'orizzonte degli eventi di un buco nero stazionario (analogo della temperatura uniforme all'equilibrio).
+\item \textbf{Prima legge}: $dM = \frac{\kappa}{8\pi G}dA + \Omega\, dJ + \Phi\, dQ$ dove $\kappa$ è la gravità di superficie, $A$ l'area dell'orizzonte, $\Omega$ la velocità angolare, $J$ il momento angolare, $\Phi$ il potenziale elettrico, $Q$ la carica (analogo di $dE = T\,dS + \text{lavoro}$).
+\item \textbf{Seconda legge} (teorema di Hawking): l'area dell'orizzonte degli eventi non può diminuire in processi fisici classici: $\delta A \geq 0$ (analogo del $\delta S \geq 0$).
+\item \textbf{Terza legge}: non è possibile ridurre $\kappa$ a zero con un numero finito di operazioni.
+\end{itemize}
+
+\section{L'entropia di Bekenstein-Hawking}
+
+Bekenstein (1972) propose che l'entropia del buco nero è:
+\[
+S_{BH} = \frac{k_B A}{4 l_P^2} = \frac{k_B c^3 A}{4 G \hbar}
+\]
+dove $l_P = \sqrt{\hbar G/c^3} \approx 1.616 \times 10^{-35}$ m è la lunghezza di Planck. Ogni area di Planck $l_P^2 \approx 2.6 \times 10^{-70}\,\mathrm{m}^2$ contribuisce circa 1 bit di informazione. Per un buco nero di massa solare ($M = M_\odot$):
+\[
+r_S = \frac{2GM_\odot}{c^2} \approx 2.95\,\mathrm{km}, \quad A = 4\pi r_S^2 \approx 1.1 \times 10^8\,\mathrm{m}^2
+\]
+\[
+S_{BH} \approx \frac{k_B \times 1.1 \times 10^8}{4 \times 2.6 \times 10^{-70}} \approx 10^{77} k_B
+\]
+enormemente superiore all'entropia della stella che ha formato il buco nero.
+
+\section{La radiazione di Hawking}
+
+Hawking (1974) dimostrò che i buchi neri emettono radiazione termica con temperatura:
+\[
+T_H = \frac{\hbar \kappa}{2\pi k_B c} = \frac{\hbar c^3}{8\pi G M k_B}
+\]
+Per un buco nero di massa solare: $T_H \approx 6.2 \times 10^{-8}\,\mathrm{K}$ — immisurabile, ma fisicamente fondamentale. Il meccanismo: vicino all'orizzonte, le fluttuazioni del vuoto quantistico producono coppie particella-antiparticella. La particella con energia negativa cade dentro il buco nero (riducendone la massa), quella con energia positiva sfugge come radiazione.
+
+La perdita di massa: $dM/dt = -L_H$ dove $L_H \propto M^{-2}$. Il tempo di evaporazione:
+\[
+\tau_{evap} = \frac{5120\pi G^2 M^3}{\hbar c^4} \approx 2.1 \times 10^{67}\left(\frac{M}{M_\odot}\right)^3\,\mathrm{yr}
+\]
+
+\section{La formula di Ryu-Takayanagi}
+
+In AdS/CFT, l'entropia di entanglement di una regione $A$ sulla superficie di confine (teoria CFT) è data dall'area della superficie minimale $\gamma_A$ nel bulk (AdS) che si ancora al bordo di $A$:
+\[
+S(A) = \frac{\text{Area}(\gamma_A)}{4 G_N \hbar}
+\]
+Questa è l'analogo della formula di Bekenstein-Hawking per l'entanglement. La formula di Engelhardt-Wall (2015), la versione quantistica:
+\[
+S(A) = \min_X\left[\frac{\text{Area}(X)}{4G_N\hbar} + S_{\text{bulk}}(\Sigma_X)\right]
+\]
+dove $\Sigma_X$ è la regione del bulk delimitata da $X$ e $A$.
+
+\textbf{La formula dell'isola} (Almheiri et al., 2019):
+\[
+S_{\text{gen}}(\text{rad}) = \min_{\text{island}}\left[\frac{\text{Area}(\partial\text{island})}{4G_N\hbar} + S_{\text{bulk}}(\text{rad} \cup \text{island})\right]
+\]
+Questa formula produce la curva di Page: prima del Page time $t_P \approx M^3$ (in unità di Planck), il minimo non include isola; dopo $t_P$, il minimo include un'isola interna al buco nero, e l'entropia della radiazione scende verso zero. L'unitarietà è preservata.
+
+\chapter*{T.5 — Statistica Quantistica: Fermioni, Bosoni, e Condensati}
+\addcontentsline{toc}{chapter}{T.5 — Statistica Quantistica e Condensazione}
+
+\section{Le distribuzioni di Fermi-Dirac e Bose-Einstein}
+
+Per un sistema di particelle quantistiche identiche a temperatura $T$ e potenziale chimico $\mu$, il numero medio di occupazione dello stato con energia $\varepsilon$ è:
+\[
+\langle n_\varepsilon \rangle = \frac{1}{e^{(\varepsilon - \mu)/k_B T} \pm 1}
+\]
+dove $+$ vale per fermioni e $-$ per bosoni.
+
+\textbf{Fermioni} ($+$): $\langle n_\varepsilon \rangle \in [0, 1]$. A $T = 0$, $\langle n_\varepsilon \rangle = \Theta(\mu - \varepsilon)$ (funzione gradino): tutti gli stati sotto il livello di Fermi $\varepsilon_F = \mu(T=0)$ sono pieni, tutti quelli sopra sono vuoti.
+
+L'energia di Fermi per una densità di particelle $n$:
+\[
+\varepsilon_F = \frac{\hbar^2}{2m}\left(3\pi^2 n\right)^{2/3}
+\]
+Per gli elettroni nel rame ($n \approx 8.5 \times 10^{28}\,\mathrm{m}^{-3}$): $\varepsilon_F \approx 7\,\mathrm{eV}$, $T_F = \varepsilon_F/k_B \approx 80\,000\,\mathrm{K}$.
+
+La pressione di degenerazione a $T = 0$:
+\[
+P_0 = \frac{2}{5} n \varepsilon_F = \frac{\hbar^2}{5m}\left(3\pi^2\right)^{2/3} n^{5/3}
+\]
+Per $n_e$ nelle nane bianche ($\sim 10^{36}\,\mathrm{m}^{-3}$): questa pressione sostiene la stella fino al limite di Chandrasekhar.
+
+\textbf{Limite di Chandrasekhar}: quando la velocità di Fermi degli elettroni raggiunge $c$, si deve usare la statistica relativistica. La massa critica:
+\[
+M_{Ch} = \frac{5.87}{\mu_e^2} M_\odot
+\]
+dove $\mu_e$ è il numero di massa atomica per elettrone. Per $\mu_e = 2$ (elio, carbonio, ossigeno): $M_{Ch} \approx 1.44\,M_\odot$.
+
+\section{Condensazione di Bose-Einstein}
+
+\textbf{Bosoni} ($-$): il numero di occupazione può essere arbitrariamente grande. Per $T < T_c$ e $\mu \to 0^-$, una frazione macroscopica $N_0/N$ delle particelle occupa il ground state: la condensazione di Bose-Einstein (BEC).
+
+La temperatura critica:
+\[
+T_c = \frac{2\pi\hbar^2}{mk_B}\left(\frac{n}{\zeta(3/2)}\right)^{2/3} \approx 3.31 \frac{\hbar^2 n^{2/3}}{mk_B}
+\]
+dove $\zeta(3/2) \approx 2.612$ è la funzione zeta di Riemann.
+
+La prima realizzazione sperimentale della BEC (Cornell, Wieman, Ketterle; Nobel 2001, 1995): $^{87}$Rb a $T_c \approx 170\,\mathrm{nK}$.
+
+L'equazione di Gross-Pitaevskii per il condensato:
+\[
+i\hbar\frac{\partial\Psi}{\partial t} = \left(-\frac{\hbar^2\nabla^2}{2m} + V_{\text{ext}} + g|\Psi|^2\right)\Psi
+\]
+dove $g = 4\pi\hbar^2 a_s/m$ con $a_s$ la lunghezza di scattering. Questa è una NLS (nonlinear Schrödinger equation) che descrive la dinamica del campo di condensato $\Psi = \sqrt{n_0}\,e^{i\theta}$.
+
+\section{Superconduttività: le coppie di Cooper}
+
+Leon Cooper (1956) dimostrò che, in presenza di qualsiasi interazione attrattiva (anche arbitrariamente piccola) tra due elettroni vicino al livello di Fermi, si forma uno stato legato: la coppia di Cooper. L'energia di legame:
+\[
+E_{\text{pair}} \approx -2\hbar\omega_D\,e^{-2/N(0)V}
+\]
+dove $\omega_D$ è la frequenza di Debye, $N(0)$ la densità di stati al livello di Fermi, e $V > 0$ la costante di accoppiamento attrattiva.
+
+Le coppie di Cooper sono bosoni effettivi (spin totale 0 o 1) e condensano. Il parametro d'ordine è la funzione d'onda macroscopica $\Delta = V\langle c_{k\uparrow} c_{-k\downarrow}\rangle$ (gap di superconduttività). L'equazione BCS per il gap:
+\[
+1 = N(0)V \int_0^{\hbar\omega_D} \frac{d\varepsilon}{\sqrt{\varepsilon^2 + \Delta^2}} = N(0)V\, \text{arcsinh}\!\left(\frac{\hbar\omega_D}{\Delta}\right)
+\]
+Per $N(0)V \ll 1$ (limite BCS debole): $\Delta \approx 2\hbar\omega_D\,e^{-1/(N(0)V)}$.
+
+La temperatura critica: $k_B T_c = 1.134\,\hbar\omega_D\,e^{-1/(N(0)V)}$.
+
+\chapter*{T.6 — Topologia e Fasi Topologiche della Materia}
+\addcontentsline{toc}{chapter}{T.6 — Fasi Topologiche: Invarianti e Materiali}
+
+\section{La fase di Berry e il numero di Chern}
+
+Per un sistema hamiltoniano $H(\mathbf{k})$ parametrizzato dal vettore d'onda $\mathbf{k}$ nello spazio di Brillouin, la fase di Berry accumulata da un autostato $|u_n(\mathbf{k})\rangle$ lungo un percorso chiuso $\mathcal{C}$ è:
+\[
+\gamma_n = \oint_\mathcal{C} \mathbf{A}_n(\mathbf{k}) \cdot d\mathbf{k}
+\]
+dove $\mathbf{A}_n(\mathbf{k}) = i\langle u_n(\mathbf{k})|\nabla_\mathbf{k}|u_n(\mathbf{k})\rangle$ è la connessione di Berry.
+
+La curvatura di Berry (analoga al campo magnetico in spazio-$\mathbf{k}$):
+\[
+\Omega_n^{xy}(\mathbf{k}) = -2\,\text{Im}\,\langle\partial_{k_x} u_n|\partial_{k_y} u_n\rangle
+\]
+
+Il \textbf{numero di Chern} è l'integrale della curvatura su tutta la zona di Brillouin 2D:
+\[
+C_n = \frac{1}{2\pi}\int_{\text{BZ}} d^2k\, \Omega_n^{xy}(\mathbf{k}) \in \mathbb{Z}
+\]
+Il numero di Chern totale $C = \sum_n C_n$ (somma sulle bande occupate) è un invariante topologico intero.
+
+\section{L'effetto Hall quantistico intero}
+
+In un gas di elettroni 2D in forte campo magnetico $B$ a bassa temperatura, si formano i livelli di Landau con energia $E_n = \hbar\omega_c(n + 1/2)$ ($\omega_c = eB/m$ è la frequenza ciclotroica). La conduttanza di Hall è:
+\[
+\sigma_{xy} = n_L \frac{e^2}{h}
+\]
+dove $n_L$ è il numero di livelli di Landau pieni — il numero di Chern del sistema. Questo è quantizzato con una precisione di $10^{-9}$, indipendentemente dal disordine. Il IQHE è la realizzazione fisica di un invariante topologico.
+
+\section{Isolanti topologici 3D}
+
+Un isolante topologico ha $C = 0$ nel bulk (è un isolante) ma ha stati di superficie metallici protetti topologicamente. La protezione viene dalla simmetria di inversione temporale $\mathcal{T}$ (con $\mathcal{T}^2 = -1$ per sistemi con spin semi-intero).
+
+Il materiale prototipo: $\mathrm{Bi}_2\mathrm{Se}_3$ (bismuto selenuro). La struttura di banda nel bulk ha un gap di $\sim 0.3\,\mathrm{eV}$. Sulla superficie (001), c'è un cono di Dirac con dispersione lineare:
+\[
+E(\mathbf{k}) = \pm v_F|\mathbf{k}|, \quad v_F \approx 5 \times 10^5\,\mathrm{m/s}
+\]
+e spin-momentum locking: lo spin è perpendicolare al momento. La backscattering (riflessione di 180°) è proibita dalla conservazione dello spin: per cambiare segno del momento, lo spin deve ruotare di $\pi$, acquistando un fattore di fase $e^{i\pi} = -1$ che interferisce distruttivamente.
+
+Il classificazione completa delle fasi topologiche in tutte le dimensioni e simmetrie è data dalla \textbf{periodic table of topological insulators} (Kitaev, 2009; Schnyder et al., 2008): una classificazione delle fasi topologiche per classi di simmetria (le 10 classi di Altland-Zirnbauer).
+
+\chapter*{T.7 — Informazione Quantistica: Qubit, Algoritmi e Crittografia}
+\addcontentsline{toc}{chapter}{T.7 — Informazione Quantistica: Fondamenti e Applicazioni}
+
+\section{Il qubit e la sfera di Bloch}
+
+Un qubit è un sistema quantistico a 2 livelli. Il suo stato generale è:
+\[
+|\psi\rangle = \cos\frac{\theta}{2}|0\rangle + e^{i\varphi}\sin\frac{\theta}{2}|1\rangle
+\]
+con $\theta \in [0, \pi]$ e $\varphi \in [0, 2\pi)$. I parametri $(\theta, \varphi)$ identificano un punto sulla \textbf{sfera di Bloch}: i poli ($\theta = 0$ o $\pi$) corrispondono agli stati $|0\rangle$ e $|1\rangle$; l'equatore ($\theta = \pi/2$) ai stati di sovrapposizione.
+
+L'operatore densità di un qubit: $\rho = |\psi\rangle\langle\psi| = \frac{1}{2}(\mathbf{I} + \mathbf{r}\cdot\boldsymbol{\sigma})$ dove $\mathbf{r}$ è il vettore di Bloch ($|\mathbf{r}| = 1$ per stati puri, $|\mathbf{r}| < 1$ per stati misti) e $\boldsymbol{\sigma} = (\sigma_x, \sigma_y, \sigma_z)$ le matrici di Pauli.
+
+\section{Porte quantistiche universali}
+
+Le porte a singolo qubit più importanti:
+\[
+H = \frac{1}{\sqrt{2}}\begin{pmatrix}1&1\\1&-1\end{pmatrix}, \quad
+T = \begin{pmatrix}1&0\\0&e^{i\pi/4}\end{pmatrix}, \quad
+S = \begin{pmatrix}1&0\\0&i\end{pmatrix}
+\]
+$H$ (Hadamard) crea sovrapposizione: $H|0\rangle = (|0\rangle + |1\rangle)/\sqrt{2}$.
+
+La porta a due qubit CNOT:
+\[
+\text{CNOT} = \begin{pmatrix}1&0&0&0\\0&1&0&0\\0&0&0&1\\0&0&1&0\end{pmatrix}
+\]
+che nella base $\{|00\rangle, |01\rangle, |10\rangle, |11\rangle\}$ flippa il secondo qubit se il primo è $|1\rangle$.
+
+Il set $\{H, T, \text{CNOT}\}$ è \textbf{universale}: qualsiasi gate unitario può essere approssimato con precisione arbitraria usando un numero finito di queste porte (teorema di Solovay-Kitaev).
+
+\section{L'algoritmo di Shor}
+
+L'algoritmo di Shor (1994) fattorizza un intero $N$ in tempo $O((\log N)^3)$ su un computer quantistico, esponenzialmente più veloce dei migliori algoritmi classici noti ($O(e^{(\log N)^{1/3}})$).
+
+Il cuore dell'algoritmo è la ricerca del periodo di $f(x) = a^x \bmod N$ (per $a$ coprime con $N$). La struttura quantistica:
+\begin{enumerate}
+\item Preparare il registro quantistico nello stato $\frac{1}{\sqrt{Q}}\sum_{x=0}^{Q-1}|x\rangle|0\rangle$
+\item Applicare $f$ in modo reversibile: $\sum|x\rangle|f(x)\rangle$
+\item Misurare il secondo registro: ottenere un valore $f_0 = a^{x_0}\bmod N$. Il primo registro collassa in $\sum_{k}|x_0 + kr\rangle$ dove $r$ è il periodo cercato.
+\item Applicare la Quantum Fourier Transform (QFT) al primo registro: i picchi nel risultato identificano $r$.
+\end{enumerate}
+
+La QFT di un registro di $n$ qubit:
+\[
+|j\rangle \mapsto \frac{1}{\sqrt{2^n}}\sum_{k=0}^{2^n-1} e^{2\pi ijk/2^n}|k\rangle
+\]
+Si implementa in $O(n^2)$ porte invece di $O(n 2^n)$ per la FFT classica.
+
+\section{Crittografia quantistica: BB84}
+
+Il protocollo BB84 (Bennett-Brassard, 1984) permette la distribuzione di chiavi crittografiche con sicurezza garantita dalle leggi fisiche.
+
+Alice prepara singoli fotoni in 4 stati possibili: $|0\rangle, |1\rangle$ (base Z) e $|+\rangle, |-\rangle$ (base X, con $|+\rangle = H|0\rangle$). Bob misura ciascun fotone in una base scelta a caso (Z o X). Dopo la trasmissione, Alice e Bob comunicano (su canale pubblico) le basi scelte ma non i risultati. Tengono solo i bit dove le basi coincidevano: la chiave grezza.
+
+Se Eva intercetta i fotoni, deve fare misure che perturbano lo stato (teorema di no-cloning). Alice e Bob lo rilevano confrontando una frazione della chiave grezza su canale pubblico: se il tasso di errore supera $\sim 11\%$, la comunicazione viene abortita.
+
+Il teorema di no-cloning: non esiste un operatore unitario $U$ tale che $U|\psi\rangle|0\rangle = |\psi\rangle|\psi\rangle$ per tutti i $|\psi\rangle$. La prova è immediata: se $U|0\rangle|0\rangle = |0\rangle|0\rangle$ e $U|1\rangle|0\rangle = |1\rangle|1\rangle$, allora $U(|0\rangle+|1\rangle)|0\rangle/\sqrt{2} = (|00\rangle + |11\rangle)/\sqrt{2}$, ma il clone richiederebbe $(|0\rangle + |1\rangle)(|0\rangle + |1\rangle)/2 = (|00\rangle + |01\rangle + |10\rangle + |11\rangle)/2$.
+
+\chapter*{T.8 — Strutturalismo Ontico e il Principio Relazionale}
+\addcontentsline{toc}{chapter}{T.8 — OSR e Fondamenti Filosofici del PRF}
+
+\section{Il problema ontologico della meccanica quantistica}
+
+La meccanica quantistica pone un problema ontologico preciso: cosa esistono? Onde o particelle? Le risposte tradizionali sono insoddisfacenti. Non le onde (la funzione d'onda collassa alla misura). Non le particelle (non hanno traiettorie definite, violano Bell). Non entrambi (dualismo onda-particella è una risposta vaga).
+
+L'Ontic Structural Realism (OSR, Ladyman e Ross, 2007) propone una risposta radicale: la física descrive strutture relazionali, non oggetti con proprietà intrinseche. Le entità fondamentali non sono oggetti con proprietà: sono nodi in strutture relazionali, e la loro identità è data dalla loro posizione nella struttura.
+
+\section{Tre argomenti per l'OSR}
+
+\textbf{Argomento 1: Particelle identiche.} Lo stato antisimmetrico di due elettroni:
+\[
+|\Psi\rangle = \frac{1}{\sqrt{2}}\left(|a\rangle_1|b\rangle_2 - |b\rangle_1|a\rangle_2\right)
+\]
+non si fattorizza in stati individuali degli elettroni 1 e 2. Non ha senso parlare di ``lo stato dell'elettrone 1'' separatamente da ``lo stato dell'elettrone 2''. Le proprietà appartengono al sistema bipartito, non alle parti.
+
+\textbf{Argomento 2: Entanglement.} Lo stato di Bell $|\Psi^-\rangle = (|01\rangle - |10\rangle)/\sqrt{2}$ non è fattorizzabile. Le misure su A e B sono correlate in modo che viola le disuguaglianze di Bell (confermato sperimentalmente). Le proprietà fondamentali appartengono alla relazione, non agli elementi.
+
+\textbf{Argomento 3: Dualità.} La corrispondenza AdS/CFT è una dualità esatta tra due teorie con fisica diversa (una con gravità, una senza). Né l'una né l'altra è la descrizione ``vera'' della realtà: entrambe catturano la stessa struttura relazionale sottostante. Questo suggerisce che ciò che è fondamentale non è la teoria specifica ma la struttura che le due teorie condividono.
+
+\section{Il PRF come enunciato ontologico}
+
+Il \textbf{Principio Relazionale Fondamentale} (PRF) è l'affermazione che:
+\begin{quoting}
+Nessuna proprietà fisica fondamentale appartiene a un sistema fisico isolato. Ogni proprietà fisica emerge dalla relazione tra sistemi. Le strutture invarianti della realtà sono invarianti relazionali: stabili rispetto a tutte le possibili prospettive, non assolute rispetto a nessuna.
+\end{quoting}
+
+Il PRF non è una tesi epistemica (su cosa possiamo conoscere): è una tesi ontica (su cosa esiste). Equivale all'OSR con l'aggiunta che le strutture relazionali sono al livello ontologico, non solo teorico.
+
+\subsection{Il PRF nella meccanica quantistica}
+Gli stati quantistici di un sistema $S$ hanno valori definiti solo rispetto a un sistema osservante $S'$ (RQM di Rovelli). Il fatto che $S$ abbia la proprietà $P$ non è un fatto assoluto: è un fatto relativo a $S'$. Questo è evidenziato empiricamente dall'esperimento di Bong et al. (2020): i fatti quantistici non sono assoluti, ma dipendono dall'osservatore.
+
+\subsection{Il PRF nella relatività}
+La simultaneità, la lunghezza spaziale, e la durata temporale sono proprietà relazionali: dipendono dal sistema di riferimento dell'osservatore. Non c'è un ``adesso cosmico'' assoluto. Nella relatività generale, lo spazio-tempo stesso è dinamico e risponde alla materia: non è uno sfondo assoluto.
+
+\subsection{Il PRF nella gravità quantistica}
+In LQG, lo spazio emerge dalle reti di spin: non è un contenitore preesistente ma una struttura di relazioni tra grani di Planck. In AdS/CFT, la geometria del bulk emerge dall'entanglement del bordo: ER=EPR. In costruzione CDT, la geometria emerge dalla somma su triangolazioni causali.
+
+\subsection{Il PRF come programma di ricerca}
+Il PRF non è un risultato concluso: è un programma di ricerca in corso. Le sue previsioni includono: l'incompletezza del realismo locale (già verificata), la relazionalità del vuoto quantistico (Unruh, Casimir), l'emergenza della geometria dall'entanglement (Van Raamsdonk, 2010), la risoluzione del paradosso dell'informazione attraverso strutture relazionali olografiche (isola formula).
 
 \vfill
 \begin{center}
-{\small\itshape\color{captionink} Fine. \textcopyright\ Tutti i diritti riservati.}
+{\small\itshape\color{captionink}
+\textit{Il silenzio tra le stelle} — Fine.\\[0.3em]
+\textcopyright\ Tutti i diritti riservati.\\[0.3em]
+Ogni replica o utilizzo, anche parziale, richiede autorizzazione scritta.}
 \end{center}
 
 \end{document}
