@@ -310,7 +310,7 @@ def reproduce_manual_numbers() -> None:
     """Reproduces every cited number in the Field Manual, printing the
     reference chapter and the computed value. Used for self-test."""
     print("=" * 74)
-    print("LLM Systems Engineering, Edition VIII — derive.py self-test")
+    print("LLM Systems Engineering, Edition IX — derive.py self-test")
     print("=" * 74)
 
     # Ch. 2 — H100 ridge.

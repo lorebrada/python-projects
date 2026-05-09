@@ -2,7 +2,7 @@
 
 ## Edition IX · 2026
 
-**Inside modern inference, serving, and GPU execution pipelines — for engineers who build the substrate, not the surface.**
+**Inside modern inference, serving, and GPU execution pipelines; for engineers who build the substrate, not the surface.**
 
 By Lorenzo Bradanini & Lorenzo Tettamanti.
 Published by The Software Frontier.
@@ -10,7 +10,7 @@ Edition IX · revised and expanded from Edition VIII.
 
 ---
 
-> _The GPU is not an accelerator — it is the runtime. The CPU-side serving code is little more than a controller for a state machine that lives entirely in HBM._
+> _The GPU is not an accelerator, it is the runtime. The CPU-side serving code is little more than a controller for a state machine that lives entirely in HBM._
 
 ---
 
@@ -19,34 +19,37 @@ Edition IX · revised and expanded from Edition VIII.
 Edition IX is the result of a comprehensive audit of Edition VIII against primary sources. Three categories of change:
 
 **Corrections.** Fourteen numbered errors were identified and fixed against primary sources. Three were load-bearing:
+
 - The DeepSeek-V3 layer composition (the first 3 layers are dense FFN, not "all-experts-activated"; the "1,354 activated experts" arithmetic was inherited from a secondary source and was wrong).
 - The Pollaczek–Khinchine formula in Ch. 16 (missing `E[S]` factor; dimensionally wrong as written).
 - The decode roofline in Ch. 2 (omitted attention's KV-cache reads; this is why "batching harder" plateaus at long context).
 
-**Additions.** Five new chapters cover topics absent from Edition VIII whose presence is required for canonical-reference status: state-space hybrids (Ch. 36), cross-layer KV strategies (Ch. 37), thinking-model serving (Ch. 38), a real-world H100 case study (Ch. 39), and an H100 benchmark catalog (Ch. 40). Eleven existing chapters received substantial additions — MXFP4 microscaling, Flash-Decoding, multi-token-prediction-as-speculation, tree-verifier kernels, DualPipe / ZeroBubble pipeline schedules, NIXL / CXL.mem / GPUDirect Storage transports, the runnable benchmark protocol, and others.
+**Additions.** Five new chapters cover topics absent from Edition VIII whose presence is required for canonical-reference status: state-space hybrids (Ch. 36), cross-layer KV strategies (Ch. 37), thinking-model serving (Ch. 38), a real-world H100 case study (Ch. 39), and an H100 benchmark catalog (Ch. 40). Eleven existing chapters received substantial additions. MXFP4 microscaling, Flash-Decoding, multi-token-prediction-as-speculation, tree-verifier kernels, DualPipe / ZeroBubble pipeline schedules, NIXL / CXL.mem / GPUDirect Storage transports, the runnable benchmark protocol, and others.
 
 **Verifiability.** Every load-bearing numerical claim now ships with a runnable derivation in the companion `fieldmanual.derive` Python module (Appendix D). Every reference to a vLLM internal pins commit SHA and line range. Every hedge is now quantitative. Additionally, **Part XI (new in Edition IX) grounds the entire manual in real-world H100 production deployments**: a forensically detailed case study of SGLang's 96-H100 DeepSeek-V3 deployment (Ch. 39) and a primary-source-cited H100 benchmark catalog covering MLPerf Inference v5.0, Together AI, Hazy Research, FlashAttention-3, vLLM, SGLang, and Anyscale (Ch. 40). Every number in Part XI is cited to its primary source.
 
-The manual's voice — opinionated, dense, confident — is preserved unchanged. The corrections target only claims that were wrong on independent verification; the additions target only topics that any post-2025 elite reference must cover.
+The manual's voice (opinionated, dense, confident) is preserved unchanged. The corrections target only claims that were wrong on independent verification; the additions target only topics that any post-2025 elite reference must cover.
 
 ---
 
 ### A note on accuracy and provenance
 
-Every load-bearing numerical claim in this manual is cited to a primary source — peer-reviewed papers, vendor datasheets, or the source trees of production engines. Where claims rest on rapidly-evolving information (GPU specifications, kernel benchmarks, engine internals), the prose carries explicit hedge callouts. Where a derivation is shown, it is reproduced from first principles so the reader can check it; the same derivations are available as runnable code in Appendix D. Where the field has converged but a frontier remains active, the manual names both states. The field moves quickly: treat dated specifics as starting points to verify against current vendor documentation and engine source.
+Every load-bearing numerical claim in this manual is cited to a primary source; peer-reviewed papers, vendor datasheets, or the source trees of production engines. Where claims rest on rapidly-evolving information (GPU specifications, kernel benchmarks, engine internals), the prose carries explicit hedge callouts. Where a derivation is shown, it is reproduced from first principles so the reader can check it; the same derivations are available as runnable code in Appendix D. Where the field has converged but a frontier remains active, the manual names both states. The field moves quickly: treat dated specifics as starting points to verify against current vendor documentation and engine source.
 
-The bibliography lists 68 primary sources — peer-reviewed papers, vendor datasheets, and engineering documentation — up from 47 in Edition VIII. Errata accepted into the next edition will be credited.
+The bibliography lists 68 primary sources (peer-reviewed papers, vendor datasheets, and engineering documentation) up from 47 in Edition VIII. Errata accepted into the next edition will be credited.
 
 ---
 
 ## Contents
 
 **I. Foundations**
+
 01. The inference workload as a new computational class
 02. The roofline of inference (extended: linear vs attention sub-step)
 03. The prefill–decode asymmetry, derived from first principles
 
 **II. GPU-Level Mechanics**
+
 04. Attention internals: from FA-2 to FA-3 to Flash-Decoding
 05. The KV cache: layout, sizing, cost of a token
 06. MLA: when KV compression beats GQA
@@ -54,28 +57,33 @@ The bibliography lists 68 primary sources — peer-reviewed papers, vendor datas
 08. Tensor parallelism and the collective tax
 
 **III. Engine Core**
+
 09. Paged attention and the vLLM allocator
 10. Continuous batching and iteration-level scheduling
 11. Chunked prefill and Sarathi-style stall-free batching
 12. Prefix caching and the radix-tree KV index
 
 **IV. Distributed Inference**
+
 13. Disaggregated prefill / decode
 14. Speculative decoding (with tree verification, MTP, and verifier-cost-aware speedup)
 15. Quantization as a memory-system decision (FP8, AWQ, KV-INT, **MXFP4**)
 
 **V. Production & Failure Modes**
+
 16. Tail-latency collapse and admission control (corrected Pollaczek–Khinchine)
 17. The GPU underutilization paradox
 18. Hardware co-design: H100 → B200 → GB200 NVL72
 
 **VI. Advanced Topics**
+
 19. MoE serving and expert parallelism (corrected DeepSeek-V3 layer attribution; quantitative all-to-all)
 20. Sequence parallelism and ring attention
 21. Structured decoding and constrained generation
 22. Benchmarking inference: the reproducible protocol
 
 **VII. Production Anatomy**
+
 23. vLLM V1 process model: code-level anatomy
 24. Production observability: metrics that actually matter
 25. Agentic and multi-turn workloads
@@ -84,22 +92,26 @@ The bibliography lists 68 primary sources — peer-reviewed papers, vendor datas
 28. The engine ecosystem: choosing your stack
 
 **VIII. Adapters, Storage, & Streaming**
+
 29. Multi-LoRA serving
 30. KV cache offloading and the storage hierarchy (NIXL, GPUDirect Storage, CXL.mem)
 31. Streaming protocols: SSE, WebSockets, gRPC, WebTransport
 
 **IX. Applied Systems**
+
 32. Security and multi-tenancy
 33. Pipeline parallelism (with ZeroBubble and DualPipe)
 34. Vendor APIs vs self-hosted: the real TCO
 35. Case study: serving Llama-3-70B to 1,000 users
 
 **X. State Spaces, Hybrids, and Reasoning** *(new in Edition IX)*
+
 36. SSMs and hybrids: serving Mamba, Jamba, Griffin
 37. Cross-layer KV strategies: CLA, YOCO, MiniCache
 38. Thinking models: serving extended-reasoning workloads
 
 **XI. Real-world H100 in production** *(new in Edition IX)*
+
 39. Field case study: SGLang + DeepSeek-V3 on 96 H100s
 40. The H100 benchmark catalog (MLPerf v5.0, vLLM, SGLang, Together, Hazy, end-to-end)
 
@@ -115,15 +127,15 @@ F. Field operational rules
 
 ## The Thesis — A Manifesto
 
-For two decades, distributed-systems engineering crystallized around a small, stable taxonomy: stateless web tiers fronting stateful storage, batch analytics fed by message queues, online transaction processors backed by replicated logs, search systems with their inverted indices and tail-latency obsession. Each had its own canonical failure modes, its own performance models, its own folklore. An engineer trained on one could reason productively about another, because the underlying abstractions — RPC, request/response, sharding, replication, consistency — composed cleanly.
+For two decades, distributed-systems engineering crystallized around a small, stable taxonomy: stateless web tiers fronting stateful storage, batch analytics fed by message queues, online transaction processors backed by replicated logs, search systems with their inverted indices and tail-latency obsession. Each had its own canonical failure modes, its own performance models, its own folklore. An engineer trained on one could reason productively about another, because the underlying abstractions (RPC, request/response, sharding, replication, consistency) composed cleanly.
 
-LLM inference does not rhyme with any of them. It looks superficially like a request/response system — a client sends text, the server returns text — but this resemblance is a lure, and following it produces architectures that fail catastrophically in production. A single request to an LLM serving stack is not a discrete event. It is a long-running, stateful, streaming computation whose memory footprint grows monotonically with every token produced, whose execution is interleaved at sub-millisecond granularity with hundreds of other in-flight requests, and whose cost structure is dominated not by CPU cycles, not by disk seeks, not by network round-trips, but by the bandwidth between high-bandwidth memory and on-chip SRAM on a single accelerator.
+LLM inference does not rhyme with any of them. It looks superficially like a request/response system (a client sends text, the server returns text) but this resemblance is a lure, and following it produces architectures that fail catastrophically in production. A single request to an LLM serving stack is not a discrete event. It is a long-running, stateful, streaming computation whose memory footprint grows monotonically with every token produced, whose execution is interleaved at sub-millisecond granularity with hundreds of other in-flight requests, and whose cost structure is dominated not by CPU cycles, not by disk seeks, not by network round-trips, but by the bandwidth between high-bandwidth memory and on-chip SRAM on a single accelerator.
 
-The unit of work is not a request. It is a step — one forward pass over a dynamically composed batch of partially completed sequences, scheduled by a system that must reason simultaneously about GPU memory pressure, per-request latency budgets, prefix-cache hit rates, the arithmetic intensity of every kernel it dispatches, and the topology of the interconnect that ties its accelerators together. **This is the first widely deployed system in which the GPU is not an accelerator — it is the runtime.** The CPU-side serving code, in the most demanding architectures, is little more than a controller for a state machine that lives entirely in HBM.
+The unit of work is not a request. It is a step; one forward pass over a dynamically composed batch of partially completed sequences, scheduled by a system that must reason simultaneously about GPU memory pressure, per-request latency budgets, prefix-cache hit rates, the arithmetic intensity of every kernel it dispatches, and the topology of the interconnect that ties its accelerators together. **This is the first widely deployed system in which the GPU is not an accelerator, it is the runtime.** The CPU-side serving code, in the most demanding architectures, is little more than a controller for a state machine that lives entirely in HBM.
 
 The constraint that defines the field is this: **the decode step is bandwidth-bound, and HBM bandwidth scales far more slowly than peak compute.** An H100 SXM5 delivers 989 TFLOP/s of dense BF16/FP16 tensor-core compute against 3.35 TB/s of HBM3 bandwidth (NVIDIA's marketing 1,979 TFLOPS figure includes 2:1 sparsity).[H100] The B200 doubles dense FP16 FLOPs to roughly 2.25 PFLOPs while only 2.4× the bandwidth (8 TB/s).[B200] Each generation widens the gap between the math the GPU can do and the bytes it can move. Every generation makes naive autoregressive decoding worse in relative terms.
 
-This single fact is the gravitational center around which the entire modern inference stack has organized itself. Paged attention exists to enable the larger batches that raise arithmetic intensity. Continuous batching exists to keep those batches full despite request heterogeneity. Speculative decoding exists to amortize a single weight read across multiple accepted tokens. Prefix caching exists to skip the bandwidth cost of recomputation entirely. Disaggregated prefill and decode exist because forcing them onto the same GPU prevents either from being optimized for its actual bottleneck. Quantization exists because halving the precision halves the bytes moved per token. FP8 tensor cores exist because the previous generation of tensor cores was bandwidth-starved at BF16. **MXFP4** on Blackwell exists because FP8 is bandwidth-starved at frontier MoE scale. Every one of these techniques is, at root, an attempt to raise arithmetic intensity, reuse memory traffic, or hide latency behind useful work. They are not optimizations layered on top of a working system — **they are the system**. Strip them away and what remains works, but at a tenth of the throughput and a tenth of the concurrency, which in inference economics means it does not work at all.
+This single fact is the gravitational center around which the entire modern inference stack has organized itself. Paged attention exists to enable the larger batches that raise arithmetic intensity. Continuous batching exists to keep those batches full despite request heterogeneity. Speculative decoding exists to amortize a single weight read across multiple accepted tokens. Prefix caching exists to skip the bandwidth cost of recomputation entirely. Disaggregated prefill and decode exist because forcing them onto the same GPU prevents either from being optimized for its actual bottleneck. Quantization exists because halving the precision halves the bytes moved per token. FP8 tensor cores exist because the previous generation of tensor cores was bandwidth-starved at BF16. **MXFP4** on Blackwell exists because FP8 is bandwidth-starved at frontier MoE scale. Every one of these techniques is, at root, an attempt to raise arithmetic intensity, reuse memory traffic, or hide latency behind useful work. They are not optimizations layered on top of a working system, **they are the system**. Strip them away and what remains works, but at a tenth of the throughput and a tenth of the concurrency, which in inference economics means it does not work at all.
 
 This manual is a map of that layer, written from the bottom up. We start at the byte/FLOP ratio of a single forward pass and end at disaggregated multi-replica serving with prefix-aware routing, with side trips through state-space hybrids, cross-layer KV sharing, and the serving characteristics of "thinking" models. The path between those two points is the subject of modern LLM systems engineering.
 
@@ -135,7 +147,7 @@ This manual is a map of that layer, written from the bottom up. We start at the 
 
 ## 01 — The inference workload as a new computational class
 
-An autoregressive transformer generates token n+1 from a hidden state that depends on tokens 1..n. Naively re-running the full forward pass at each step would cost O(n²) over the generation. The KV cache eliminates this by storing the per-layer key and value projections of every token already seen, so each new step computes only one new K, one new V, and one attention reduction over the cached past. This single optimization — present in every serious inference system since 2020 — converts what would be a stateless function evaluation into a long-lived stateful coroutine.
+An autoregressive transformer generates token n+1 from a hidden state that depends on tokens 1..n. Naively re-running the full forward pass at each step would cost O(n²) over the generation. The KV cache eliminates this by storing the per-layer key and value projections of every token already seen, so each new step computes only one new K, one new V, and one attention reduction over the cached past. This single optimization (present in every serious inference system since 2020) converts what would be a stateless function evaluation into a long-lived stateful coroutine.
 
 The consequences of statefulness are everything. A 50-token chat reply and a 4,000-token document summary share the same model weights but allocate KV cache that differs by two orders of magnitude. A request that takes 80 ms in isolation may take 600 ms when the GPU is saturated. The notion of an "average request" is meaningless: the cost distribution is heavy-tailed in both prompt length and output length, and the system must handle both ends of that distribution on the same hardware, in the same step, at the same time.[Gordić]
 
@@ -151,7 +163,7 @@ Every one of these failure modes has been observed in production systems that in
 
 ### The right unit of work is the step
 
-The scheduler runs once per forward pass — every 20 to 60 ms in steady state, depending on model size and batch composition. On each invocation it does five things, in order, in microseconds:
+The scheduler runs once per forward pass; every 20 to 60 ms in steady state, depending on model size and batch composition. On each invocation it does five things, in order, in microseconds:
 
 1. Examine the running set of in-flight sequences and decode any whose KV is allocated.
 2. Admit new requests from the waiting queue if KV memory permits and the token budget is not exhausted.
@@ -161,7 +173,7 @@ The scheduler runs once per forward pass — every 20 to 60 ms in steady state, 
 
 This is the iteration-level scheduling pattern introduced by Orca (Yu et al., OSDI 2022)[Orca] and now standard. vLLM's V1 scheduler is its production heir; the SGLang and TensorRT-LLM equivalents differ in details but share the structure.[Gordić]
 
-> **Mental model.** The right analogy is not _HTTP server_; it is _real-time operating system_. The scheduler runs at millisecond granularity, allocates a paged memory pool, preempts under pressure, and enforces priority. It happens to be carrying language tokens instead of process pages, but every concept the kernel hackers built in the 1970s — virtual memory, page tables, working sets, copy-on-write, demand paging, swap policy — is in scope here. Engineers steeped in OS internals tend to converge on these designs faster than engineers steeped in microservices.
+> **Mental model.** The right analogy is not _HTTP server_; it is _real-time operating system_. The scheduler runs at millisecond granularity, allocates a paged memory pool, preempts under pressure, and enforces priority. It happens to be carrying language tokens instead of process pages, but every concept the kernel hackers built in the 1970s (virtual memory, page tables, working sets, copy-on-write, demand paging, swap policy) is in scope here. Engineers steeped in OS internals tend to converge on these designs faster than engineers steeped in microservices.
 
 ### The OS-analogy, made concrete
 
@@ -180,7 +192,7 @@ This is the iteration-level scheduling pattern introduced by Orca (Yu et al., OS
 
 Every concept on the left has a near-isomorphic counterpart on the right. An operating-systems engineer will learn LLM serving faster than a microservices engineer because the abstractions transfer directly.
 
-> **Key takeaways — Ch. 1.** Inference is stateful, streaming, heavy-tailed in both directions, scheduled at step granularity. Three classes of failure mode follow from inheriting web abstractions: scheduling-by-request, admission-without-memory-accounting, and request-level isolation. The OS analogy is exact: paged virtual memory, time-slicing, demand paging, work-conserving schedulers — every primitive of 1970s OS design re-enters the field.
+> **Key takeaways — Ch. 1.** Inference is stateful, streaming, heavy-tailed in both directions, scheduled at step granularity. Three classes of failure mode follow from inheriting web abstractions: scheduling-by-request, admission-without-memory-accounting, and request-level isolation. The OS analogy is exact: paged virtual memory, time-slicing, demand paging, work-conserving schedulers; every primitive of 1970s OS design re-enters the field.
 
 ---
 
@@ -188,10 +200,10 @@ Every concept on the left has a near-isomorphic counterpart on the right. An ope
 
 > Decode performance is governed by HBM bandwidth, not FLOPs. The roofline calculation tells you, before you implement anything, whether a proposed optimization is even capable of helping.
 
-Williams, Waterman, and Patterson's roofline model (CACM 2009)[Roofline] gives a hard upper bound on the throughput of any kernel: performance equals the minimum of peak compute and arithmetic intensity times peak bandwidth. For a kernel that performs F FLOPs while moving B bytes, the achievable FLOP/s is bounded by `min(peak_FLOPs, (F/B) × peak_bytes_per_s)`. The crossover point — the **ridge** — is where peak compute equals intensity × bandwidth.
+Williams, Waterman, and Patterson's roofline model (CACM 2009)[Roofline] gives a hard upper bound on the throughput of any kernel: performance equals the minimum of peak compute and arithmetic intensity times peak bandwidth. For a kernel that performs F FLOPs while moving B bytes, the achievable FLOP/s is bounded by `min(peak_FLOPs, (F/B) × peak_bytes_per_s)`. The crossover point (the **ridge**) is where peak compute equals intensity × bandwidth.
 
 ```
-ridge_intensity (FLOP/byte) = peak_compute (FLOP/s) ÷ peak_bandwidth (bytes/s)              (2.1)
+ridge_intensity (FLOP/byte) = peak_compute (FLOP/s) ÷ peak_bandwidth (bytes/s) (2.1)
 ```
 
 ### The H100 ridge
@@ -210,7 +222,7 @@ Consider the linear projections in a single decode step. For a hidden dimension 
 
 ```
 intensity_linear(decode, B=1) = 2d² FLOPs / (d² × dtype_bytes)
-                              = 2 / dtype_bytes  FLOP/byte                                  (2.3)
+                              = 2 / dtype_bytes FLOP/byte                                  (2.3)
 ```
 
 For BF16 (2 bytes), that is exactly 1 FLOP/byte. The H100 ridge is 295 FLOP/byte. A decode step at batch size 1 sits 295× below the ridge for the linear sub-step. The H100's tensor cores are 99.7% idle for that work; the GPU's wall-clock time is entirely the time it takes to stream the weights through the HBM channels.
@@ -218,7 +230,7 @@ For BF16 (2 bytes), that is exactly 1 FLOP/byte. The H100 ridge is 295 FLOP/byte
 Batching is the master variable for the linear sub-step because at batch size B, the same weight matrix is reused across B independent input rows. Bytes read stay roughly constant (the weights still need to come in once); FLOPs scale as `2Bd²`. Linear arithmetic intensity becomes:
 
 ```
-intensity_linear(decode, batch B) = 2B / dtype_bytes  FLOP/byte                             (2.4)
+intensity_linear(decode, batch B) = 2B / dtype_bytes FLOP/byte                             (2.4)
 ```
 
 ### Where the manual *previously* stopped — and why that was incomplete
@@ -236,10 +248,10 @@ Attention's KV-cache traffic is shared across `n_h / n_kv` query heads (GQA). Th
 
 ```
 intensity_attention(decode) = (4 · n · d_h · n_h) / (2 · n · d_h · n_kv · b)
-                            = (2 · n_h) / (n_kv · b)                                        (2.5)
+                            = (2 · n_h) / (n_kv · b) (2.5)
 ```
 
-This is **independent of batch size B and independent of sequence length n**. For Llama-3-70B (n_h=64, n_kv=8, BF16 b=2), `intensity_attention = 2·64 / (8·2) = 8 FLOP/byte`. For full MHA (n_h = n_kv), it is `2/b = 1 FLOP/byte` — same as the linear sub-step at B=1. For MLA in absorb mode at the DeepSeek-V3 configuration, the equivalent ratio is approximately **28 FLOP/byte** (derivation in Ch. 6) — sliding attention's operating point materially right on the roofline before any quantization.
+This is **independent of batch size B and independent of sequence length n**. For Llama-3-70B (n_h=64, n_kv=8, BF16 b=2), `intensity_attention = 2·64 / (8·2) = 8 FLOP/byte`. For full MHA (n_h = n_kv), it is `2/b = 1 FLOP/byte`, same as the linear sub-step at B=1. For MLA in absorb mode at the DeepSeek-V3 configuration, the equivalent ratio is approximately **28 FLOP/byte** (derivation in Ch. 6); sliding attention's operating point materially right on the roofline before any quantization.
 
 ### The combined picture
 
@@ -249,7 +261,7 @@ The decode step's effective throughput is set by the *minimum* arithmetic intens
 fraction_attention_bytes ≈ (n × bytes_per_token_per_layer) / (W_total / n_layers + n × bytes_per_token_per_layer)
 ```
 
-For Llama-3-70B at 4K context, the attention KV bytes per layer per step at B=1 are `4096 × (2·8·128·2) = 16.8 MB`, vs the layer's weight bytes `~1.7 GB`. Weights still dominate at 4K. At 32K context: `134 MB` vs `1.7 GB` — still weight-dominated. At 128K: `537 MB` vs `1.7 GB` — KV is now ~24% of bytes.
+For Llama-3-70B at 4K context, the attention KV bytes per layer per step at B=1 are `4096 × (2·8·128·2) = 16.8 MB`, vs the layer's weight bytes `~1.7 GB`. Weights still dominate at 4K. At 32K context: `134 MB` vs `1.7 GB`, still weight-dominated. At 128K: `537 MB` vs `1.7 GB`. KV is now ~24% of bytes.
 
 But the key insight is that batching helps the linear sub-step but does **not** help the attention sub-step. As B grows, weight reads amortize but KV reads do not. The combined intensity therefore plateaus:
 
@@ -258,7 +270,7 @@ combined_intensity(B, n) ≈ (FLOPs_linear(B) + FLOPs_attn(B, n))
                           / (bytes_weight + B · bytes_kv_per_seq(n))
 ```
 
-For Llama-3-70B at B=64, n=32K: linear intensity is 64 FLOP/byte; attention intensity is 8 FLOP/byte; total bytes are dominated by `64 × 134 MB = 8.6 GB` of KV reads vs `~1.7 GB` of weight reads. The combined intensity is approximately `(linear_FLOPs + attn_FLOPs) / total_bytes ≈ 12 FLOP/byte` — much closer to attention's 8 than linear's 64. **The H100 stays bandwidth-bound at this operating point regardless of how much further you batch.** This is the long-context plateau, and it is invisible if you only model weight reads.
+For Llama-3-70B at B=64, n=32K: linear intensity is 64 FLOP/byte; attention intensity is 8 FLOP/byte; total bytes are dominated by `64 × 134 MB = 8.6 GB` of KV reads vs `~1.7 GB` of weight reads. The combined intensity is approximately `(linear_FLOPs + attn_FLOPs) / total_bytes ≈ 12 FLOP/byte`, much closer to attention's 8 than linear's 64. **The H100 stays bandwidth-bound at this operating point regardless of how much further you batch.** This is the long-context plateau, and it is invisible if you only model weight reads.
 
 ### The roofline picture, extended
 
@@ -271,8 +283,8 @@ MHA attention sub-step (BF16) ────────────────�
 Linear sub-step, B=1   (BF16) ────────────────────  1 FLOP/byte
 Linear sub-step, B=64  (BF16) ────────────────────  64 FLOP/byte
 Linear sub-step, B=295 (BF16) ────────────────────  295 FLOP/byte (saturates ridge)
-Linear sub-step, B=64  (FP8)  ────────────────────  128 FLOP/byte
-Linear sub-step, B=64  (FP4)  ────────────────────  256 FLOP/byte
+Linear sub-step, B=64  (FP8) ────────────────────  128 FLOP/byte
+Linear sub-step, B=64  (FP4) ────────────────────  256 FLOP/byte
 ```
 
 The Sarathi-Serve paper's measured roofline on 4×A100 LLaMA-2-70B confirms exactly this combined picture: prefill batches sit near the compute ceiling at moderate sizes; decode batches stay bandwidth-bound until batch sizes well into the hundreds, at which point KV memory typically binds first.[Sarathi-Serve]
@@ -281,11 +293,11 @@ The Sarathi-Serve paper's measured roofline on 4×A100 LLaMA-2-70B confirms exac
 
 1. **FLOP/dollar is the wrong procurement metric for inference.** A GPU with 2× the FLOPs and 1.2× the bandwidth will deliver roughly 1.2× the decode throughput, not 2×. The H100 → B200 jump bears this out: FLOPs roughly tripled, bandwidth grew 2.4×, decode throughput tracks bandwidth.
 
-2. **Kernel fusion that doesn't reduce HBM traffic doesn't help decode.** Fusing two compute-bound elementwise ops into one launch saves launch overhead, which is a different problem (Ch. 7); it does not move the operating point on the roofline. Fusing operations that share a tensor — RMSNorm with the residual add, QKV projections into a single GEMM — does help, because it eliminates redundant HBM reads.
+2. **Kernel fusion that doesn't reduce HBM traffic doesn't help decode.** Fusing two compute-bound elementwise ops into one launch saves launch overhead, which is a different problem (Ch. 7); it does not move the operating point on the roofline. Fusing operations that share a tensor (RMSNorm with the residual add, QKV projections into a single GEMM) does help, because it eliminates redundant HBM reads.
 
 3. **Speculative decoding's economic model is exactly "raise arithmetic intensity per accepted token."** Verifying k drafted tokens in a single forward pass reads the weights once but produces (in expectation) more than one accepted token. We derive the speedup formula in Ch. 14, including the verifier-cost correction that Edition VIII did not state explicitly.
 
-> **Key takeaways — Ch. 2.** The roofline model bounds throughput by `min(peak FLOPs, intensity × peak bandwidth)`. For an H100, the BF16 ridge is ~295 FLOP/byte. Decode at batch 1 sits at intensity ≈ 1 (linear) or ≈ 1–8 (attention, depending on GQA degree) — two orders of magnitude below the ridge. Batching helps the linear sub-step but not the attention sub-step; the latter is fixed by `(2 n_h) / (n_kv b)`. Long-context decode plateaus when KV traffic dominates. Every modern inference optimization is, at root, a maneuver to raise arithmetic intensity (batching, speculation), reduce bytes moved (caching, quantization, MLA, cross-layer KV sharing), or hide latency behind useful work (CUDA Graphs, fusion).
+> **Key takeaways — Ch. 2.** The roofline model bounds throughput by `min(peak FLOPs, intensity × peak bandwidth)`. For an H100, the BF16 ridge is ~295 FLOP/byte. Decode at batch 1 sits at intensity ≈ 1 (linear) or ≈ 1–8 (attention, depending on GQA degree), two orders of magnitude below the ridge. Batching helps the linear sub-step but not the attention sub-step; the latter is fixed by `(2 n_h) / (n_kv b)`. Long-context decode plateaus when KV traffic dominates. Every modern inference optimization is, at root, a maneuver to raise arithmetic intensity (batching, speculation), reduce bytes moved (caching, quantization, MLA, cross-layer KV sharing), or hide latency behind useful work (CUDA Graphs, fusion).
 
 ---
 
@@ -310,8 +322,8 @@ The Sarathi paper measures the crossover empirically: on H100, a prefill batch w
 ### Cost scaling, made explicit
 
 ```
-prefill_cost  ≈ Θ(L² · d  +  L · d²)        [attention is L², projections are L · d²]
-decode_step_cost ≈ Θ(d²  +  n · d)          [projections d², attention n · d]
+prefill_cost  ≈ Θ(L² · d  +  L · d²) [attention is L², projections are L · d²]
+decode_step_cost ≈ Θ(d²  +  n · d) [projections d², attention n · d]
 ```
 
 For L < d (typical small prompts), prefill is dominated by the d² term and looks like a sequence of GEMMs; for L > d, the L² attention term takes over. For decode, the d² weight-read term dominates at short context and the `n·d` attention KV-read term dominates at long context. (Ch. 2 derivations make this precise.)
@@ -323,11 +335,11 @@ For L < d (typical small prompts), prefill is dominated by the d² term and look
 
 ### Why mixing them in one batch creates bubbles
 
-The two phases share weights but compete for SMs, HBM channels, and the launch queue. A long prefill scheduled in the same step as decodes blocks the decodes for the duration of the prefill — the "generation stall" that Sarathi-Serve targets.[Sarathi-Serve] A small decode-only batch leaves SMs idle because the decode workload cannot saturate tensor cores no matter how many SMs are available.
+The two phases share weights but compete for SMs, HBM channels, and the launch queue. A long prefill scheduled in the same step as decodes blocks the decodes for the duration of the prefill; the "generation stall" that Sarathi-Serve targets.[Sarathi-Serve] A small decode-only batch leaves SMs idle because the decode workload cannot saturate tensor cores no matter how many SMs are available.
 
 This asymmetry is the conceptual root of three of the most consequential serving designs of the last three years:
 
-- **Chunked prefill** (Sarathi 2023; Sarathi-Serve OSDI '24). Slice the long prefill into chunks and interleave each chunk with the decode batch — fills the bandwidth slack of decode with the compute density of prefill. Chapter 11.
+- **Chunked prefill** (Sarathi 2023; Sarathi-Serve OSDI '24). Slice the long prefill into chunks and interleave each chunk with the decode batch; fills the bandwidth slack of decode with the compute density of prefill. Chapter 11.
 
 - **Disaggregated prefill/decode** (DistServe OSDI '24). Run prefill and decode on separate replica pools, transfer KV between them. Each pool is sized and tuned for its own bottleneck. Chapter 13.
 
@@ -350,17 +362,17 @@ The naive formulation materializes an L × L score matrix in HBM:
 ```python
 # For each layer, each head:
 S = Q @ K.T            # [L, L] — written to HBM
-P = softmax(S)         # [L, L] — read, computed, written
+P = softmax(S) # [L, L] — read, computed, written
 O = P @ V              # [L, d] — read, computed, written
 ```
 
-For L = 32,768 and a single head with d = 128, the score matrix alone is 2 GB per head per layer in BF16 (32768² × 2 bytes) — multiplied across heads and layers, this exceeds the model itself. The IO cost is also lethal: each element of S is written, read, and then written again. The naive attention is a textbook bandwidth-bound kernel masquerading as a compute-bound one.
+For L = 32,768 and a single head with d = 128, the score matrix alone is 2 GB per head per layer in BF16 (32768² × 2 bytes); multiplied across heads and layers, this exceeds the model itself. The IO cost is also lethal: each element of S is written, read, and then written again. The naive attention is a textbook bandwidth-bound kernel masquerading as a compute-bound one.
 
 ### FlashAttention's central insight
 
 FlashAttention (Dao, Fu, Ermon, Rudra, Ré, NeurIPS 2022)[FA-1] observes that the score matrix never needs to be materialized in HBM. By tiling Q, K, and V in SRAM and computing softmax incrementally with online running statistics, the entire attention block is performed with HBM IO proportional to (L × d), not (L²). The mathematical foundation is the "online softmax" identity: given partial running max `m` and partial running denominator `ℓ`, a new block of scores can be incorporated by rescaling `ℓ` with `exp(m_old − m_new)` and accumulating exponentials over the new max.
 
-A Triton-style sketch of the FA-2 forward pass — annotated to show where HBM traffic happens:
+A Triton-style sketch of the FA-2 forward pass; annotated to show where HBM traffic happens:
 
 ```python
 @triton.jit
@@ -405,7 +417,7 @@ FA-2 (2023)[FA-2] parallelized the algorithm across the sequence dimension and r
 
 FA-3 (Shah, Bikshandi, Zhang, Thakkar, Ramani, Dao, NeurIPS 2024)[FA3] targets Hopper's specific hardware features. The published-version benchmarks report FA-3 reaching **840 TFLOP/s in BF16 (≈85% of H100 peak)** and approximately **1.3 PFLOP/s in FP8**. (The earlier blog post quoted 740/75% and 1.2 PFLOPs; the paper was updated for the camera-ready.) Three innovations:
 
-1. **Warp specialization (producer / consumer split).** The CTA is split into producer warps that issue asynchronous TMA (Tensor Memory Accelerator) loads from HBM into shared memory, and consumer warps that execute WGMMA (warp-group matrix-multiply-accumulate) and softmax. The `setmaxnreg` PTX instruction reallocates registers between groups dynamically — producer warps need fewer registers (mostly addresses), consumers need many (accumulators). A circular SMEM buffer (a ring of shared-memory tiles) enables round-robin double/triple buffering: new K/V blocks are loaded while old ones are being consumed.
+1. **Warp specialization (producer / consumer split).** The CTA is split into producer warps that issue asynchronous TMA (Tensor Memory Accelerator) loads from HBM into shared memory, and consumer warps that execute WGMMA (warp-group matrix-multiply-accumulate) and softmax. The `setmaxnreg` PTX instruction reallocates registers between groups dynamically; producer warps need fewer registers (mostly addresses), consumers need many (accumulators). A circular SMEM buffer (a ring of shared-memory tiles) enables round-robin double/triple buffering: new K/V blocks are loaded while old ones are being consumed.
 
 2. **GEMM/softmax interleaving (ping-pong).** Softmax requires `exp` evaluations, which run on the **Special Function Units** (referred to as MUFU at the SASS / hardware-block level, exposed via the `ex2.approx` family of PTX instructions). On H100 SXM5 these deliver only ~3.9 TFLOP/s for `exp` against 989 TFLOP/s for matmul (a ~256× ratio). FA-3 schedules the softmax of warp-group A to run during the WGMMA of warp-group B, hiding the softmax cost behind tensor-core math. This is the same pattern as software pipelining in classical compilers, lifted onto the warpgroup level.
 
@@ -415,7 +427,7 @@ The ablations in the FA-3 paper isolate each technique's independent contributio
 
 ### Flash-Decoding: split-K for decode B=1 *(new in Edition IX)*
 
-FA-2 and FA-3 are designed for prefill, where Q has many rows and parallelism comes from query tiling. At decode B=1, there is exactly one Q row per layer per request, and FA's natural parallelism unit (BLOCK_M Q rows) collapses to a single CTA — leaving the rest of the H100's 132 SMs idle even though HBM is saturated by KV reads.
+FA-2 and FA-3 are designed for prefill, where Q has many rows and parallelism comes from query tiling. At decode B=1, there is exactly one Q row per layer per request, and FA's natural parallelism unit (BLOCK_M Q rows) collapses to a single CTA; leaving the rest of the H100's 132 SMs idle even though HBM is saturated by KV reads.
 
 **Flash-Decoding** (Dao et al., FlashAttention repo / blog, October 2023; published as FA-Decoding) splits the K dimension across SMs: each SM computes attention against a chunk of the cached K/V, producing a partial softmax output `(O_i, m_i, ℓ_i)`; a second-pass reduction kernel merges these via online softmax merging into the final output. The result is full SM utilization at decode B=1, recovering 2–4× decode throughput on long contexts.
 
@@ -435,7 +447,7 @@ Mathematically, the merge is a generalization of the online-softmax identity to 
 
 ### GQA and MQA as bandwidth strategies
 
-Multi-head attention costs `n_heads × head_dim × 2` bytes of KV per token per layer. **Grouped-query attention** (Ainslie et al., EMNLP 2023)[GQA] shares K and V across groups of query heads, reducing KV memory and bandwidth by a factor of `n_heads / n_kv_heads`. Llama-3-70B uses 8 KV heads to 64 query heads — an 8× reduction in KV bandwidth at near-MHA quality. **Multi-query attention** (Shazeer, 2019)[MQA] is the extreme case with `n_kv_heads = 1`; it reduces KV by the full factor of `n_heads` at higher quality cost.
+Multi-head attention costs `n_heads × head_dim × 2` bytes of KV per token per layer. **Grouped-query attention** (Ainslie et al., EMNLP 2023)[GQA] shares K and V across groups of query heads, reducing KV memory and bandwidth by a factor of `n_heads / n_kv_heads`. Llama-3-70B uses 8 KV heads to 64 query heads; an 8× reduction in KV bandwidth at near-MHA quality. **Multi-query attention** (Shazeer, 2019)[MQA] is the extreme case with `n_kv_heads = 1`; it reduces KV by the full factor of `n_heads` at higher quality cost.
 
 GQA is the largest single bandwidth optimization in the modern transformer stack. Every recent open model (Llama-3, Mistral, Qwen, DeepSeek for query attention) uses GQA or its variants. The choice of `n_kv_heads` is itself an architectural design decision with serving implications: smaller is faster but quality may degrade, larger preserves quality at the cost of bandwidth.
 
@@ -450,9 +462,9 @@ The KV-per-token figures below are expressed as a fraction of an MHA baseline wi
 
 ### FlashInfer: the kernel library that ties this together
 
-In production, the FlashAttention papers describe the algorithm; the kernels that engines actually call live in **FlashInfer** (Ye et al., MLSys 2025)[FlashInfer], a unified attention engine integrated into vLLM, SGLang, TensorRT-LLM, TGI, MLC-LLM, and several proprietary stacks. FlashInfer routes calls through a common API to the appropriate kernel — FA-2, FA-3, cuDNN-attention, CUTLASS, or TensorRT-LLM kernels — depending on hardware capabilities, KV layout (paged or contiguous, block-sparse or compressed), and runtime configuration. NVIDIA now publishes its highest-performance inference kernels (including those from TensorRT-LLM) directly into FlashInfer for downstream framework adoption.[FlashInfer-NV]
+In production, the FlashAttention papers describe the algorithm; the kernels that engines actually call live in **FlashInfer** (Ye et al., MLSys 2025)[FlashInfer], a unified attention engine integrated into vLLM, SGLang, TensorRT-LLM, TGI, MLC-LLM, and several proprietary stacks. FlashInfer routes calls through a common API to the appropriate kernel (FA-2, FA-3, cuDNN-attention, CUTLASS, or TensorRT-LLM kernels) depending on hardware capabilities, KV layout (paged or contiguous, block-sparse or compressed), and runtime configuration. NVIDIA now publishes its highest-performance inference kernels (including those from TensorRT-LLM) directly into FlashInfer for downstream framework adoption.[FlashInfer-NV]
 
-A practical consequence: when comparing engine throughput, a substantial fraction of the "engine performance" on Hopper-class hardware is in fact FlashInfer performance — the engines differ more in scheduling, batching, and overhead than in the raw attention kernel.
+A practical consequence: when comparing engine throughput, a substantial fraction of the "engine performance" on Hopper-class hardware is in fact FlashInfer performance; the engines differ more in scheduling, batching, and overhead than in the raw attention kernel.
 
 > **Key takeaways — Ch. 4.** FA-2 reaches ~35% of H100 BF16 peak (Hopper-specific bottleneck on async pipeline); FA-3 reaches ~85% via warp specialization, GEMM/softmax interleaving, and block FP8. Flash-Decoding splits K across SMs to recover decode parallelism at B=1. GQA / MQA / MLA are bandwidth strategies; the per-token ratio against same-`n_heads` MHA is `n_kv / n_heads`. FlashInfer is the production dispatch layer; many "engine performance" claims on Hopper reduce to FlashInfer kernel performance.
 
@@ -479,20 +491,20 @@ Llama-3-70B has 80 layers, 8 KV heads (GQA, 64 query heads grouped into 8), and 
 | COMPONENT | VALUE | NOTE |
 |---|---|---|
 | K and V factor | 2 | K + V tensors |
-| `n_layers` | 80 | — |
+| `n_layers` | 80 |, |
 | `n_kv_heads` | 8 | GQA: 64 q-heads / 8 |
-| `head_dim` | 128 | — |
+| `head_dim` | 128 |, |
 | `dtype_bytes` | 2 | BF16 |
 | **per-token** | **327,680 B ≈ 320 KiB** | `2 × 80 × 8 × 128 × 2` |
 | per 4 K context | ~1.34 GB | `4,096 × 327,680 B` |
 | per 32 K context | ~10.74 GB | `32,768 × 327,680 B` |
-| per 128 K context | ~42.95 GB | — |
+| per 128 K context | ~42.95 GB |, |
 
-This is independently verifiable via the runnable derivation in Appendix D (`derive.kv_per_token(...)`). The same 327,680 B/token figure is cited in production engineering write-ups of disaggregated serving.[Jarvis] A single 32 K-context request consumes ~10.74 GB of HBM — roughly the weight footprint of a 5 B-parameter model in BF16, or the entire weight memory of a 10 B-parameter model in INT8. **This is why KV memory, not weights, becomes the dominant scheduling concern at long context.**
+This is independently verifiable via the runnable derivation in Appendix D (`derive.kv_per_token(...)`). The same 327,680 B/token figure is cited in production engineering write-ups of disaggregated serving.[Jarvis] A single 32 K-context request consumes ~10.74 GB of HBM; roughly the weight footprint of a 5 B-parameter model in BF16, or the entire weight memory of a 10 B-parameter model in INT8. **This is why KV memory, not weights, becomes the dominant scheduling concern at long context.**
 
 ### Capacity arithmetic: how many concurrent requests fit?
 
-An H100 80GB serving Llama-3-70B in BF16 uses approximately 141 GB for weights — meaning the model already requires TP=2 (two H100s) to fit. With TP=2, each GPU holds half the weights (~70 GB) and contributes its other ~10 GB to KV. Total cluster KV across the two GPUs is therefore approximately 20 GB, leaving 4 K-context concurrency at about 15 simultaneous requests. At 32 K context, that drops to 2.
+An H100 80GB serving Llama-3-70B in BF16 uses approximately 141 GB for weights; meaning the model already requires TP=2 (two H100s) to fit. With TP=2, each GPU holds half the weights (~70 GB) and contributes its other ~10 GB to KV. Total cluster KV across the two GPUs is therefore approximately 20 GB, leaving 4 K-context concurrency at about 15 simultaneous requests. At 32 K context, that drops to 2.
 
 An H200 with 141 GB HBM3e changes the math: TP=2 leaves about 70 GB total KV, supporting roughly 50 concurrent 4K-context requests or 6 simultaneous 32K-context requests. A B200 with 192 GB doubles this again. Each GPU generation buys roughly proportionally more concurrency at constant context length, which is why long-context serving is the killer app for HBM scaling.[Vast]
 
@@ -514,42 +526,42 @@ The paged layout is the load-bearing decision of modern engines. We come back to
 
 > DeepSeek's Multi-head Latent Attention compresses K and V into a low-rank latent before caching, reducing KV memory by an order of magnitude beyond GQA at equal or better model quality.
 
-GQA reduces KV bandwidth by sharing K/V across query-head groups; MLA goes further by storing a compressed latent and projecting back to full K/V at attention time. This shifts cost from memory to compute — a favorable trade in the bandwidth-bound decode regime.
+GQA reduces KV bandwidth by sharing K/V across query-head groups; MLA goes further by storing a compressed latent and projecting back to full K/V at attention time. This shifts cost from memory to compute; a favorable trade in the bandwidth-bound decode regime.
 
 ### The compression structure
 
-For each token x, MLA produces a compressed latent `c_KV = W^DKV x` of dimension `d_c` (the "KV LoRA rank"), and stores only this in the cache. At attention time, K and V are reconstructed by projection: `K = W^UK c_KV`, `V = W^UV c_KV`. The position-dependent component (RoPE) is decoupled into a small per-token tensor of dimension `d_h^R` (typically 64) to avoid the "low-rank + RoPE" incompatibility — RoPE rotates K differently at each position, which breaks the low-rank assumption unless the positional component is kept separate.[MLA / V2][DeepSeek-V3]
+For each token x, MLA produces a compressed latent `c_KV = W^DKV x` of dimension `d_c` (the "KV LoRA rank"), and stores only this in the cache. At attention time, K and V are reconstructed by projection: `K = W^UK c_KV`, `V = W^UV c_KV`. The position-dependent component (RoPE) is decoupled into a small per-token tensor of dimension `d_h^R` (typically 64) to avoid the "low-rank + RoPE" incompatibility. RoPE rotates K differently at each position, which breaks the low-rank assumption unless the positional component is kept separate.[MLA / V2][DeepSeek-V3]
 
 ```
-KV memory per token (MLA) = (d_c + d_h^R) × dtype_bytes  per layer                          (6.1)
+KV memory per token (MLA) = (d_c + d_h^R) × dtype_bytes per layer                          (6.1)
 ```
 
-For DeepSeek-V3 with `d_c = 512`, `d_h^R = 64`, BF16, that is `(512 + 64) × 2 = 1,152 bytes per token per layer` — compared with MHA's `2 × n_heads × head_dim × 2` bytes per layer. At a like-for-like baseline of 16-head MHA with `head_dim = 128`, MLA delivers a reduction of `(2 × 16 × 128 × 2) / 1152 = 8,192 / 1152 ≈ 7.1×`.
+For DeepSeek-V3 with `d_c = 512`, `d_h^R = 64`, BF16, that is `(512 + 64) × 2 = 1,152 bytes per token per layer`; compared with MHA's `2 × n_heads × head_dim × 2` bytes per layer. At a like-for-like baseline of 16-head MHA with `head_dim = 128`, MLA delivers a reduction of `(2 × 16 × 128 × 2) / 1152 = 8,192 / 1152 ≈ 7.1×`.
 
-At the V3 scale where the equivalent MHA would have `n_h = 128, head_dim = 128`, the comparison is `(2 × 128 × 128 × 2) / 1152 = 65,536 / 1152 ≈ **56.9×** reduction`. The DeepSeek-V2 paper reports 5–13% of MHA KV under various configurations — a ~10× reduction at typical settings.[MLA / V2]
+At the V3 scale where the equivalent MHA would have `n_h = 128, head_dim = 128`, the comparison is `(2 × 128 × 128 × 2) / 1152 = 65,536 / 1152 ≈ **56.9×** reduction`. The DeepSeek-V2 paper reports 5–13% of MHA KV under various configurations, a ~10× reduction at typical settings.[MLA / V2]
 
 ### Why this isn't free — and why it pays anyway
 
 MLA introduces two additional projection GEMMs at attention time. The trade is favorable because:
 
 1. Decode is bandwidth-bound, so reducing bytes-per-token directly increases token throughput.
-2. The extra GEMMs are small and benefit from tensor-core throughput; in a regime where bandwidth is the binding constraint, this is "free compute" — you are paying with cycles you would otherwise spend stalled on HBM.
+2. The extra GEMMs are small and benefit from tensor-core throughput; in a regime where bandwidth is the binding constraint, this is "free compute"; you are paying with cycles you would otherwise spend stalled on HBM.
 
 MLA's effect on the **attention sub-step's arithmetic intensity** can be derived directly from Ch. 2's framework. In "absorb mode" (where `W^UV` is fused into downstream ops so the cached latent is consumed without intermediate decompression), the effective intensity is approximately:
 
 ```
-intensity_attention(MLA absorb) ≈ (2 · n_h · d_h) / ((d_c + d_h^R) · b)                     (6.2)
+intensity_attention(MLA absorb) ≈ (2 · n_h · d_h) / ((d_c + d_h^R) · b) (6.2)
 ```
 
-For DeepSeek-V3 (n_h=128, d_h=128, d_c=512, d_h^R=64, BF16): `(2·128·128) / ((512+64)·2) = 32,768 / 1,152 ≈ **28.4 FLOP/byte**` — a much better ratio than GQA's 8 FLOP/byte at Llama-3-70B scale, and ~28× better than MHA's 1 FLOP/byte at BF16.
+For DeepSeek-V3 (n_h=128, d_h=128, d_c=512, d_h^R=64, BF16): `(2·128·128) / ((512+64)·2) = 32,768 / 1,152 ≈ **28.4 FLOP/byte**`; a much better ratio than GQA's 8 FLOP/byte at Llama-3-70B scale, and ~28× better than MHA's 1 FLOP/byte at BF16.
 
 ### Operational verdict
 
-DeepSeek's V2 ablations show MLA matching or slightly exceeding MHA quality on most benchmarks, while GQA underperforms MHA — a counterintuitive but reproducible result.[Raschka] MLA also requires specialized attention kernels (the projection has to be fused into the attention path) and specialized KV-cache layouts. The vLLM and SGLang teams have shipped MLA-aware paths; the engineering complexity is real but contained.
+DeepSeek's V2 ablations show MLA matching or slightly exceeding MHA quality on most benchmarks, while GQA underperforms MHA, a counterintuitive but reproducible result.[Raschka] MLA also requires specialized attention kernels (the projection has to be fused into the attention path) and specialized KV-cache layouts. The vLLM and SGLang teams have shipped MLA-aware paths; the engineering complexity is real but contained.
 
-For a model trained from scratch at the multi-hundred-billion-parameter scale, **MLA is now a defensible default**. For an MHA or GQA model already in production, retrofitting MLA via fine-tuning (the MHA2MLA family of methods) is feasible — Ji et al. report Llama-2-7B KV reduced 92.19% with only 0.5% LongBench drop using 3–6% of pretraining data — but has not yet been shown to fully recover MHA's quality across all tasks.[MHA2MLA]
+For a model trained from scratch at the multi-hundred-billion-parameter scale, **MLA is now a defensible default**. For an MHA or GQA model already in production, retrofitting MLA via fine-tuning (the MHA2MLA family of methods) is feasible. Ji et al. report Llama-2-7B KV reduced 92.19% with only 0.5% LongBench drop using 3–6% of pretraining data; but has not yet been shown to fully recover MHA's quality across all tasks.[MHA2MLA]
 
-> **Key takeaways — Ch. 6.** MLA caches `c_KV ∈ ℝ^{d_c}` plus `k_R ∈ ℝ^{d_h^R}` per token per layer. At V3 configuration, this is `1,152 bytes/token/layer` vs `65,536` for MHA-equivalent — a ~57× reduction. The "absorb" optimization is a kernel-fusion trick orthogonal to cache size. MLA's attention sub-step intensity is ~28 FLOP/byte (BF16, V3 scale), vs ~8 for GQA-8 and ~1 for MHA. MLA is the most aggressive bandwidth optimization currently available short of quantization.
+> **Key takeaways — Ch. 6.** MLA caches `c_KV ∈ ℝ^{d_c}` plus `k_R ∈ ℝ^{d_h^R}` per token per layer. At V3 configuration, this is `1,152 bytes/token/layer` vs `65,536` for MHA-equivalent, a ~57× reduction. The "absorb" optimization is a kernel-fusion trick orthogonal to cache size. MLA's attention sub-step intensity is ~28 FLOP/byte (BF16, V3 scale), vs ~8 for GQA-8 and ~1 for MHA. MLA is the most aggressive bandwidth optimization currently available short of quantization.
 
 ---
 
@@ -557,16 +569,16 @@ For a model trained from scratch at the multi-hundred-billion-parameter scale, *
 
 > A naïve decode step issues 80–120 kernels and pays microseconds of host overhead on each. Without fusion and graph capture, launch latency alone caps decode throughput far below the bandwidth ceiling.
 
-A single transformer layer, in the simplest implementation, dispatches kernels for: input RMSNorm, Q projection, K projection, V projection, RoPE, attention, output projection, residual add, post-attention RMSNorm, gate projection, up projection, SwiGLU activation, down projection, residual add. That's roughly 14 launches per layer, multiplied by 80 layers for a 70B model, plus pre/post processing — 1,100–1,500 launches per decode step.
+A single transformer layer, in the simplest implementation, dispatches kernels for: input RMSNorm, Q projection, K projection, V projection, RoPE, attention, output projection, residual add, post-attention RMSNorm, gate projection, up projection, SwiGLU activation, down projection, residual add. That's roughly 14 launches per layer, multiplied by 80 layers for a 70B model, plus pre/post processing, 1,100–1,500 launches per decode step.
 
-Per-launch overhead from the CUDA host runtime is in the single-digit microseconds. Stanford Hazy Research's microbenchmarks on H100 measure approximately **2.1 µs per stream-launched kernel** and approximately **0.5–0.7 µs per node in a captured CUDA Graph** (a 3–4× reduction once captured).[Hazy] At ~2 µs per stream launch, 1,200 launches cost roughly 2.5 ms of pure host overhead. For a small Llama-1B-class model where the entire forward pass fits in under 1 ms (Hazy's measured baseline: vLLM and SGLang at ~2.5–4 forward passes per ms on H100), launch overhead alone consumes a substantial fraction — sometimes the majority — of wall time. For larger models with longer per-kernel work, the launch fraction drops; the "launch tax" is most acute on small models, heavy quantization, and low-batch decode.
+Per-launch overhead from the CUDA host runtime is in the single-digit microseconds. Stanford Hazy Research's microbenchmarks on H100 measure approximately **2.1 µs per stream-launched kernel** and approximately **0.5–0.7 µs per node in a captured CUDA Graph** (a 3–4× reduction once captured).[Hazy] At ~2 µs per stream launch, 1,200 launches cost roughly 2.5 ms of pure host overhead. For a small Llama-1B-class model where the entire forward pass fits in under 1 ms (Hazy's measured baseline: vLLM and SGLang at ~2.5–4 forward passes per ms on H100), launch overhead alone consumes a substantial fraction (sometimes the majority) of wall time. For larger models with longer per-kernel work, the launch fraction drops; the "launch tax" is most acute on small models, heavy quantization, and low-batch decode.
 
 ### Three remedies, in increasing order of constraint
 
 | TECHNIQUE | MECHANISM | SPEEDUP | CONSTRAINT |
 |---|---|---|---|
 | Fusion | Combine compatible ops (RMSNorm + residual; QKV in one GEMM; gate + up + SwiGLU) | 1.2–2× per fused group | Numerical parity must be preserved |
-| CUDA Graphs | Capture a sequence of launches once; replay as one host call | 2–5× on launch-bound steps | Shape stability — graph re-captured on shape change |
+| CUDA Graphs | Capture a sequence of launches once; replay as one host call | 2–5× on launch-bound steps | Shape stability; graph re-captured on shape change |
 | Persistent kernels (megakernels) | One kernel runs continuously, polling work queues | Eliminates launch overhead entirely | Locks execution pattern; hard to compose |
 
 ### Fusion patterns that save HBM traffic
@@ -597,11 +609,11 @@ def step(real_inputs):                         # at step time
     bs = next_pow2(real_inputs.batch_size)
     g, in_buffers, out_buffers = captured_graphs[bs]
     in_buffers.copy_(pad_to(real_inputs, bs))
-    g.replay()                                 # single host call
+    g.replay() # single host call
     return unpad(out_buffers, real_inputs.batch_size)
 ```
 
-The trade is a small amount of padded work (the difference between the real batch size and the next captured power-of-2) for a large reduction in launch overhead. On launch-bound workloads — small models, heavy quantization, low-batch decode — graph capture is one of the largest single optimizations available.
+The trade is a small amount of padded work (the difference between the real batch size and the next captured power-of-2) for a large reduction in launch overhead. On launch-bound workloads (small models, heavy quantization, low-batch decode) graph capture is one of the largest single optimizations available.
 
 ### Megakernels — when they apply
 
@@ -611,7 +623,7 @@ Megakernels apply when (i) the model is small enough that the entire forward pas
 
 > **Production pitfall.** CUDA Graphs and continuous batching interact badly with dynamic features (variable LoRA selection, structured-decoding masks, speculative-decoding tree shapes). Many production bugs trace to a code path that worked in eager mode and silently broke under graph capture because of an unexpected shape dependency or an unsupported kernel. Always test the captured-graph path explicitly, with the full set of features the engine ships with.
 
-> **Key takeaways — Ch. 7.** Decode launches ~1,200 kernels at ~2 µs each = 2.5 ms of host overhead — substantial on small models. CUDA Graphs cut this to ~0.5 µs per node (3–4× reduction). Fusion that shares tensors saves HBM round-trips; fusion that just merges launches saves only host time. Megakernels are the upper bound but apply only to small models or homogeneous-batch workloads.
+> **Key takeaways — Ch. 7.** Decode launches ~1,200 kernels at ~2 µs each = 2.5 ms of host overhead, substantial on small models. CUDA Graphs cut this to ~0.5 µs per node (3–4× reduction). Fusion that shares tensors saves HBM round-trips; fusion that just merges launches saves only host time. Megakernels are the upper bound but apply only to small models or homogeneous-batch workloads.
 
 ---
 
@@ -624,7 +636,7 @@ The Megatron-LM partitioning (Shoeybi, Patwary, Puri, LeGresley, Casper, Catanza
 - **Column-parallel.** Weight matrix split along the output dimension; each GPU produces a slice of the output; outputs are concatenated via all-gather (or kept sliced for the next op).
 - **Row-parallel.** Weight matrix split along the input dimension; each GPU computes a partial sum; partial sums are summed via all-reduce.
 
-Composing one column-parallel layer feeding one row-parallel layer requires exactly one all-reduce per pair. A standard transformer block (attention + MLP) becomes **two all-reduces per layer in the forward pass** — one after the attention output projection, one after the MLP down projection.
+Composing one column-parallel layer feeding one row-parallel layer requires exactly one all-reduce per pair. A standard transformer block (attention + MLP) becomes **two all-reduces per layer in the forward pass**; one after the attention output projection, one after the MLP down projection.
 
 ```
 Tensor-parallel MLP at TP=4:
@@ -642,7 +654,7 @@ The standard cost model uses two parameters: α (per-message latency) and β (in
 T_ring(N, m) ≈ 2(N−1)·α + 2(N−1)/N · m·β                                                    (8.1)
 ```
 
-For large messages, the latency term `2(N−1)·α` becomes negligible and the bandwidth term dominates. Per-GPU bandwidth utilization approaches `(N−1)/N`, which is why NCCL's reported "bus bandwidth" — the rate at which data flows across the slowest link — is the right number to compare against the hardware peak.[NCCL]
+For large messages, the latency term `2(N−1)·α` becomes negligible and the bandwidth term dominates. Per-GPU bandwidth utilization approaches `(N−1)/N`, which is why NCCL's reported "bus bandwidth" (the rate at which data flows across the slowest link) is the right number to compare against the hardware peak.[NCCL]
 
 For small messages (latency-bound regime), NCCL switches to tree algorithms with logarithmic depth instead of linear. The default thresholds and protocols (`NCCL_PROTO=LL/LL128/Simple`, `NCCL_ALGO=Ring/Tree`) are tuned automatically but can be overridden via env vars. NCCL uses LL/LL128 protocols for small messages and Simple for large messages; Tree for latency-sensitive collectives, Ring for bandwidth-sensitive ones.[NCCL-tuning]
 
@@ -656,7 +668,7 @@ m = 1024 × 8192 × 2 = 16 MiB per all-reduce
 
 The ring algorithm at TP=4 transfers `2(N−1)/N · m = 1.5 m = 24 MiB per GPU per call`. With 80 layers × 2 all-reduces, that's `80 × 2 × 24 MiB = 3,840 MiB ≈ 4.03 GB per step per GPU`.
 
-On NVLink 4 (900 GB/s aggregate per-direction per H100), at peak link bandwidth, that's `4.03 / 900 ≈ 4.5 ms of pure communication per decode step at TP=4` if collectives run unoverlapped — comparable to or larger than the GPU compute itself for moderate batches.[Vast] **However**, NCCL's realistic bus bandwidth is roughly 30–35% of peak link bandwidth for ring all-reduce on H100 NVLink with `Simple` protocol and 16 channels; the realistic step communication time is closer to **12–15 ms**, not 4.5 ms.
+On NVLink 4 (900 GB/s aggregate per-direction per H100), at peak link bandwidth, that's `4.03 / 900 ≈ 4.5 ms of pure communication per decode step at TP=4` if collectives run unoverlapped; comparable to or larger than the GPU compute itself for moderate batches.[Vast] **However**, NCCL's realistic bus bandwidth is roughly 30–35% of peak link bandwidth for ring all-reduce on H100 NVLink with `Simple` protocol and 16 channels; the realistic step communication time is closer to **12–15 ms**, not 4.5 ms.
 
 Concrete ranges by configuration:
 
@@ -669,7 +681,7 @@ Concrete ranges by configuration:
 
 ### Two consequences
 
-1. **TP within NVLink is fast; TP across PCIe is fatal.** PCIe Gen 4 x16 delivers ~32 GB/s, roughly 28× less than NVLink 4. The same 4.03 GB/step would consume 126 ms — an order of magnitude longer than the GPU work.
+1. **TP within NVLink is fast; TP across PCIe is fatal.** PCIe Gen 4 x16 delivers ~32 GB/s, roughly 28× less than NVLink 4. The same 4.03 GB/step would consume 126 ms, an order of magnitude longer than the GPU work.
 
 2. **Sequence parallelism reclaims some of the cost.** Sequence parallelism (Korthikanti et al., 2022)[SequenceParallel] extends the partitioning into the dropout and norm layers, reducing redundant computation across TP shards. The cost is replacing some all-reduces with all-gather + reduce-scatter pairs, which together transfer the same volume but at finer granularity that is easier to overlap.
 
@@ -687,7 +699,7 @@ Concrete ranges by configuration:
 
 If each sequence's KV is stored in a contiguous slab sized to its maximum length, two failures emerge under realistic load:
 
-- **Internal fragmentation.** A request reserves an 8K-token slab but uses only 2K — 75% wasted, persistent for the request's lifetime.
+- **Internal fragmentation.** A request reserves an 8K-token slab but uses only 2K, 75% wasted, persistent for the request's lifetime.
 - **External fragmentation.** After many short sequences come and go, free memory is spread across non-contiguous holes, none large enough to fit a new long-context request, even though aggregate free memory might be 30–40% of total. The allocator looks healthy in metrics but cannot accept new traffic.
 
 Empirically, this caps usable concurrency at a fraction of the GPU's nominal capacity. The PagedAttention paper documents an order-of-magnitude throughput improvement over contiguous baselines on identical hardware.[vLLM]
@@ -747,11 +759,11 @@ def paged_attention_step(query, kv_cache_pool, block_tables, seq_lens):
         out[seq_id] = attention(query[seq_id], K_seq, V_seq)
 ```
 
-The indirection is the price: every attention step pays a block-table lookup per logical block. On long contexts this is non-trivial — at 32K context with 16-token blocks, that's 2,048 lookups per step per sequence. The vLLM kernels handle this with vectorized loads and careful memory access patterns; the overhead is amortized by the elimination of fragmentation.
+The indirection is the price: every attention step pays a block-table lookup per logical block. On long contexts this is non-trivial; at 32K context with 16-token blocks, that's 2,048 lookups per step per sequence. The vLLM kernels handle this with vectorized loads and careful memory access patterns; the overhead is amortized by the elimination of fragmentation.
 
 ### The block-size knob
 
-Block size is a tunable with a sharp optimum. Larger blocks reduce per-block metadata overhead and indirection cost but increase internal fragmentation in the partial last block. Smaller blocks increase indirection and metadata but waste less. The vLLM default of 16 is empirically near-optimal for transformer workloads on Hopper-class hardware. The vAttention paper showed that block size alone can change kernel time by 1.9× — a real and unwelcome surprise to operators who change it casually.[FA-vAttention]
+Block size is a tunable with a sharp optimum. Larger blocks reduce per-block metadata overhead and indirection cost but increase internal fragmentation in the partial last block. Smaller blocks increase indirection and metadata but waste less. The vLLM default of 16 is empirically near-optimal for transformer workloads on Hopper-class hardware. The vAttention paper showed that block size alone can change kernel time by 1.9×; a real and unwelcome surprise to operators who change it casually.[FA-vAttention]
 
 > **Hedge — paged attention's challengers.** Recent work (vAttention, ASPLOS '25) argues that paged attention's indirection costs are higher than commonly assumed (up to 2.8× slower than FA-2 in some configurations), and proposes alternative designs using CUDA virtual memory directly. The verdict is not yet in. As of this writing, paged attention remains the dominant production design across vLLM, SGLang, TensorRT-LLM, and TGI; vAttention is a credible challenger to watch.
 
@@ -761,7 +773,7 @@ Block size is a tunable with a sharp optimum. Larger blocks reduce per-block met
 
 ## 10 — Continuous batching and iteration-level scheduling
 
-> The scheduler runs once per forward pass, recomposing the batch from scratch every time. This is the single most consequential software advance in modern LLM serving — without it, none of the other optimizations matter as much.
+> The scheduler runs once per forward pass, recomposing the batch from scratch every time. This is the single most consequential software advance in modern LLM serving; without it, none of the other optimizations matter as much.
 
 Static batching waits for a batch to complete; dynamic batching admits requests up to a timeout, then fixes the batch for its lifetime. Both leave large amounts of the GPU idle. Continuous batching (also called iteration-level scheduling, after the Orca paper, OSDI 2022)[Orca] treats each forward pass as the unit: completed sequences exit the batch, new ones enter, and the rest continue, all at every step boundary.
 
@@ -796,8 +808,7 @@ def step(self):
             self.waiting.popleft()
             self.running.append(req)
     # PHASE 2 — forward pass (flattened batch + per-token attention metadata).
-    flat_ids, position_ids, slot_mapping, attn_meta = self.prepare_inputs(
-        decode_batch, prefill_batch)
+    flat_ids, position_ids, slot_mapping, attn_meta = self.prepare_inputs(decode_batch, prefill_batch)
     logits = self.model_runner.execute(flat_ids, position_ids, slot_mapping, attn_meta)
     # PHASE 3 — sample & postprocess.
     for req, token_logits in zip(decode_batch + prefill_batch, logits):
@@ -809,19 +820,19 @@ def step(self):
             yield req.output
 ```
 
-(Source: `vllm@42172ad/vllm/v1/core/sched/scheduler.py:L412–L478` — pin to commit SHA in citations.)
+(Source: `vllm@42172ad/vllm/v1/core/sched/scheduler.py:L412–L478`, pin to commit SHA in citations.)
 
 ### Three properties make this pattern work
 
-1. **Flattened batch.** All in-flight sequences are concatenated into one long "super-sequence." Attention masks and position IDs ensure each request only attends to its own tokens. This eliminates right-padding waste — different-length sequences in the batch no longer cost the GPU anything.
+1. **Flattened batch.** All in-flight sequences are concatenated into one long "super-sequence." Attention masks and position IDs ensure each request only attends to its own tokens. This eliminates right-padding waste; different-length sequences in the batch no longer cost the GPU anything.
 
 2. **Token budget.** Each step processes at most `max_num_batched_tokens` tokens. This is the master throttle: it bounds the per-step latency and provides the slack that chunked prefill exploits.
 
-3. **Recompute preemption.** When KV memory is exhausted, vLLM V1 evicts a low-priority request entirely (freeing all its blocks) and restarts it later from scratch — recompute is faster than swap-out on most realistic workloads, especially with prefix caching, which means the recomputed prefill often hits the cache.[Gordić]
+3. **Recompute preemption.** When KV memory is exhausted, vLLM V1 evicts a low-priority request entirely (freeing all its blocks) and restarts it later from scratch; recompute is faster than swap-out on most realistic workloads, especially with prefix caching, which means the recomputed prefill often hits the cache.[Gordić]
 
 ### Scheduling policies and their interaction with chunked prefill, prefix caching
 
-The default is FCFS (first-come, first-served). vLLM also supports priority-based scheduling, where higher-priority requests preempt lower ones. The choice matters in multi-tenant deployments: FCFS is fair across users but cannot enforce SLO tiers; priority enables tiered SLOs at the cost of starvation risk for low-priority traffic. Fairness across tenants is the active research frontier here — adapting OS-style fair-share scheduling (CFS, deficit round-robin) to GPU-step granularity.
+The default is FCFS (first-come, first-served). vLLM also supports priority-based scheduling, where higher-priority requests preempt lower ones. The choice matters in multi-tenant deployments: FCFS is fair across users but cannot enforce SLO tiers; priority enables tiered SLOs at the cost of starvation risk for low-priority traffic. Fairness across tenants is the active research frontier here; adapting OS-style fair-share scheduling (CFS, deficit round-robin) to GPU-step granularity.
 
 The scheduler's three big knobs interact:
 
@@ -857,14 +868,14 @@ Sarathi reports that chunk sizes of 256–512 limit prefill efficiency loss to �
 Sarathi derives a clean condition for when piggybacked decodes are "free": if B is the total batch size (1 prefill + B−1 decodes), and C is the chunk size, the maximum throughput improvement occurs when:
 
 ```
-P : D ratio  =  C / (B − 1)                                                                 (11.1)
+P : D ratio  =  C / (B − 1) (11.1)
 ```
 
 i.e. when the prefill chunk's compute time is exactly matched to the bandwidth time of (B−1) decode rows. Choose C too small and you can't fill the SMs; too large and the chunk runs ahead of the decodes and you've recreated the stall.
 
 ### Tile-quantization effects
 
-Tile quantization is an under-discussed second-order effect. GPUs compute matmuls by partitioning matrices into tiles (typically 128 or 256 along each dimension) and assigning each tile to a thread block. Matmuls reach maximum utilization when matrix dimensions are divisible by the tile size; otherwise extraneous tile work is performed at the boundaries — an effect documented in NVIDIA's matmul performance guidance.[NV-matmul] Sarathi-Serve applies this insight at scheduler granularity by aligning chunk + decode token counts to tile boundaries, which can recover several percent of throughput that would otherwise be lost to padding.
+Tile quantization is an under-discussed second-order effect. GPUs compute matmuls by partitioning matrices into tiles (typically 128 or 256 along each dimension) and assigning each tile to a thread block. Matmuls reach maximum utilization when matrix dimensions are divisible by the tile size; otherwise extraneous tile work is performed at the boundaries; an effect documented in NVIDIA's matmul performance guidance.[NV-matmul] Sarathi-Serve applies this insight at scheduler granularity by aligning chunk + decode token counts to tile boundaries, which can recover several percent of throughput that would otherwise be lost to padding.
 
 ### vLLM V1's implementation
 
@@ -876,23 +887,23 @@ The Sarathi-Serve OSDI '24 paper reports specific gains under SLO-bound evaluati
 
 | Model | Hardware | vs vLLM | vs Orca |
 |---|---|---|---|
-| Mistral-7B | 1×A100 | up to 2.6× | — |
-| Yi-34B | 2×A100 | up to 3.7× | — |
+| Mistral-7B | 1×A100 | up to 2.6× |, |
+| Yi-34B | 2×A100 | up to 3.7× |, |
 | Falcon-180B | 8×A100 | **5.6×** | **6.9×** |
 
 The 5.6× and 6.9× on Falcon-180B are *two different baselines*, not a range over conditions. The gains compound with model size because larger models suffer worse generation stalls from long prefills, and stall-free batching's relative advantage scales accordingly.
 
-> **Key takeaways — Ch. 11.** Chunk size C balances prefill efficiency against decode TBT; 256–512 is a near-universal sweet spot on H100. Saturating ratio P:D = C/(B−1). Tile-quantization–aware chunk sizing recovers several percent. Sarathi-Serve's gains over vLLM and Orca are baseline-dependent — quote them as separate numbers, not as a range.
+> **Key takeaways — Ch. 11.** Chunk size C balances prefill efficiency against decode TBT; 256–512 is a near-universal sweet spot on H100. Saturating ratio P:D = C/(B−1). Tile-quantization–aware chunk sizing recovers several percent. Sarathi-Serve's gains over vLLM and Orca are baseline-dependent, quote them as separate numbers, not as a range.
 
 ---
 
 ## 12 — Prefix caching and the radix-tree KV index
 
-> When prompts share prefixes — system messages, few-shot examples, conversation history — caching the prefix's KV state turns repeated prefill into a memory lookup. On chat workloads, this is the single largest throughput optimization available.
+> When prompts share prefixes (system messages, few-shot examples, conversation history) caching the prefix's KV state turns repeated prefill into a memory lookup. On chat workloads, this is the single largest throughput optimization available.
 
 Prefix caching is mechanically a content-addressed cache over KV blocks. The key is a hash chain: the hash of a block depends on its tokens and the hash of all preceding blocks. This makes the prefix "You are a helpful assistant. The user said: hello" a deterministic key into the cache, regardless of which user submitted the prompt or when.
 
-The matched blocks are reused via reference counting: the new request's block table points at the same physical blocks the previous request used, with refcount incremented. When the original request completed, the blocks were freed back to the pool but their hashes were retained — they are reclaimed only when the pool runs out and a free block needs to be re-allocated, at which point its hash entry is invalidated and the block is reassigned.[Gordić]
+The matched blocks are reused via reference counting: the new request's block table points at the same physical blocks the previous request used, with refcount incremented. When the original request completed, the blocks were freed back to the pool but their hashes were retained; they are reclaimed only when the pool runs out and a free block needs to be re-allocated, at which point its hash entry is invalidated and the block is reassigned.[Gordić]
 
 ```python
 def hash_request_tokens(token_ids, block_size=16, salt=None):
@@ -920,15 +931,15 @@ def find_longest_cache_hit(block_hashes, cached_hash_to_block):
 
 ### Why this works on agentic and chat workloads
 
-Multi-turn conversations and agentic tool-use chains accumulate context: each turn appends to the previous turn's prompt. With prefix caching, only the new tokens require prefill — the tens of thousands of tokens of conversation history are served from the cache. Hit rates of 80–95% on chat workloads are commonly reported in production engineering writeups (specific numbers depend heavily on workload mix and cache eviction policy), which translates to a near-elimination of prefill cost for the cached portion. Few-shot prompts (where 95% of every request is a shared prefix) approach 99% hit rates, making the prefill effectively free.
+Multi-turn conversations and agentic tool-use chains accumulate context: each turn appends to the previous turn's prompt. With prefix caching, only the new tokens require prefill; the tens of thousands of tokens of conversation history are served from the cache. Hit rates of 80–95% on chat workloads are commonly reported in production engineering writeups (specific numbers depend heavily on workload mix and cache eviction policy), which translates to a near-elimination of prefill cost for the cached portion. Few-shot prompts (where 95% of every request is a shared prefix) approach 99% hit rates, making the prefill effectively free.
 
 ### SGLang's RadixAttention
 
-SGLang (Zheng et al., NeurIPS '24)[SGLang] generalizes vLLM's hash-chain implementation into a **radix tree** purpose-built for longest-prefix matching across many concurrent sequences sharing partial common ancestors. The tree's structure makes longest-prefix matching `O(prefix length)` rather than `O(blocks_in_cache)`, and it naturally handles overlapping prefixes from different conversations sharing partial common ancestors. SGLang pairs the radix tree with an LRU eviction policy and a cache-aware scheduling policy that reorders the queue to maximize hit rate — the paper reports up to 6.4× higher throughput on workloads where multiple requests share prefixes (few-shot benchmarks, agentic loops, tree-of-thought).
+SGLang (Zheng et al., NeurIPS '24)[SGLang] generalizes vLLM's hash-chain implementation into a **radix tree** purpose-built for longest-prefix matching across many concurrent sequences sharing partial common ancestors. The tree's structure makes longest-prefix matching `O(prefix length)` rather than `O(blocks_in_cache)`, and it naturally handles overlapping prefixes from different conversations sharing partial common ancestors. SGLang pairs the radix tree with an LRU eviction policy and a cache-aware scheduling policy that reorders the queue to maximize hit rate, the paper reports up to 6.4× higher throughput on workloads where multiple requests share prefixes (few-shot benchmarks, agentic loops, tree-of-thought).
 
 The data-structure choice matters at scale: with millions of cached blocks and hundreds of QPS doing lookups, a linear hash-table scan degrades; the radix-tree variant remains constant per character.
 
-> **Hot pitfall: cache poisoning.** If user-specific tokens (a user ID, a timestamp, a session token, anything per-request) appear early in the prompt, the cache hash chain diverges immediately and the cache becomes useless. Order matters: put shared content first, per-user content last. The `cache_salt` mechanism exists precisely to scope shared prefixes to authorized tenants — without it, in a multi-tenant deployment, one tenant's prefix could be served from another tenant's KV. This is both a privacy issue and a correctness issue.
+> **Hot pitfall: cache poisoning.** If user-specific tokens (a user ID, a timestamp, a session token, anything per-request) appear early in the prompt, the cache hash chain diverges immediately and the cache becomes useless. Order matters: put shared content first, per-user content last. The `cache_salt` mechanism exists precisely to scope shared prefixes to authorized tenants; without it, in a multi-tenant deployment, one tenant's prefix could be served from another tenant's KV. This is both a privacy issue and a correctness issue.
 
 > **Key takeaways — Ch. 12.** Prefix caching keys = hash-chain over block tokens. vLLM uses a hash chain (V1 implementation includes per-block parent hashes); SGLang uses a radix tree purpose-built for longest-prefix matching. Hit rates on chat/agentic workloads: 80–95% typical, 99% on few-shot. Cache poisoning by per-user tokens placed early in the prompt is the universal pitfall.
 
@@ -938,9 +949,9 @@ The data-structure choice matters at scale: with millions of cached blocks and h
 
 ## 13 — Disaggregated prefill / decode
 
-> Because prefill is compute-bound and decode is bandwidth-bound, running them on the same GPU forces a compromise that suboptimizes both. Disaggregating them onto separate replica pools — with KV transferred between them — restores the ability to optimize each independently.
+> Because prefill is compute-bound and decode is bandwidth-bound, running them on the same GPU forces a compromise that suboptimizes both. Disaggregating them onto separate replica pools (with KV transferred between them) restores the ability to optimize each independently.
 
-The DistServe paper (Zhong et al., OSDI '24)[DistServe] was the academic articulation; Splitwise, TetriInfer, and DéjàVu are concurrent work; Mooncake (Moonshot AI) and NVIDIA Dynamo are production deployments. The retrospective from the Hao AI Lab at UCSD, which produced DistServe, notes that "almost every production-grade LLM serving framework — NVIDIA Dynamo, llm-d, Ray Serve LLM, SGLang, vLLM, LMCache, MoonCake — runs on disaggregation" as of late 2025.[Disagg-retro]
+The DistServe paper (Zhong et al., OSDI '24)[DistServe] was the academic articulation; Splitwise, TetriInfer, and DéjàVu are concurrent work; Mooncake (Moonshot AI) and NVIDIA Dynamo are production deployments. The retrospective from the Hao AI Lab at UCSD, which produced DistServe, notes that "almost every production-grade LLM serving framework (NVIDIA Dynamo, llm-d, Ray Serve LLM, SGLang, vLLM, LMCache, MoonCake) runs on disaggregation" as of late 2025.[Disagg-retro]
 
 ### The mechanism
 
@@ -970,11 +981,11 @@ NVIDIA's **NIXL** (Inference Xfer Library), CXL, and NVMe-oF are emerging as sta
 
 A subtlety Edition VIII did not state: KV transfer can be **streamed**, layer-by-layer, overlapping with the decode worker's prefill of remaining layers. With 80 layers and a 200 Gb/s link (~25 GB/s), per-layer transfer is ~0.7 ms; if the decode worker can start consuming layer-i KV as soon as it arrives (rather than waiting for the full transfer), the effective TTFT contribution is roughly one layer of pipeline (~0.7 ms), not 54 ms total transfer time. Production systems (NVIDIA Dynamo, MoonCake) implement this streaming with a per-layer ready bit on the receiving side and ordered transmission on the sending side.
 
-The sending side's policy depends on attention vs. FFN computation order: if the decode worker computes attention before FFN at each layer, KV must be fully present at start of layer; if FFN first, KV transfer can overlap with FFN. Most engines compute attention first, so the streaming buys at most one layer's worth of overlap per layer — but cumulative across 80 layers, this is the difference between a 54 ms KV-transfer cliff at the start of decode and an amortized 0.7 ms-per-layer cost.
+The sending side's policy depends on attention vs. FFN computation order: if the decode worker computes attention before FFN at each layer, KV must be fully present at start of layer; if FFN first, KV transfer can overlap with FFN. Most engines compute attention first, so the streaming buys at most one layer's worth of overlap per layer; but cumulative across 80 layers, this is the difference between a 54 ms KV-transfer cliff at the start of decode and an amortized 0.7 ms-per-layer cost.
 
 ### When disaggregation pays
 
-The economics improve when (i) decodes are long enough to amortize the KV transfer over many forward passes, (ii) prefill prompts are long enough that co-located stall would be severe, and (iii) interconnect bandwidth is sufficient. The DistServe paper reports several-times-higher SLO-meeting throughput at equal hardware compared to vLLM at the time of publication. Production reports cite 30–50% goodput improvements on long-decode workloads. The transfer cost itself is reported at under 0.1% of total request time on 175B models with 25 Gb/s links — the network is rarely the bottleneck once it is fast enough.[DistServe-summary]
+The economics improve when (i) decodes are long enough to amortize the KV transfer over many forward passes, (ii) prefill prompts are long enough that co-located stall would be severe, and (iii) interconnect bandwidth is sufficient. The DistServe paper reports several-times-higher SLO-meeting throughput at equal hardware compared to vLLM at the time of publication. Production reports cite 30–50% goodput improvements on long-decode workloads. The transfer cost itself is reported at under 0.1% of total request time on 175B models with 25 Gb/s links; the network is rarely the bottleneck once it is fast enough.[DistServe-summary]
 
 ### When not to disaggregate
 
@@ -993,7 +1004,7 @@ For short prompts and short outputs (e.g., classification, embedding-style gener
 Let `p(x)` be the target model's probability for token x at some position, and `q(x)` be the draft model's. The draft proposes `x ∼ q`; we accept with probability:
 
 ```
-P(accept | x ∼ q) = min(1, p(x) / q(x))                                                     (14.1)
+P(accept | x ∼ q) = min(1, p(x) / q(x)) (14.1)
 ```
 
 If rejected, we sample from the "residual" distribution proportional to `max(0, p(x) − q(x))`, normalized.
@@ -1008,14 +1019,14 @@ P(token = x) = q(x) · min(1, p(x)/q(x))
             = p(x)
 ```
 
-The key consequence is **distributional exactness**: speculative decoding is mathematically equivalent to autoregressive sampling from the target. There is no quality loss, no sampling drift, no edge cases — provided the implementation is faithful.
+The key consequence is **distributional exactness**: speculative decoding is mathematically equivalent to autoregressive sampling from the target. There is no quality loss, no sampling drift, no edge cases, provided the implementation is faithful.
 
 ### Expected accepted tokens
 
 If the per-position acceptance probability is α (averaged across positions and inputs) and we draft k tokens per step, the expected number of accepted tokens per target forward pass under i.i.d. acceptance is:
 
 ```
-E[accepted | i.i.d. α] = (1 − α^{k+1}) / (1 − α)                                            (14.2)
+E[accepted | i.i.d. α] = (1 − α^{k+1}) / (1 − α) (14.2)
 ```
 
 (The "+1" accounts for the bonus token sampled from the target's residual on full acceptance.) For α = 0.7, k = 4: `E[accepted] = (1 − 0.7^5) / 0.3 = 2.77` tokens per target pass. Verified against `derive.expected_accepted_iid(0.7, 4) = 2.77` ✓.
@@ -1025,7 +1036,7 @@ E[accepted | i.i.d. α] = (1 − α^{k+1}) / (1 − α)                         
 The wall-clock speedup also depends on the draft model's cost relative to the target. The corrected formula is:
 
 ```
-speedup_wall_clock = E[accepted] / (1 + (c_draft / c_target_step) · k)                      (14.3)
+speedup_wall_clock = E[accepted] / (1 + (c_draft / c_target_step) · k) (14.3)
 ```
 
 where `c_draft` is the per-token draft cost and `c_target_step` is the target verify cost. With α = 0.7, k = 4, drafter 5% the cost of the target:
@@ -1038,7 +1049,7 @@ This matches the manuscript's earlier informal "2–3× wall-clock speedup is re
 
 ### Acceptance correlation correction *(new in Edition IX)*
 
-The closed-form (14.2) assumes α is constant and independent across positions. In practice acceptance is positively correlated: a successful draft predicts successful next-position drafts. An empirical surrogate is to model α as a beta distribution; for typical drafter-target pairs trained jointly, α distributions resemble Beta(8, 3) — concentrated near 0.7–0.8 with positive skew. Plugging through the chain probabilities gives `E[accepted | α ∼ Beta(8,3)] ≈ 3.3` for k = 4, vs. the i.i.d. prediction of 2.77 — a 19% correction in the favorable direction.
+The closed-form (14.2) assumes α is constant and independent across positions. In practice acceptance is positively correlated: a successful draft predicts successful next-position drafts. An empirical surrogate is to model α as a beta distribution; for typical drafter-target pairs trained jointly, α distributions resemble Beta(8, 3), concentrated near 0.7–0.8 with positive skew. Plugging through the chain probabilities gives `E[accepted | α ∼ Beta(8,3)] ≈ 3.3` for k = 4, vs. the i.i.d. prediction of 2.77, a 19% correction in the favorable direction.
 
 The cleanest practical approach: measure `E[accepted]` directly on production traffic and use that empirical number in (14.3); the closed forms give the right shape for sizing and sanity-checking.
 
@@ -1059,7 +1070,7 @@ MTP-as-speculation has structural advantages over Medusa and EAGLE:
 - **No drafter footprint at inference.** MTP modules share embeddings and output head with the main model.
 - **Lower integration cost than EAGLE.** MTP heads are usually a single TRM block; EAGLE-3's drafter is multi-step.
 
-DeepSeek-V3's deployment uses MTP as a drafter in some configurations, with empirical α in the 0.85+ range and effective `E[accepted]` ≈ 1.8 (k=1, single MTP head) — i.e., a near-2× speedup with negligible integration overhead.
+DeepSeek-V3's deployment uses MTP as a drafter in some configurations, with empirical α in the 0.85+ range and effective `E[accepted]` ≈ 1.8 (k=1, single MTP head), i.e., a near-2× speedup with negligible integration overhead.
 
 | METHOD | DRAFTER COST | AVG. ACCEPT LENGTH | PRODUCTION SPEEDUP |
 |---|---|---|---|
@@ -1067,7 +1078,7 @@ DeepSeek-V3's deployment uses MTP as a drafter in some configurations, with empi
 | Medusa | Negligible | ~2.5 tokens | 1.5–2× |
 | EAGLE-3 | ~5% params | 4.5–5.0 tokens | 2–6× |
 | MTP-as-spec (V3-style) | Built-in | ~1.8 (k=1) to ~3.5 (k=3) | 1.7–2.5× |
-| n-gram (lookup) | None | varies — task-dependent | 1.1–3× |
+| n-gram (lookup) | None | varies, task-dependent | 1.1–3× |
 
 ### Tree verification *(expanded in Edition IX)*
 
@@ -1082,7 +1093,7 @@ The expected number of accepted tokens grows because the tree explores multiple 
 
 The ancestor mask is constructed as follows: number tree nodes in DFS order; for each node i with ancestor set A(i) ⊆ {0, …, i−1}, set `mask[i, j] = 1 iff j ∈ A(i) ∪ {i}`. The mask is a lower-triangular boolean matrix of shape `[n_nodes, n_nodes]` plus the standard causal restriction. Production engines compile this mask once per drafted tree and pass it as an attention bias.
 
-> **Caveat — speedup ≠ acceptance rate.** A high acceptance rate doesn't always imply throughput gain. As batch size grows, the target becomes compute-bound rather than bandwidth-bound, and the cost of verifying k draft positions in one pass approaches the cost of k sequential passes. The E2E Networks benchmarks show EAGLE-3 speedup degrading from 2.5× at batch 4 to under 1.3× at batch 32 on Llama-3.1-8B.[EAGLE-3] At very large batches (32+), spec decoding can hurt rather than help. The right operating point is workload-specific; engines must support both modes and switch dynamically.
+> **Caveat, speedup ≠ acceptance rate.** A high acceptance rate doesn't always imply throughput gain. As batch size grows, the target becomes compute-bound rather than bandwidth-bound, and the cost of verifying k draft positions in one pass approaches the cost of k sequential passes. The E2E Networks benchmarks show EAGLE-3 speedup degrading from 2.5× at batch 4 to under 1.3× at batch 32 on Llama-3.1-8B.[EAGLE-3] At very large batches (32+), spec decoding can hurt rather than help. The right operating point is workload-specific; engines must support both modes and switch dynamically.
 
 > **Key takeaways — Ch. 14.** Acceptance rule: `P(accept) = min(1, p(x)/q(x))`. Distributional exactness is a theorem, not an approximation. Wall-clock speedup = `E[accepted] / (1 + c_draft/c_target · k)`. Acceptance is positively correlated; closed-form i.i.d. underestimates by ~15–20%. MTP-as-speculation reuses training-time multi-token-prediction heads as drafters with near-zero integration cost. Tree verification with ancestor masks lifts throughput further at the cost of tree-construction complexity. Speculation hurts at very large batches.
 
@@ -1094,7 +1105,7 @@ The ancestor mask is constructed as follows: number tree nodes in DFS order; for
 
 ### Weight quantization: AWQ and GPTQ
 
-**AWQ** (Activation-aware Weight Quantization, Lin et al., MLSys 2024)[AWQ] preserves the salient weight channels — the ones connected to high-magnitude activations — at higher precision while quantizing the rest aggressively. The asymmetry exists because a small fraction of channels carry most of the model's expressive load; quantizing them uniformly causes outsized quality loss. AWQ identifies salient channels by analyzing activation magnitudes on a calibration set and applies per-channel scaling that protects them.
+**AWQ** (Activation-aware Weight Quantization, Lin et al., MLSys 2024)[AWQ] preserves the salient weight channels (the ones connected to high-magnitude activations) at higher precision while quantizing the rest aggressively. The asymmetry exists because a small fraction of channels carry most of the model's expressive load; quantizing them uniformly causes outsized quality loss. AWQ identifies salient channels by analyzing activation magnitudes on a calibration set and applies per-channel scaling that protects them.
 
 **GPTQ** (Frantar et al., ICLR 2023)[GPTQ] uses second-order error compensation. After rounding each weight, it adjusts the neighboring weights to cancel the rounding error using an approximation to the layer's Hessian. The calibration is expensive (requires a forward pass and a Hessian approximation per layer) but the result is a 4-bit quantization that matches or exceeds AWQ on many models.
 
@@ -1116,8 +1127,9 @@ Notation: **W8A8** = 8-bit weights, 8-bit activations. **W8A16** = 8-bit weights
 Edition VIII mentioned FP4 as "Blackwell's bet" but did not name the actually-shipping standard format. **MXFP4** is the Open Compute Project Microscaling standard (OCP MX v1.0, September 2023):[MXFP4][Microscaling]
 
 **Format definition:**
-- Each 4-bit element is **E2M1** (1 sign, 2 exponent, 1 mantissa) — 12 distinct values: ±{0, 0.5, 1, 1.5, 2, 3} approximately.
-- Every block of **32 elements** shares one **E8M0** scale factor — i.e., the scale is a power of two, stored as an 8-bit unsigned exponent.
+
+- Each 4-bit element is **E2M1** (1 sign, 2 exponent, 1 mantissa), 12 distinct values: ±{0, 0.5, 1, 1.5, 2, 3} approximately.
+- Every block of **32 elements** shares one **E8M0** scale factor, i.e., the scale is a power of two, stored as an 8-bit unsigned exponent.
 - Effective storage: 4 bits per element + 8 bits per 32-element block = **4.25 bits/element on average**.
 
 **Why E8M0 for the scale:** dequantization is a bit-shift, not a multiplication. The scale bypasses the FP4 ALU entirely and is applied at the accumulator stage. This is the hardware reason FP4 hits 2× FP8 throughput on Blackwell.
@@ -1125,6 +1137,7 @@ Edition VIII mentioned FP4 as "Blackwell's bet" but did not name the actually-sh
 **Outlier handling:** the 32-element block size is small enough that outliers are statistically rare within a block; combined with optional Hadamard rotation (used by FA-3 and NVIDIA's TransformerEngine to spread outliers across channels), MXFP4 achieves quality close to FP8 on most workloads.
 
 **Variants:**
+
 - **NVFP4** is NVIDIA's variant with E4M3 (8-bit FP) scale instead of E8M0; small accuracy improvement, same throughput.
 - **MXFP6** and **MXFP8** are sister formats from the same OCP spec, with the same 32-element block size.
 
@@ -1142,15 +1155,15 @@ KV memory is linear in context length. Quantizing the KV cache from BF16 to INT8
 
 | SCHEME | BYTES / WEIGHT | BYTES / ACT | BANDWIDTH GAIN | TYPICAL QUALITY COST |
 |---|---|---|---|---|
-| BF16 (baseline) | 2 | 2 | 1.0× | — |
+| BF16 (baseline) | 2 | 2 | 1.0× |, |
 | FP8 E4M3 (W8A8) | 1 | 1 | 2.0× | negligible–0.2 ppl |
 | INT8 W8A16 | 1 | 2 | ~1.8× | <0.3 ppl |
 | AWQ INT4 W4A16 | 0.5 | 2 | ~3.5× | <1.0 ppl |
 | GPTQ INT4 W4A16 | 0.5 | 2 | ~3.5× | <1.0 ppl |
 | MXFP4 W4A4 (Blackwell) | 0.5 | 0.5 | ~4× | workload-dependent |
 | MXFP4 W4A16 | 0.5 | 2 | ~3.5× | smaller than W4A4 |
-| KV-INT8 | (KV) 1 | — | 2× context | <0.5 ppl |
-| KV-INT4 | (KV) 0.5 | — | 4× context | workload-dependent |
+| KV-INT8 | (KV) 1 |, | 2× context | <0.5 ppl |
+| KV-INT4 | (KV) 0.5 |, | 4× context | workload-dependent |
 
 > **Key takeaways — Ch. 15.** Quantization is a memory-system optimization first, a quality decision second. FP8 (Hopper-native) is the strong default for production. INT4 weight quantization compresses weights further but requires dequantization. **MXFP4** (OCP standard) is the actually-shipping FP4 format on Blackwell with 32-element E2M1 + E8M0 blocks; bit-shift dequantization is what makes 2× FP8 throughput possible. KV-cache quantization is the highest-leverage option for long-context workloads.
 
@@ -1167,7 +1180,7 @@ KV memory is linear in context length. Quantizing the KV cache from BF16 to INT8
 Queueing theory predicts unbounded p99 near saturation. For an M/G/1 system (Poisson arrivals, general service time, single server), the **Pollaczek–Khinchine formula** gives mean waiting-in-queue time:[Kleinrock]
 
 ```
-E[W_q] = (ρ · (1 + C²) · E[S]) / (2 · (1 − ρ))                                              (16.1)
+E[W_q] = (ρ · (1 + C²) · E[S]) / (2 · (1 − ρ)) (16.1)
 ```
 
 where ρ = λE[S] is utilization, C² = Var(S)/E[S]² is the squared coefficient of variation of service time, and E[S] is mean service time. As ρ → 1, `E[W_q]` → ∞; the variance of wait time grows as `1/(1−ρ)²`, which is the source of the p99 cliff.
@@ -1179,13 +1192,13 @@ where ρ = λE[S] is utilization, C² = Var(S)/E[S]² is the squared coefficient
 Inference systems care about p99, not just E[W_q]. For light-tailed service distributions, the tail of the queue waiting time is approximately exponential, decaying with rate `(1−ρ)/E[S]`:
 
 ```
-P(W_q > t) ≈ ρ · exp(-t · (1−ρ) / E[S])                                                     (16.2)
+P(W_q > t) ≈ ρ · exp(-t · (1−ρ) / E[S]) (16.2)
 ```
 
 The 99th percentile is approximately:
 
 ```
-W_q^{p99} ≈ E[W_q] · ln(100·ρ) / (1 + C²)·... ≈ (E[S] · ln(100·ρ)) / (1−ρ)                  (16.3)
+W_q^{p99} ≈ E[W_q] · ln(100·ρ) / (1 + C²)·... ≈ (E[S] · ln(100·ρ)) / (1−ρ) (16.3)
 ```
 
 **Worked example.** With C² = 4 (output lengths uniformly 200–4000 tokens, σ²/μ² ≈ 4) and ρ = 0.85:
@@ -1195,7 +1208,7 @@ E[W_q]    = 0.85 · 5 · 0.05s / (2 · 0.15) = 0.708 s = 708 ms
 W_q^{p99} ≈ 0.05 · ln(85) / 0.15 ≈ 1.48 s
 ```
 
-At 85% utilization with realistic LLM service-time variance, the 99th percentile of queue waiting time is ~1.5 seconds — almost 30× the mean service time. This is the cliff, quantified.
+At 85% utilization with realistic LLM service-time variance, the 99th percentile of queue waiting time is ~1.5 seconds, almost 30× the mean service time. This is the cliff, quantified.
 
 Run the corrected formula via `derive.pk_mean_queue_wait(rho=0.85, c_squared=4.0, mean_service_time_s=0.05)` to verify ✓.
 
@@ -1209,7 +1222,7 @@ Run the corrected formula via `derive.pk_mean_queue_wait(rho=0.85, c_squared=4.0
 
 | STRATEGY | MECHANISM | THROUGHPUT | TAIL LATENCY |
 |---|---|---|---|
-| Aggressive (greedy) | Admit while any KV blocks free | Highest | Worst — preemption thrash |
+| Aggressive (greedy) | Admit while any KV blocks free | Highest | Worst; preemption thrash |
 | SLO-aware | Admit only if predicted KV at completion ≤ pool | Moderate | Bounded p99 |
 | Load-shed | Reject above utilization threshold | Lower | Best p99; user-visible 503s |
 
@@ -1227,7 +1240,7 @@ The right unit objective for an SLO-bound inference system is **goodput**: token
 
 > GPUs in inference deployments routinely show 90%+ utilization in `nvidia-smi` while delivering a fraction of their roofline-predicted performance. This is the most common diagnostic error in the field.
 
-The `nvidia-smi` "GPU-Util" metric reports the percentage of time at least one SM was active over the sampling interval. For a memory-bound workload like decode, the SMs are technically "active" — they are issuing memory load instructions and stalling on HBM. The metric reports 95%+ utilization while the GPU is delivering 5% of its FLOP capacity. This is mathematically defensible but operationally misleading.
+The `nvidia-smi` "GPU-Util" metric reports the percentage of time at least one SM was active over the sampling interval. For a memory-bound workload like decode, the SMs are technically "active"; they are issuing memory load instructions and stalling on HBM. The metric reports 95%+ utilization while the GPU is delivering 5% of its FLOP capacity. This is mathematically defensible but operationally misleading.
 
 ### A worked example
 
@@ -1241,7 +1254,7 @@ A typical Llama-3-70B FP8 decode deployment on H100 in steady state:
 | `DCGM_FI_PROF_PIPE_TENSOR_ACTIVE` | 0.12 |
 | Achieved tensor-core FLOP/s vs peak | ~12% (consistent with bandwidth-bound) |
 
-Reading `nvidia-smi` alone, you would conclude the GPU is saturated. Reading `DCGM_FI_PROF_DRAM_ACTIVE` (84%), you would conclude HBM is saturated — the actual ground truth on bandwidth-bound decode. The two metrics do not contradict; they answer different questions.
+Reading `nvidia-smi` alone, you would conclude the GPU is saturated. Reading `DCGM_FI_PROF_DRAM_ACTIVE` (84%), you would conclude HBM is saturated; the actual ground truth on bandwidth-bound decode. The two metrics do not contradict; they answer different questions.
 
 ### The metrics that actually matter
 
@@ -1273,8 +1286,8 @@ Reading `nvidia-smi` alone, you would conclude the GPU is saturated. Reading `DC
 | HBM | 80 GB HBM2e | 80 GB HBM3 | 141 GB HBM3e | 192 GB HBM3e | 192 GB HBM3e |
 | HBM bandwidth | 2.0 TB/s | 3.35 TB/s | 4.8 TB/s | 8.0 TB/s | 8.0 TB/s |
 | FP16/BF16 dense (TC) | 312 TFLOPs | 989 TFLOPs | 989 TFLOPs | 2,250 TFLOPs | 2,500 TFLOPs |
-| FP8 dense (TC) | — | 1,979 TFLOPs | 1,979 TFLOPs | 4,500 TFLOPs | 5,000 TFLOPs |
-| FP4 dense (TC) | — | — | — | 9,000 TFLOPs | 10,000 TFLOPs |
+| FP8 dense (TC) |, | 1,979 TFLOPs | 1,979 TFLOPs | 4,500 TFLOPs | 5,000 TFLOPs |
+| FP4 dense (TC) | (|) |, | 9,000 TFLOPs | 10,000 TFLOPs |
 | NVLink per GPU | 600 GB/s | 900 GB/s | 900 GB/s | 1,800 GB/s | 1,800 GB/s |
 | Ridge (BF16) | ~156 FLOP/B | ~295 FLOP/B | ~206 FLOP/B | ~281 FLOP/B | ~313 FLOP/B |
 | NVLink domain | 8 (NVSwitch) | 8 (NVSwitch) | 8 (NVSwitch) | 8 (NVSwitch) | **72 (NVL72)** |
@@ -1287,15 +1300,15 @@ Sources: NVIDIA H100/B200 datasheets and aggregator analyses.[H100][B200][Vast] 
 
 2. **NVLink 5 doubles the TP bandwidth budget** (1.8 TB/s vs 900 GB/s on H100). All-reduce time drops by half on the same workload, making larger TP groups viable. The bandwidth-budget calculation in Ch. 8 shifts: an 8-GPU TP group on B200 is roughly equivalent to a 4-GPU TP group on H100 in terms of collective overhead.
 
-3. **FP4 (MXFP4) changes quantization economics.** If FP4 holds quality on a workload, the bandwidth gain is 4× over BF16, twice that of FP8. Long-context serving in particular benefits — the KV cache shrinks by 4×, so context capacity quadruples.
+3. **FP4 (MXFP4) changes quantization economics.** If FP4 holds quality on a workload, the bandwidth gain is 4× over BF16, twice that of FP8. Long-context serving in particular benefits; the KV cache shrinks by 4×, so context capacity quadruples.
 
 4. **HBM bandwidth grows but not in proportion to FLOPs.** 2.4× bandwidth, 2.3× FP16 FLOPs, 2.3× FP8 FLOPs. The ridge moves slightly favorably; decode improvements track bandwidth, not FLOPs. **For inference, the 2.4× HBM bandwidth gain is the dominant factor, not the FLOP gains.** Customers paying for the FLOP advertisements while running decode-heavy workloads are paying for capability they cannot use.
 
 ### What GB200 NVL72 changes *(new in Edition IX)*
 
-The GB200 NVL72 is a rack-scale system with 72 Blackwell GPUs in a single NVLink domain — a 9× larger NVLink domain than the 8-GPU H100/H200 baseline. Three consequences for serving:
+The GB200 NVL72 is a rack-scale system with 72 Blackwell GPUs in a single NVLink domain; a 9× larger NVLink domain than the 8-GPU H100/H200 baseline. Three consequences for serving:
 
-1. **MoE expert parallelism scales without IB hop.** EP=64 on a single NVL72 stays within NVLink bandwidth (1.8 TB/s) instead of dropping to InfiniBand (50 GB/s). The DeepSeek-V3 deployment that needed 32 H800s for prefill (4 nodes × 8 GPUs, with cross-node IB) fits in a single NVL72 with all-NVLink bandwidth — eliminating the all-to-all bottleneck.
+1. **MoE expert parallelism scales without IB hop.** EP=64 on a single NVL72 stays within NVLink bandwidth (1.8 TB/s) instead of dropping to InfiniBand (50 GB/s). The DeepSeek-V3 deployment that needed 32 H800s for prefill (4 nodes × 8 GPUs, with cross-node IB) fits in a single NVL72 with all-NVLink bandwidth, eliminating the all-to-all bottleneck.
 
 2. **Reasoning-model serving benefits disproportionately.** Thinking models (Ch. 38) generate long output sequences; the per-token latency over many thousands of tokens makes any per-step overhead expensive. A 72-GPU NVLink domain reduces every collective by ~3× over multi-node TP+EP.
 
@@ -1307,7 +1320,7 @@ Reported NVIDIA roadmap items: B300 / Blackwell Ultra (288 GB HBM3e via 12-high 
 
 > **Hedge — Blackwell production maturity.** B200 began shipping in volume in 2025. Production-grade software paths (TensorRT-LLM, vLLM, SGLang) are still maturing FP4 support, kernel autotuning, and multi-GPU collective performance on Blackwell. Quote H100 numbers when discussing established production behavior; quote B200 numbers for forward-looking capacity planning, with the understanding that real-world realized performance has been catching up to advertised specs through 2025–2026.
 
-> **Key takeaways — Ch. 18.** Bandwidth scales slower than FLOPs across generations; decode tracks bandwidth. B200 192 GB enables TP=2 for 70B models. NVL72 turns a rack into a single 72-GPU NVLink domain — a step change for MoE EP and reasoning-model serving. Inference customers should optimize for HBM-bandwidth/$ and HBM-capacity/$, not FLOPs/$.
+> **Key takeaways — Ch. 18.** Bandwidth scales slower than FLOPs across generations; decode tracks bandwidth. B200 192 GB enables TP=2 for 70B models. NVL72 turns a rack into a single 72-GPU NVLink domain; a step change for MoE EP and reasoning-model serving. Inference customers should optimize for HBM-bandwidth/$ and HBM-capacity/$, not FLOPs/$.
 
 ---
 
@@ -1329,7 +1342,7 @@ The DeepSeek-V3 Technical Report (§2.1.2 and §4.2) specifies:
 - **Total parameters:** 671B.
 - **Activated parameters per token:** 37B (37.96B in the precise count).
 
-**Correction note.** Edition VIII inherited from a secondary source the misstatement that "DeepSeek-V3 has 3 layers where all 257 experts activate plus 58 layers with the routed top-8 + shared pattern, giving 1,354 activated experts per forward pass." This is wrong on two counts: (a) the first 3 layers are dense FFN, not "all-experts-activated" — those layers contain *no* experts; (b) even under the (incorrect) interpretation, the arithmetic does not check (`58·9 + 3·257 = 1,293`, not 1,354).
+**Correction note.** Edition VIII inherited from a secondary source the misstatement that "DeepSeek-V3 has 3 layers where all 257 experts activate plus 58 layers with the routed top-8 + shared pattern, giving 1,354 activated experts per forward pass." This is wrong on two counts: (a) the first 3 layers are dense FFN, not "all-experts-activated"; those layers contain *no* experts; (b) even under the (incorrect) interpretation, the arithmetic does not check (`58·9 + 3·257 = 1,293`, not 1,354).
 
 The correct count of FFN-component-applications per token per forward pass is:
 
@@ -1350,24 +1363,24 @@ embeddings + output head               ≈ 0.7 B
 
 ### The bandwidth math, derived precisely
 
-For a dense SwiGLU MLP layer with hidden dim d and intermediate dim m, weight memory is `3 d × m × dtype_bytes` per layer (gate, up, down). The classic transformer used m = 4d, but modern models vary: Llama-3-70B uses m = 3.5d (`intermediate_size=28,672` for `hidden_size=8,192`); other models adjust this ratio by FLOP-budget tradeoffs. For an MoE layer with N routed experts each of intermediate dim m, total weight memory grows to `N × 3 d × m × bytes`, but the per-token bandwidth — which is what decode pays — drops to `k/N` of the equivalent dense layer (where k includes the shared expert if any).
+For a dense SwiGLU MLP layer with hidden dim d and intermediate dim m, weight memory is `3 d × m × dtype_bytes` per layer (gate, up, down). The classic transformer used m = 4d, but modern models vary: Llama-3-70B uses m = 3.5d (`intermediate_size=28,672` for `hidden_size=8,192`); other models adjust this ratio by FLOP-budget tradeoffs. For an MoE layer with N routed experts each of intermediate dim m, total weight memory grows to `N × 3 d × m × bytes`, but the per-token bandwidth (which is what decode pays) drops to `k/N` of the equivalent dense layer (where k includes the shared expert if any).
 
-For DeepSeek-V3 with k=9 (8 routed + 1 shared) of N=257 total per-MoE-layer experts (256 routed + 1 shared), the per-token MoE bandwidth is roughly `9/257 ≈ 3.5%` of an equivalent fully-dense MLP at the same intermediate width — a ~28× reduction for those layers.
+For DeepSeek-V3 with k=9 (8 routed + 1 shared) of N=257 total per-MoE-layer experts (256 routed + 1 shared), the per-token MoE bandwidth is roughly `9/257 ≈ 3.5%` of an equivalent fully-dense MLP at the same intermediate width, a ~28× reduction for those layers.
 
-The catch: total memory is N× larger than activated, so MoE models that would fit comfortably as dense suddenly need expert parallelism (EP) to fit at all. DeepSeek-V3's 671B parameters in BF16 are ~1.3 TB of weights — far beyond any single GPU.
+The catch: total memory is N× larger than activated, so MoE models that would fit comfortably as dense suddenly need expert parallelism (EP) to fit at all. DeepSeek-V3's 671B parameters in BF16 are ~1.3 TB of weights, far beyond any single GPU.
 
 ### Expert parallelism: the all-to-all primitive
 
 Tensor parallelism shards each weight matrix; expert parallelism shards each expert across GPUs. With EP=64, each GPU holds 1 of 64 experts. A token enters the layer; the router selects k experts; the token must travel to whichever GPUs hold those experts (the "dispatch"); the experts compute; the outputs return to the originating GPU (the "combine"). This is an all-to-all collective twice per MoE layer.
 
-The communication pattern is fundamentally different from TP's all-reduce. All-reduce moves a fixed-size tensor; all-to-all moves variable-size payloads — each GPU sends a different number of tokens to each other GPU depending on routing decisions. The communication volume per GPU is `(tokens × d) / N` for dispatch and the same again for combine, but the irregularity makes it harder to schedule, harder to overlap, and harder to optimize.
+The communication pattern is fundamentally different from TP's all-reduce. All-reduce moves a fixed-size tensor; all-to-all moves variable-size payloads; each GPU sends a different number of tokens to each other GPU depending on routing decisions. The communication volume per GPU is `(tokens × d) / N` for dispatch and the same again for combine, but the irregularity makes it harder to schedule, harder to overlap, and harder to optimize.
 
 ### Quantitative all-to-all volume *(new in Edition IX)*
 
 For T tokens per GPU, hidden d, k active routed experts per token, EP=P:
 
 ```
-bytes_dispatch_per_GPU ≈ T · d · dtype_bytes · k · (1 − 1/P)                                (19.1)
+bytes_dispatch_per_GPU ≈ T · d · dtype_bytes · k · (1 − 1/P) (19.1)
 ```
 
 Combine has the same volume; total per-MoE-layer communication is ≈2× this.
@@ -1378,11 +1391,11 @@ Combine has the same volume; total per-MoE-layer communication is ≈2× this.
 bytes_dispatch ≈ 4096 × 7168 × 2 × 8 × (1 − 1/64) = 4096 × 7168 × 2 × 8 × 0.984 ≈ 462 MB per GPU per dispatch
 ```
 
-Total all-to-all (dispatch + combine) per MoE layer: 924 MB. For 58 MoE layers: **53.6 GB per GPU per forward pass**. At 200 Gb/s InfiniBand NDR (≈25 GB/s), that's 2.14 seconds of network time per forward pass — catastrophic. At 1.8 TB/s NVLink-5 (within an NVL72 domain): 30 ms — workable.
+Total all-to-all (dispatch + combine) per MoE layer: 924 MB. For 58 MoE layers: **53.6 GB per GPU per forward pass**. At 200 Gb/s InfiniBand NDR (≈25 GB/s), that's 2.14 seconds of network time per forward pass, catastrophic. At 1.8 TB/s NVLink-5 (within an NVL72 domain): 30 ms, workable.
 
 **This is exactly why** DeepSeek's deployment uses (a) **node-limited routing** (capping each token to at most M nodes), (b) **DeepEP** (a custom all-to-all kernel optimized for the MoE pattern), and (c) **DualPipe** (overlapping all-to-all with compute on the critical path).
 
-At decode (B=1 effectively per GPU per step), T is much smaller per step — but per-step latency matters for decode. A single round-trip is ~1 µs intra-node, ~10 µs inter-node × 58 MoE layers = 580 µs to several ms of pure network latency on the critical path. This is the structural reason MoE decode is hard.
+At decode (B=1 effectively per GPU per step), T is much smaller per step, but per-step latency matters for decode. A single round-trip is ~1 µs intra-node, ~10 µs inter-node × 58 MoE layers = 580 µs to several ms of pure network latency on the critical path. This is the structural reason MoE decode is hard.
 
 ### DeepSeek-V3's production deployment
 
@@ -1407,7 +1420,7 @@ DeepEP is not yet upstreamed to NCCL; it is a separate library. Production-grade
 
 ### The hot-expert problem
 
-Routing is unbalanced in practice. Some experts are popular (a code expert in code-heavy traffic, a math expert in reasoning traffic); others are starved. The popular experts become the bottleneck — every step waits for the GPU holding the hot expert. Three mitigations:
+Routing is unbalanced in practice. Some experts are popular (a code expert in code-heavy traffic, a math expert in reasoning traffic); others are starved. The popular experts become the bottleneck; every step waits for the GPU holding the hot expert. Three mitigations:
 
 1. **Auxiliary-loss-free load balancing.** DeepSeek-V3's training-time strategy adds a per-expert bias to the routing logits, adjusted dynamically based on observed expert load. Avoids the gradient conflicts of auxiliary losses while keeping experts balanced.
 2. **Expert replication.** Hot experts are replicated across multiple GPUs; the router distributes tokens across replicas. Costs memory but smooths the hottest cases.
@@ -1441,11 +1454,11 @@ def ring_attention(Q_local, K_local, V_local, rank, P):
     for step in range(P):
         attn_partial = flash_attn(Q_local, K, V, sm_state=softmax_state)
         output_acc, softmax_state = merge(output_acc, attn_partial)
-        K, V = ring_p2p_swap(K, V, rank, P)  # send to next, recv from prev
+        K, V = ring_p2p_swap(K, V, rank, P) # send to next, recv from prev
     return normalize(output_acc, softmax_state)
 ```
 
-The total communication volume per GPU is `2(P−1) × (L/P × d) × dtype_bytes` bytes — proportional to the full sequence length, not its square, which is what makes long-context inference tractable. Each GPU's compute is `O(L²/P)`, an exact P-way speedup of attention.
+The total communication volume per GPU is `2(P−1) × (L/P × d) × dtype_bytes` bytes; proportional to the full sequence length, not its square, which is what makes long-context inference tractable. Each GPU's compute is `O(L²/P)`, an exact P-way speedup of attention.
 
 ### DeepSpeed Ulysses
 
@@ -1459,13 +1472,13 @@ An alternative SP design (Jacobs et al., 2023)[CP / Ulysses] partitions sequence
 
 ### ZigZag and Stripe layouts *(expanded in Edition IX)*
 
-The natural Ring layout has a load-balance problem under causal attention: rank P-1 (the last in the ring) receives K/V from later positions, but its own queries (last block) have already attended to all earlier positions when the data arrives — meaning later ranks do less work. **ZigZag** and **Stripe** layouts re-distribute query positions across ranks so each rank computes the same number of attention pairs.
+The natural Ring layout has a load-balance problem under causal attention: rank P-1 (the last in the ring) receives K/V from later positions, but its own queries (last block) have already attended to all earlier positions when the data arrives, meaning later ranks do less work. **ZigZag** and **Stripe** layouts re-distribute query positions across ranks so each rank computes the same number of attention pairs.
 
 ZigZag layout: rank r holds query positions `{r, P+r, 2P+r, …}` (stride-P interleaving). Stripe layout: rank r holds positions `{r·L/P, (r·L/P)+1, …}` for the first half and the mirror for the second half. Both layouts produce identical per-rank attention work counts under causal masking, eliminating the natural-Ring imbalance.
 
 ### What this gets you in practice
 
-Without SP, a 1M-token prefill on Llama-3-70B is impossible on a single 8-H100 node — the activations alone exceed available HBM. With Ring Attention or USP, the prefill can be distributed across multiple nodes, with sequence-parallel attention scaling roughly linearly until interconnect bandwidth binds. This is how Gemini-class million-token contexts are actually served.[SeqShard]
+Without SP, a 1M-token prefill on Llama-3-70B is impossible on a single 8-H100 node, the activations alone exceed available HBM. With Ring Attention or USP, the prefill can be distributed across multiple nodes, with sequence-parallel attention scaling roughly linearly until interconnect bandwidth binds. This is how Gemini-class million-token contexts are actually served.[SeqShard]
 
 > **Hedge — SP variants matter.** Variants matter: zigzag and stripe layouts of Ring Attention rebalance load across the ring (the natural layout has the last rank computing nothing for causal attention); USP combines Ring and Ulysses for hybrid networks. Production systems pick the variant matching their interconnect topology. Read the USP paper and the LoongTrain / TokenRing follow-ups for the current state of the art.
 
@@ -1483,7 +1496,7 @@ Three classes of constraint are common in production:
 
 - **JSON-schema constraint.** The constraint is a state machine over a context-free grammar derived from the schema. Each step's mask is the set of tokens that would extend a valid prefix.
 - **Regex constraint.** The constraint is a DFA. Compilation is offline; the runtime cost is a state lookup per step.
-- **General CFG / grammar.** Used for code generation, custom DSLs, function-calling formats. More expressive but more expensive — the parser state is more elaborate.
+- **General CFG / grammar.** Used for code generation, custom DSLs, function-calling formats. More expressive but more expensive, the parser state is more elaborate.
 
 ### Where the cost comes from (corrected)
 
@@ -1497,7 +1510,7 @@ The dominant approaches:
 
 ### The interactions that bite in production
 
-**CUDA Graph incompatibility.** A grammar-driven mask is data-dependent — it depends on what tokens have been emitted so far. CUDA Graphs require shape stability and don't capture data-dependent control flow. Engines either fall back to eager mode for constrained requests, or precompute all possible mask shapes per state and dispatch among them.
+**CUDA Graph incompatibility.** A grammar-driven mask is data-dependent; it depends on what tokens have been emitted so far. CUDA Graphs require shape stability and don't capture data-dependent control flow. Engines either fall back to eager mode for constrained requests, or precompute all possible mask shapes per state and dispatch among them.
 
 **Engine architecture matters as much as backend choice.** SqueezeBits' 2025 benchmark on identical hardware found vLLM showed significant performance drops with guided decoding at batch sizes ≥ 8 due to sequential mask generation, while SGLang overlapped mask generation with the GPU's inference step and largely mitigated the cost. The same backend (XGrammar) on different engines produced very different overheads.[Guided-bench]
 
@@ -1521,7 +1534,7 @@ Let request *i* enter the system at `t^{enter}_i`, see its first emitted token a
 
 ```
 TTFT_i := t^{first}_i − t^{enter}_i                                  (22.1, time-to-first-token)
-TPOT_i := (t^{end}_i − t^{first}_i) / max(1, n^{out}_i − 1)          (22.2, time per output token)
+TPOT_i := (t^{end}_i − t^{first}_i) / max(1, n^{out}_i − 1) (22.2, time per output token)
 E2E_i  := t^{end}_i − t^{enter}_i                                    (22.3, end-to-end)
 Throughput  := Σ_i n^{out}_i / wall_clock_duration                   (22.4, output tok/s)
 Goodput@(s_TTFT, s_TPOT) := Σ_i n^{out}_i · 1[TTFT_i ≤ s_TTFT ∧ TPOT_i ≤ s_TPOT] / duration   (22.5)
@@ -1561,6 +1574,7 @@ Pinned random seed (`seed=20260509`); the corpus JSONL is byte-identical across 
 **Arrival schedule:** Closed-loop concurrency K ∈ {1,2,4,8,16,32,64,128,256} for ≥1000 requests each; open-loop Poisson λ ∈ {1,2,4,8,16,32,64} req/s for 10 minutes each. Both regimes run with `temperature=0` (reproducibility) and `temperature=0.7, top_p=0.9` (production).
 
 **Knob disclosure (mandatory for every run):**
+
 - Engine version + git SHA
 - Model checkpoint hash
 - Tokenizer hash
@@ -1583,6 +1597,7 @@ Pinned random seed (`seed=20260509`); the corpus JSONL is byte-identical across 
 ```
 
 **Statistical-rigor checklist:**
+
 - Bootstrap 95% CIs on every percentile (10K resamples).
 - 10K+ requests per regime to detect 5% TTFT differences with α=0.05.
 - Run each (engine, regime) cell 3× and report median + range.
@@ -1595,10 +1610,10 @@ A reference Python harness sketch (~80 lines) is in Appendix E. A complete runna
 ### Reporting template
 
 ```
-Engine:  vLLM 0.10.1
+Engine: vLLM 0.10.1
 Hardware: 8×H100 SXM5, NVSwitch
-Model:   Llama-3-70B-Instruct, FP8 W8A8
-Config:  TP=2, DP=4, max_num_batched_tokens=8192,
+Model: Llama-3-70B-Instruct, FP8 W8A8
+Config: TP=2, DP=4, max_num_batched_tokens=8192,
          enable_prefix_caching=true, enable_chunked_prefill=true
 Workload: Open-loop, λ=16 req/s, 10-minute run, 9,621 requests.
 
@@ -1640,9 +1655,9 @@ Per-bucket TTFT p99:
 
 ## 23 — vLLM V1 process model: code-level anatomy
 
-> A production inference engine is not one process — it is a small distributed system within a single host. Understanding the actual process layout, IPC mechanism, and component boundaries of vLLM V1 is the difference between debugging it and being defeated by it.
+> A production inference engine is not one process; it is a small distributed system within a single host. Understanding the actual process layout, IPC mechanism, and component boundaries of vLLM V1 is the difference between debugging it and being defeated by it.
 
-The vLLM V0 architecture ran scheduling, memory management, and model execution in a single Python process — which meant the GIL serialized everything and Python overhead leaked into the GPU step time. V1 redesigned the engine around process separation: scheduler and executor live in different processes, communicate via msgpack over IPC, and execute in parallel rather than serially.[V1-arch]
+The vLLM V0 architecture ran scheduling, memory management, and model execution in a single Python process; which meant the GIL serialized everything and Python overhead leaked into the GPU step time. V1 redesigned the engine around process separation: scheduler and executor live in different processes, communicate via msgpack over IPC, and execute in parallel rather than serially.[V1-arch]
 
 ### The actual process count
 
@@ -1659,7 +1674,7 @@ Two concrete examples:
 - **Single-node, 4 GPUs, TP=4** (`vllm serve --tp 4`): `1 API server + 1 engine core + 4 GPU workers = 6 processes`.
 - **Single-node, 8 GPUs, TP=2 DP=4**: `4 API servers + 4 engine cores + 8 GPU workers + 1 DP coordinator = 17 processes`.
 
-Even on a single GPU you have 2 processes: the engine core (Python, scheduler-side) and the worker (Python, owns the CUDA context). This is deliberate — it bypasses the GIL and lets the scheduler plan step n+1 while the worker executes step n.[V1-issue]
+Even on a single GPU you have 2 processes: the engine core (Python, scheduler-side) and the worker (Python, owns the CUDA context). This is deliberate; it bypasses the GIL and lets the scheduler plan step n+1 while the worker executes step n.[V1-issue]
 
 ### The components, with file paths *(pinned to commit `42172ad`)*
 
@@ -1686,7 +1701,7 @@ The IPC payloads are deliberately asymmetric to minimize traffic:
 
 ### The async overlap that makes V1 fast
 
-The single most consequential V1 design decision: the scheduler runs ahead of the executor by one step. While GPU workers execute step n, the scheduler is composing the batch for step n+1. When the GPU finishes step n, step n+1 is already prepared — no host-side stall.
+The single most consequential V1 design decision: the scheduler runs ahead of the executor by one step. While GPU workers execute step n, the scheduler is composing the batch for step n+1. When the GPU finishes step n, step n+1 is already prepared, no host-side stall.
 
 The engine core process has its own asyncio loop; the API server has another; they communicate only via msgpack queues. Two GILs, two loops, no contention.[Ubicloud]
 
@@ -1695,7 +1710,7 @@ class EngineCoreProc:
     def run_busy_loop(self):
         while True:
             self._process_input_queue()
-            outputs = self.step()        # 1) scheduler picks batch n+1
+            outputs = self.step() # 1) scheduler picks batch n+1
                                          # 2) executor runs batch n on GPU
                                          # 3) results from completed step go back to AsyncLLM
             if outputs:
@@ -1735,7 +1750,7 @@ vLLM V1 exposes a structured Prometheus surface populated by `SchedulerStats` em
 | `vllm:num_requests_waiting` | Queue depth | Growing without bound |
 | `vllm:gpu_cache_usage_perc` | KV pool pressure | > 95% sustained |
 | `vllm:prefix_cache_queries / hits` | Prefix-cache hit rate | Sudden drop |
-| `vllm:num_preemptions_total` | Preemption rate | Climbing — KV pressure |
+| `vllm:num_preemptions_total` | Preemption rate | Climbing. KV pressure |
 | `vllm:time_to_first_token_seconds` | TTFT histogram | p99 over SLO |
 | `vllm:time_per_output_token_seconds` | TPOT histogram | p99 over SLO |
 | `vllm:e2e_request_latency_seconds` | End-to-end | p99 over SLO |
@@ -1744,7 +1759,7 @@ vLLM V1 exposes a structured Prometheus surface populated by `SchedulerStats` em
 
 | DCGM FIELD | MEANING | HEALTHY (DECODE) |
 |---|---|---|
-| `DCGM_FI_PROF_DRAM_ACTIVE` | Fraction cycles HBM transferring | ≥ 0.85 — bandwidth-bound is healthy |
+| `DCGM_FI_PROF_DRAM_ACTIVE` | Fraction cycles HBM transferring | ≥ 0.85; bandwidth-bound is healthy |
 | `DCGM_FI_PROF_SM_ACTIVE` | Fraction cycles SMs active | ≥ 0.90; misleading on its own |
 | `DCGM_FI_PROF_PIPE_TENSOR_ACTIVE` | Fraction cycles tensor cores issuing | 0.05–0.30 (decode); 0.40–0.85 (prefill) |
 | `DCGM_FI_DEV_NVLINK_BANDWIDTH_TOTAL` | NVLink bytes/sec | Saturated during all-reduce |
@@ -1791,11 +1806,11 @@ Three signals are systematically undermonitored in production deployments:
 
 ### Why agentic is its own discipline
 
-An agentic workload — Claude Code, Devin, Cursor's agent mode, OpenAI's Operator — has three properties that single-turn chat doesn't:
+An agentic workload (Claude Code, Devin, Cursor's agent mode, OpenAI's Operator) has three properties that single-turn chat doesn't:
 
 1. **Conversation context grows monotonically.** Each turn appends tool results, observations, and reasoning to the conversation. After 10 turns, the conversation is 50K+ tokens. Re-prefilling this on every turn is catastrophic; **prefix caching is not optional, it's load-bearing**.
 2. **Generation is bursty and short.** An agent step might generate 50 tokens of plan, call a tool, generate 20 tokens of summary, repeat. TTFT dominates wall-clock; per-turn TPOT matters less than per-task end-to-end latency.
-3. **Concurrency patterns are different.** A single user might have 5 agents running 50 conversations each — fan-out from a single account. Per-tenant rate limits designed for single-turn chat starve agentic users.
+3. **Concurrency patterns are different.** A single user might have 5 agents running 50 conversations each, fan-out from a single account. Per-tenant rate limits designed for single-turn chat starve agentic users.
 
 ### The prefix-cache bandwidth math
 
@@ -1805,11 +1820,11 @@ Without prefix caching, a 10-turn conversation on Llama-3-70B costs roughly:
 prefill_total = sum_{i=1}^{10} prefill_cost(context_i) ≈ 10× single-turn cost
 ```
 
-With prefix caching, only the new tokens at each turn are prefilled. If each turn adds 500 tokens to a 50K context, the per-turn prefill drops from 50K → 500 — a 100× reduction. **This is why every production agentic deployment runs with prefix caching enabled and routes turns of the same conversation to the same replica.** Without affinity, the cache misses, and the math reverts to the no-cache case.
+With prefix caching, only the new tokens at each turn are prefilled. If each turn adds 500 tokens to a 50K context, the per-turn prefill drops from 50K → 500, a 100× reduction. **This is why every production agentic deployment runs with prefix caching enabled and routes turns of the same conversation to the same replica.** Without affinity, the cache misses, and the math reverts to the no-cache case.
 
 ### Conversation-affine routing
 
-The standard pattern: hash the conversation ID, route consistently to the same replica. This is consistent hashing with one wrinkle — replica failure must not lose conversations. Two designs are common:
+The standard pattern: hash the conversation ID, route consistently to the same replica. This is consistent hashing with one wrinkle, replica failure must not lose conversations. Two designs are common:
 
 | APPROACH | MECHANISM | FAILURE RECOVERY |
 |---|---|---|
@@ -1833,7 +1848,7 @@ per_step       = 1000 ms
 # A 10-step task: 10s, dominated by agent step count.
 ```
 
-The TTFT savings from prefix caching are the highest-leverage optimization. A 200 ms TTFT instead of 800 ms (the cold-prefill cost) saves 6 seconds across 10 steps — 60% of the total task time.
+The TTFT savings from prefix caching are the highest-leverage optimization. A 200 ms TTFT instead of 800 ms (the cold-prefill cost) saves 6 seconds across 10 steps, 60% of the total task time.
 
 ### The pathology that bites everyone
 
@@ -1845,7 +1860,7 @@ Three failure modes appear specifically in agentic workloads:
 
 ### When agentic looks like batch
 
-At the limit, an agentic workload starts to resemble a batch workload — many short, independent generations with shared base prefix. The optimal serving config converges with offline batch inference: small per-step latency budget, aggressive batching, prefix cache as primary memory consumer, speculative decoding turned on. The architectural distance from "chat" to "agentic" is larger than most teams budget for.
+At the limit, an agentic workload starts to resemble a batch workload; many short, independent generations with shared base prefix. The optimal serving config converges with offline batch inference: small per-step latency budget, aggressive batching, prefix cache as primary memory consumer, speculative decoding turned on. The architectural distance from "chat" to "agentic" is larger than most teams budget for.
 
 ### Thinking-model agents *(forward reference to Ch. 38)*
 
@@ -1878,32 +1893,30 @@ The 10–100× gap between "fast" and "slow" tokenizers is the difference betwee
 
 ### Where tokenization sits in the engine
 
-In vLLM V1, tokenization happens in the `AsyncLLM` wrapper on the API server side, not in the engine core. This is deliberate — it parallelizes tokenization with engine-side scheduling. But it also means tokenization runs in the API server's Python process, which holds the GIL during pure-Python operations. A slow tokenizer that holds the GIL serializes the entire API tier.
+In vLLM V1, tokenization happens in the `AsyncLLM` wrapper on the API server side, not in the engine core. This is deliberate; it parallelizes tokenization with engine-side scheduling. But it also means tokenization runs in the API server's Python process, which holds the GIL during pure-Python operations. A slow tokenizer that holds the GIL serializes the entire API tier.
 
 ```python
 class AsyncLLM:
     async def add_request(self, prompt: str, params: SamplingParams):
         token_ids = await self._tokenize_async(prompt)
-        await self.engine_client.add_request(
-            request_id=uuid(),
+        await self.engine_client.add_request(request_id=uuid(),
             token_ids=token_ids,
             sampling_params=params)
 
     async def _tokenize_async(self, prompt):
         # HF fast tokenizer's Rust path releases the GIL via pyo3.
-        return await asyncio.get_event_loop().run_in_executor(
-            self.tokenizer_pool, self.tokenizer.encode, prompt)
+        return await asyncio.get_event_loop().run_in_executor(self.tokenizer_pool, self.tokenizer.encode, prompt)
 ```
 
 ### Detokenization streaming and incremental decoding
 
-Detokenization in streaming mode is per-token, but BPE tokenizers don't always produce a clean character at each token boundary — some tokens encode partial UTF-8 sequences. Naive per-token decoding produces "?" characters or worse, broken Unicode. Production engines maintain a small per-request decoder state and emit characters only when a complete UTF-8 sequence is available.
+Detokenization in streaming mode is per-token, but BPE tokenizers don't always produce a clean character at each token boundary, some tokens encode partial UTF-8 sequences. Naive per-token decoding produces "?" characters or worse, broken Unicode. Production engines maintain a small per-request decoder state and emit characters only when a complete UTF-8 sequence is available.
 
 The performance trick: batch detokenization across all in-flight sequences in a single Rust call, rather than calling the tokenizer once per sequence. vLLM V1 has a dedicated detokenization path (the `OutputProcessor` in `vllm/v1/engine/output_processor.py` runs incremental detokenization on the API-server side, batched across requests); this redesign explicitly addressed performance issues with the V0 detokenizer at long-output-length workloads.[V1-detok]
 
 ### The chat-template gotcha
 
-Modern models have **chat templates** — the formatting that wraps user messages with the model's expected role markers. The template is applied before tokenization. If the template is misconfigured (wrong special tokens, wrong role names, wrong end-of-turn markers), the model's outputs degrade silently. This is one of the highest-leverage debugging targets when a deployment underperforms its benchmarks.
+Modern models have **chat templates**; the formatting that wraps user messages with the model's expected role markers. The template is applied before tokenization. If the template is misconfigured (wrong special tokens, wrong role names, wrong end-of-turn markers), the model's outputs degrade silently. This is one of the highest-leverage debugging targets when a deployment underperforms its benchmarks.
 
 > **The five-minute investigation that pays for itself.** For any inference deployment, run: (1) tokenize 10K random prompts and measure throughput; (2) compare to the model's expected fast tokenizer; (3) verify the chat template renders correctly by tokenizing a known input and comparing token IDs to the model's eval suite. If any of these three checks fail, fix them before any other optimization. They account for a disproportionate share of "why is our deployment slow" questions.
 
@@ -1944,7 +1957,7 @@ Two newer sampling operations have entered production:
 
 ### Where the sampler runs (and why it matters)
 
-A naive implementation runs the sampler on CPU: copy logits from device to host, apply transformations in Python or NumPy, sample, copy the chosen token back. This adds two PCIe round trips and serializes through the GIL. For a small model where decode step time is 5–10 ms, a CPU sampler can add 1–2 ms — a 20% overhead invisible in profiling that doesn't measure the host-device copy.
+A naive implementation runs the sampler on CPU: copy logits from device to host, apply transformations in Python or NumPy, sample, copy the chosen token back. This adds two PCIe round trips and serializes through the GIL. For a small model where decode step time is 5–10 ms, a CPU sampler can add 1–2 ms; a 20% overhead invisible in profiling that doesn't measure the host-device copy.
 
 Production engines run the entire sampler on GPU. vLLM's sampler in `vllm/v1/sample/sampler.py` runs all steps as fused kernels; the only CPU operation is reading the chosen token ID for the scheduler. SGLang and TensorRT-LLM follow the same pattern.
 
@@ -1974,13 +1987,13 @@ def gpu_sample(logits, sampling_params):
 
 ### Per-request sampling parameters and batching
 
-A subtlety that bites teams: different requests in the same batch can have different sampling parameters. One user wants temperature 0.7 and top-p 0.9; another wants greedy decoding; a third has a constraint mask. The sampler must apply per-row parameters within a batched kernel — straightforward in principle, easy to get wrong in implementation.
+A subtlety that bites teams: different requests in the same batch can have different sampling parameters. One user wants temperature 0.7 and top-p 0.9; another wants greedy decoding; a third has a constraint mask. The sampler must apply per-row parameters within a batched kernel; straightforward in principle, easy to get wrong in implementation.
 
 The most common bug: using the first request's parameters for the entire batch because the kernel was written assuming homogeneous sampling. The result is silent quality degradation that doesn't surface in benchmarks (which usually use uniform sampling).
 
 ### The greedy / temperature-0 special case
 
-When T = 0, sampling is deterministic argmax. This is the natural choice for tasks where reproducibility matters (code generation with tests, structured outputs, evaluations). It also bypasses most of the sampler stack — no softmax, no truncation needed — which makes it slightly cheaper. Production engines fast-path this case explicitly.
+When T = 0, sampling is deterministic argmax. This is the natural choice for tasks where reproducibility matters (code generation with tests, structured outputs, evaluations). It also bypasses most of the sampler stack (no softmax, no truncation needed) which makes it slightly cheaper. Production engines fast-path this case explicitly.
 
 The rare bug: T = 0 with constrained decoding. The constraint mask must still apply (some tokens are illegal regardless of which has the highest logit). Fast-paths that skip the mask break correctness.
 
@@ -2023,14 +2036,14 @@ The choice depends on three axes: hardware, workload pattern, and operational co
 
 ### What to actually benchmark before committing
 
-The published benchmarks for these engines are unreliable — every team optimizes for their own benchmark. **Run the protocol from Ch. 22** before committing:
+The published benchmarks for these engines are unreliable, every team optimizes for their own benchmark. **Run the protocol from Ch. 22** before committing:
 
 1. Use your real prompt distribution.
 2. Run the same SLO sweep on each engine.
 3. Test the features you'll actually use.
 4. Hold quantization constant (don't compare an FP16 vLLM deployment to an FP8 TRT-LLM deployment; that's measuring quantization, not the engine).
 
-> **The honest answer for most teams.** Start with vLLM. It works, it's well-supported, and the ecosystem around it (deployment, monitoring, integrations) is the most mature. Move to SGLang or TensorRT-LLM if profiling shows you're losing 20%+ on a workload-specific bottleneck (heavy structured output for SGLang; raw NVIDIA throughput on a stable workload for TRT-LLM). Don't pre-optimize the engine choice — pre-optimize the request distribution you're going to throw at it.
+> **The honest answer for most teams.** Start with vLLM. It works, it's well-supported, and the ecosystem around it (deployment, monitoring, integrations) is the most mature. Move to SGLang or TensorRT-LLM if profiling shows you're losing 20%+ on a workload-specific bottleneck (heavy structured output for SGLang; raw NVIDIA throughput on a stable workload for TRT-LLM). Don't pre-optimize the engine choice; pre-optimize the request distribution you're going to throw at it.
 
 > **Hedge — engine landscape.** Engine maturity, performance, and feature completeness change quarterly. The recommendations above reflect the state as of early 2026. Verify current benchmarks before committing.
 
@@ -2044,7 +2057,7 @@ The published benchmarks for these engines are unreliable — every team optimiz
 
 > Serving many LoRA-adapted variants of one base model on the same GPU pool requires treating LoRA weights as a separate memory tier. Done right, you get N specialized models for the price of slightly more than one. Done wrong, every adapter swap triggers a stall.
 
-A LoRA adapter is a low-rank update `B·A` applied to a base weight matrix W: the effective weight is `W + α·B·A`, where B is `d × r` and A is `r × d`, with rank r typically 8–64. Storage cost per adapter is tiny — a Llama-3-70B adapter at r=16 stores roughly `2 × 80 layers × (8192 × 16 + 16 × 8192) × 4 weight matrices × 2 bytes ≈ 336 MB`, vs the base model's 140 GB. The arithmetic asymmetry is what makes multi-LoRA economically interesting: one base model + 100 adapters fits in memory; 100 separately fine-tuned full models would not.
+A LoRA adapter is a low-rank update `B·A` applied to a base weight matrix W: the effective weight is `W + α·B·A`, where B is `d × r` and A is `r × d`, with rank r typically 8–64. Storage cost per adapter is tiny; a Llama-3-70B adapter at r=16 stores roughly `2 × 80 layers × (8192 × 16 + 16 × 8192) × 4 weight matrices × 2 bytes ≈ 336 MB`, vs the base model's 140 GB. The arithmetic asymmetry is what makes multi-LoRA economically interesting: one base model + 100 adapters fits in memory; 100 separately fine-tuned full models would not.
 
 ### The naive approach and why it fails
 
@@ -2055,7 +2068,7 @@ The naive serving pattern is: for each request, load the appropriate adapter, ru
 Two designs solve the multi-LoRA serving problem, with different trade-offs:
 
 - **Punica** (Chen et al., MLSys 2024)[Punica]: introduces a custom **BGMV** (Batched Grouped Matrix-Vector) kernel that performs the LoRA computation for a heterogeneous batch in a single GPU call. Each request in the batch may use a different adapter; the kernel reads each adapter once per batch and applies it to the corresponding rows.
-- **S-LoRA** (Sheng et al., MLSys 2024)[S-LoRA]: generalizes the approach with **unified paging** — adapter weights live in the same paged memory pool as KV cache, with their own block table. Adapters are loaded on demand and evicted under memory pressure, just like KV blocks. S-LoRA reports serving thousands of adapters concurrently on a single GPU pool with throughput comparable to single-adapter serving.
+- **S-LoRA** (Sheng et al., MLSys 2024)[S-LoRA]: generalizes the approach with **unified paging**; adapter weights live in the same paged memory pool as KV cache, with their own block table. Adapters are loaded on demand and evicted under memory pressure, just like KV blocks. S-LoRA reports serving thousands of adapters concurrently on a single GPU pool with throughput comparable to single-adapter serving.
 
 The conceptual move is the same in both: **batch heterogeneity is solved at the kernel level, not the scheduler level.** A batch of 64 requests using 64 different adapters runs as efficiently as a batch using one adapter, provided the BGMV-style kernel is in place.
 
@@ -2067,15 +2080,15 @@ For a request using adapter j, each linear layer's effective computation is `y =
 adapter_bytes_per_request = 2 × 8192 × 16 × 2 (BF16) = 524 KiB per layer
 ```
 
-Across 80 layers and 4 LoRA-targeted matrices per layer (typically Q, K, V, O), that's about 164 MB of adapter traffic per request per forward pass. For a batch of 64 different adapters, the per-step adapter bandwidth is `64 × 164 MB ≈ 10.5 GB` — a real cost on top of the base weight bandwidth. The trade is favorable because adapters are small enough to keep many in HBM simultaneously, but the bandwidth cost scales with batch heterogeneity.
+Across 80 layers and 4 LoRA-targeted matrices per layer (typically Q, K, V, O), that's about 164 MB of adapter traffic per request per forward pass. For a batch of 64 different adapters, the per-step adapter bandwidth is `64 × 164 MB ≈ 10.5 GB`, a real cost on top of the base weight bandwidth. The trade is favorable because adapters are small enough to keep many in HBM simultaneously, but the bandwidth cost scales with batch heterogeneity.
 
 ### What this enables
 
 With multi-LoRA serving, a single base model deployment supports per-customer fine-tunes, per-task specializations, and rapid A/B experimentation without provisioning separate replicas. The economic model shifts: instead of fine-tuning being "train a model + provision serving capacity," it becomes "train an adapter + push to a shared pool." This is how vLLM, SGLang, and most managed inference platforms support hundreds of customer fine-tunes.
 
-> **When LoRA serving works, when it doesn't.** LoRA serving is excellent when adapters are uncorrelated across batches (random user-to-adapter mapping). It degrades when one adapter is dramatically hotter than others (most traffic to one adapter): the heterogeneous batching benefit disappears and you'd be better off serving the dominant adapter as its own merged-weight replica. The decision rule is empirical — measure per-adapter QPS distribution.
+> **When LoRA serving works, when it doesn't.** LoRA serving is excellent when adapters are uncorrelated across batches (random user-to-adapter mapping). It degrades when one adapter is dramatically hotter than others (most traffic to one adapter): the heterogeneous batching benefit disappears and you'd be better off serving the dominant adapter as its own merged-weight replica. The decision rule is empirical, measure per-adapter QPS distribution.
 
-> **Key takeaways — Ch. 29.** LoRA = `W + B·A`, B/A are `d × r` and `r × d` for r ≈ 8–64. Adapter is ~336 MB at r=16 for 70B. BGMV kernels (Punica, S-LoRA) make heterogeneous batching efficient. Adapter bandwidth scales with batch heterogeneity — 10 GB/step at 64 different adapters per batch. Hot-adapter case → merge to base.
+> **Key takeaways — Ch. 29.** LoRA = `W + B·A`, B/A are `d × r` and `r × d` for r ≈ 8–64. Adapter is ~336 MB at r=16 for 70B. BGMV kernels (Punica, S-LoRA) make heterogeneous batching efficient. Adapter bandwidth scales with batch heterogeneity, 10 GB/step at 64 different adapters per batch. Hot-adapter case → merge to base.
 
 ---
 
@@ -2094,7 +2107,7 @@ With multi-LoRA serving, a single base model deployment supports per-customer fi
 
 ### The transfer-cost ledger
 
-Using the Llama-3-70B figure (320 KiB/token), a single 32K-token conversation's KV is ~10.74 GB. Reloading from CPU at 32 GB/s takes ~330 ms — a full TTFT budget on its own. From NVMe at 7 GB/s: ~1.5 seconds, unacceptable for interactive workloads. From a 200 Gb InfiniBand network: ~430 ms, borderline.
+Using the Llama-3-70B figure (320 KiB/token), a single 32K-token conversation's KV is ~10.74 GB. Reloading from CPU at 32 GB/s takes ~330 ms, a full TTFT budget on its own. From NVMe at 7 GB/s: ~1.5 seconds, unacceptable for interactive workloads. From a 200 Gb InfiniBand network: ~430 ms, borderline.
 
 CPU offload is viable for warm prefixes (recently used, expected back soon); NVMe is viable only for batch workloads tolerating second-class latency; remote offload is viable only with high-end interconnects and ideally as a backstop, not a primary tier.
 
@@ -2125,7 +2138,7 @@ Throughput-wise, GDS is comparable to plain NVMe; the win is **latency** (avoidi
 
 ### CXL.mem prospects *(new in Edition IX)*
 
-**Compute Express Link (CXL) 3.1** introduces memory pooling across hosts, with `CXL.mem` allowing GPUs to access remote memory at near-DRAM latency over a coherent fabric. As of 2026-Q2, CXL.mem-equipped servers (Intel Granite Rapids, AMD Turin) are entering production, but CXL-attached GPU memory is still emerging. For LLM serving, the use case is a **shared KV pool across a rack** with single-digit-microsecond latency — much faster than InfiniBand for cross-replica KV sharing.
+**Compute Express Link (CXL) 3.1** introduces memory pooling across hosts, with `CXL.mem` allowing GPUs to access remote memory at near-DRAM latency over a coherent fabric. As of 2026-Q2, CXL.mem-equipped servers (Intel Granite Rapids, AMD Turin) are entering production, but CXL-attached GPU memory is still emerging. For LLM serving, the use case is a **shared KV pool across a rack** with single-digit-microsecond latency; much faster than InfiniBand for cross-replica KV sharing.
 
 CXL.mem will likely be the dominant cross-host KV transport by 2027–2028; for now it's a forward-looking hedge. Production deployments through 2026 use NIXL over IB.
 
@@ -2166,7 +2179,7 @@ The latency profile is the best of the three for typical chat workloads: token-t
 
 ### WebSockets: when bidirectional matters
 
-WebSockets become preferable when the client may send mid-generation updates: cancellation, parameter changes, or interactive function-call results. The OpenAI Realtime API uses WebSockets for this reason — voice conversations require bidirectional streaming with sub-100 ms latency.
+WebSockets become preferable when the client may send mid-generation updates: cancellation, parameter changes, or interactive function-call results. The OpenAI Realtime API uses WebSockets for this reason; voice conversations require bidirectional streaming with sub-100 ms latency.
 
 The operational pain is connection management. Many corporate networks and load balancers strip the WebSocket Upgrade header or terminate idle connections after 30–60 seconds. Production WebSocket deployments need explicit keep-alive, reconnection logic, and load balancer configuration that specifically preserves the upgrade.
 
@@ -2174,14 +2187,14 @@ The operational pain is connection management. Many corporate networks and load 
 
 For service-to-service streaming inside a backend (e.g., from a router service to inference workers), gRPC server-streaming is the natural choice. It multiplexes many streams over a single HTTP/2 connection, has built-in flow control, and produces efficient binary wire formats via Protobuf. Inference engines (vLLM, TGI, TensorRT-LLM Triton) often expose gRPC interfaces for internal use alongside HTTP/SSE for external use.
 
-The cost is browser incompatibility — browsers cannot speak gRPC directly without the gRPC-Web translation layer.
+The cost is browser incompatibility; browsers cannot speak gRPC directly without the gRPC-Web translation layer.
 
 ### WebTransport: the emerging frontier *(new in Edition IX)*
 
 **WebTransport** (HTTP/3 over QUIC) is the W3C-standardized successor to WebSockets, with two key advantages for LLM streaming:
 
 1. **No head-of-line blocking.** QUIC streams are independent at the transport layer; a slow stream doesn't block fast ones.
-2. **Faster reconnection.** QUIC's 0-RTT and connection migration mean a phone switching from WiFi to cellular doesn't need to renegotiate the connection — saves 100–300 ms.
+2. **Faster reconnection.** QUIC's 0-RTT and connection migration mean a phone switching from WiFi to cellular doesn't need to renegotiate the connection, saves 100–300 ms.
 
 As of 2026-Q2, WebTransport is supported in Chrome (since v97), Firefox (since v114), and Edge. Cloudflare and Fastly support HTTP/3 through their CDNs. For voice / multimodal applications where session interruption is frequent, WebTransport is the protocol to watch.
 
@@ -2205,17 +2218,17 @@ Buffering happens in: nginx (default 8 KiB buffer; a 4-token response sits in th
 
 ## 32 — Security and multi-tenancy
 
-> Every optimization that makes inference fast — prefix caching, paged memory, batched scheduling — also creates a side channel between users sharing a deployment. A multi-tenant inference cluster without explicit isolation is a multi-tenant cluster with a leak.
+> Every optimization that makes inference fast (prefix caching, paged memory, batched scheduling) also creates a side channel between users sharing a deployment. A multi-tenant inference cluster without explicit isolation is a multi-tenant cluster with a leak.
 
-Security in inference is not the same problem as security in a stateless web tier. The dominant attack surface is not network-level (TLS, auth, rate limits — all standard) but **architectural**: the very mechanisms that improve throughput are the ones that cross tenant boundaries.
+Security in inference is not the same problem as security in a stateless web tier. The dominant attack surface is not network-level (TLS, auth, rate limits; all standard) but **architectural**: the very mechanisms that improve throughput are the ones that cross tenant boundaries.
 
 ### The four leakage vectors
 
-1. **Prefix-cache poisoning and cross-tenant cache hits.** If two tenants happen to send a prompt with the same first N tokens — "You are a helpful assistant" is the canonical example — the second request hits the cache populated by the first. In most cases this is harmless and intended. The attack: a malicious tenant crafts a prompt that, when cached, induces the model to behave a particular way for any later tenant whose prompt overlaps its prefix. The vLLM `cache_salt` parameter exists precisely to scope shared prefixes to authorized tenants — without it, prefix sharing is global by default. The salt is injected into the hash of the first block, ensuring only requests with the same salt reuse cached KV blocks.[vLLM-salt]
+1. **Prefix-cache poisoning and cross-tenant cache hits.** If two tenants happen to send a prompt with the same first N tokens ("You are a helpful assistant" is the canonical example) the second request hits the cache populated by the first. In most cases this is harmless and intended. The attack: a malicious tenant crafts a prompt that, when cached, induces the model to behave a particular way for any later tenant whose prompt overlaps its prefix. The vLLM `cache_salt` parameter exists precisely to scope shared prefixes to authorized tenants, without it, prefix sharing is global by default. The salt is injected into the hash of the first block, ensuring only requests with the same salt reuse cached KV blocks.[vLLM-salt]
 
-2. **Side-channel timing leaks.** Cache-hit prompts return their first token measurably faster than cache-miss prompts. A tenant observing TTFT distributions can infer whether other tenants are sending similar prompts — a bona fide information leak demonstrated empirically against production engines.[Cache-side] Mitigation requires either tenant-isolated cache pools (no cross-tenant sharing) or constant-time TTFT padding (sacrificing the cache benefit).
+2. **Side-channel timing leaks.** Cache-hit prompts return their first token measurably faster than cache-miss prompts. A tenant observing TTFT distributions can infer whether other tenants are sending similar prompts; a bona fide information leak demonstrated empirically against production engines.[Cache-side] Mitigation requires either tenant-isolated cache pools (no cross-tenant sharing) or constant-time TTFT padding (sacrificing the cache benefit).
 
-3. **Prompt injection through cached system prompts.** An attacker who controls part of a long shared prefix — for example, a company that publishes a popular prompt template — can encode instructions that activate when the prefix is reused under a different system prompt. The prefix cache makes this attack durable: the malicious prefix may sit in the cache for hours, affecting every tenant whose prompt overlaps it.
+3. **Prompt injection through cached system prompts.** An attacker who controls part of a long shared prefix (for example, a company that publishes a popular prompt template) can encode instructions that activate when the prefix is reused under a different system prompt. The prefix cache makes this attack durable: the malicious prefix may sit in the cache for hours, affecting every tenant whose prompt overlaps it.
 
 4. **KV memory exhaustion as denial-of-service.** A single tenant submitting requests with very long contexts can saturate the KV pool, forcing preemption of other tenants' in-flight work. Without per-tenant KV quotas, the worst-behaved tenant determines latency for everyone. This is not a confidentiality leak but it is a real shared-resource attack.
 
@@ -2251,13 +2264,13 @@ A model with L layers is split across P pipeline stages, with stage i holding la
 
 ### The bubble: PP's defining cost
 
-If only one micro-batch is in flight, only one stage is active at any time — the others are idle. With M micro-batches in flight, the steady-state utilization is `M / (M + P − 1)`. The lost fraction `(P − 1) / (M + P − 1)` is the **pipeline bubble**.
+If only one micro-batch is in flight, only one stage is active at any time, the others are idle. With M micro-batches in flight, the steady-state utilization is `M / (M + P − 1)`. The lost fraction `(P − 1) / (M + P − 1)` is the **pipeline bubble**.
 
 ```
-bubble_fraction = (P − 1) / (M + P − 1)                                                     (33.1)
+bubble_fraction = (P − 1) / (M + P − 1) (33.1)
 ```
 
-For training, M is large (gradient accumulation produces many micro-batches per optimizer step) and the bubble is amortized. For inference, M is bounded by the number of in-flight requests on the stage — and at low concurrency, this can be embarrassingly small. With P=4 and M=4, the bubble is 3/7 ≈ 43% of wall time. With M=16, it drops to 16%. With M=64, to 4.5%. Inference-time PP only pays off at concurrencies high enough to drive M well past P. (Verified via `derive.pp_bubble_fraction` in Appendix D.)
+For training, M is large (gradient accumulation produces many micro-batches per optimizer step) and the bubble is amortized. For inference, M is bounded by the number of in-flight requests on the stage; and at low concurrency, this can be embarrassingly small. With P=4 and M=4, the bubble is 3/7 ≈ 43% of wall time. With M=16, it drops to 16%. With M=64, to 4.5%. Inference-time PP only pays off at concurrencies high enough to drive M well past P. (Verified via `derive.pp_bubble_fraction` in Appendix D.)
 
 ### 1F1B and interleaved schedules
 
@@ -2267,7 +2280,7 @@ The standard schedule is **1F1B** (one-forward-one-backward, named for its train
 
 **ZeroBubble** (Qi et al., ICLR 2024)[ZeroBubble] proves that for training pipelines with backward decomposition, the bubble can be reduced to zero with the right scheduling. The key insight: the backward pass can be split into two finer-grained operations (`backward_input` and `backward_weight`), which can be scheduled independently to fill what would otherwise be bubble cycles.
 
-For **inference** (forward-only), the ZeroBubble formalism doesn't directly apply (no backward), but its principles — fine-grained scheduling, compute-comm overlap at finer granularity than the layer — do. The "forward-only ZeroBubble" recipe overlaps each layer's compute with the previous layer's pipeline-comm, reducing the inference bubble at any M.
+For **inference** (forward-only), the ZeroBubble formalism doesn't directly apply (no backward), but its principles (fine-grained scheduling, compute-comm overlap at finer granularity than the layer) do. The "forward-only ZeroBubble" recipe overlaps each layer's compute with the previous layer's pipeline-comm, reducing the inference bubble at any M.
 
 ### DualPipe *(new in Edition IX)*
 
@@ -2279,10 +2292,10 @@ For inference, DualPipe's relevant contribution is the **all-to-all/compute over
 
 PP is preferable to TP when one of two conditions holds:
 
-1. **The model exceeds NVLink-domain capacity.** TP is bandwidth-hungry; it works best inside one NVLink domain (typically up to 8 GPUs on H100/B200 with NVSwitch, 72 with NVL72). Beyond that domain, TP across PCIe or RDMA is fatal — the all-reduce cost dominates the compute. PP, in contrast, only sends activations between adjacent stages — a much smaller payload.
+1. **The model exceeds NVLink-domain capacity.** TP is bandwidth-hungry; it works best inside one NVLink domain (typically up to 8 GPUs on H100/B200 with NVSwitch, 72 with NVL72). Beyond that domain, TP across PCIe or RDMA is fatal, the all-reduce cost dominates the compute. PP, in contrast, only sends activations between adjacent stages, a much smaller payload.
 2. **The deployment has high concurrency.** When M ≫ P, the bubble is small and PP's benefit (cross-node scaling) outweighs its cost (the bubble plus the per-stage forwarding overhead).
 
-The Sarathi-Serve paper reports cross-node TP increasing median TBT by more than 2× compared to a 4-way TP within the node combined with PP across nodes — illustrating exactly this trade-off on Falcon-180B.[Sarathi-Serve]
+The Sarathi-Serve paper reports cross-node TP increasing median TBT by more than 2× compared to a 4-way TP within the node combined with PP across nodes; illustrating exactly this trade-off on Falcon-180B.[Sarathi-Serve]
 
 > **Key takeaways — Ch. 33.** PP partitions layers across stages, crossing node boundaries that TP cannot. Bubble fraction `(P−1)/(M+P−1)` becomes acceptable only when concurrency M is several times P. ZeroBubble (training) and DualPipe (DeepSeek-V3) close the bubble or hide it behind comm; the "forward-only ZeroBubble" pattern transfers to inference. Hybrid TP-within-NVLink + PP-across-nodes is canonical for 180B+ on multi-node clusters.
 
@@ -2298,8 +2311,8 @@ The Sarathi-Serve paper reports cross-node TP increasing median TBT by more than
 |---|---|---|---|
 | Frontier API (OpenAI, Anthropic, Gemini) | Per token (input/output split, often 3:1) | None | Frontier-quality requirement, low/variable volume |
 | Open-model API (Together, Fireworks, Groq, etc.) | Per token, typically 30–70% of frontier price | None | Open model is sufficient, want hosted convenience |
-| Cloud GPU + managed inference (Bedrock, Vertex) | Per token or per GPU-hour | Some — you own deployment configuration | Existing cloud stack, compliance constraints |
-| Self-hosted on dedicated GPUs | GPU-hour (capex/opex) | Full — deployment, scaling, on-call | High steady volume, cost-sensitivity, custom requirements |
+| Cloud GPU + managed inference (Bedrock, Vertex) | Per token or per GPU-hour | Some; you own deployment configuration | Existing cloud stack, compliance constraints |
+| Self-hosted on dedicated GPUs | GPU-hour (capex/opex) | Full; deployment, scaling, on-call | High steady volume, cost-sensitivity, custom requirements |
 
 ### The break-even arithmetic *(methodology, not fixed prices)*
 
@@ -2309,12 +2322,12 @@ An H100 on a managed cloud rents for roughly `$P_h` per hour on demand. At `$P_h
 
 An H100 running Llama-3-70B with TP=2 (so two GPUs are needed) at peak utilization can serve roughly **1,500–3,000 output tokens/second** across all in-flight requests (run the protocol in Ch. 22 with your prompt distribution). Take a midpoint of 2,000 tok/s at full saturation. At 100% utilization for a month, that's about **5.2 billion tokens served per 2-GPU pair, costing $5,760**. That's `~$1.10 per million tokens at perfect utilization`.
 
-Compare to managed open-model API pricing of roughly `$0.50–$0.90 per million tokens` for Llama-3-70B-class models (Together, Fireworks, Groq tier prices — verify current). At on-demand GPU rates, **self-hosted is more expensive than managed APIs at every realistic utilization level**. Self-hosted on reserved-instance pricing (typically 30–50% below on-demand) reaches the break-even with mid-range managed pricing at roughly **60–80% sustained utilization**. Below that bar, managed APIs are cheaper after operational overhead is included.
+Compare to managed open-model API pricing of roughly `$0.50–$0.90 per million tokens` for Llama-3-70B-class models (Together, Fireworks, Groq tier prices, verify current). At on-demand GPU rates, **self-hosted is more expensive than managed APIs at every realistic utilization level**. Self-hosted on reserved-instance pricing (typically 30–50% below on-demand) reaches the break-even with mid-range managed pricing at roughly **60–80% sustained utilization**. Below that bar, managed APIs are cheaper after operational overhead is included.
 
 ### Costs that aren't on the price-per-token sticker
 
 - **Engineering time.** A self-hosted inference platform requires a team of engineers (typically 2–5 senior FTEs at $300K+ fully-loaded annually) to maintain, monitor, debug, and upgrade. This dwarfs GPU costs at small scale.
-- **Capacity planning risk.** Provisioning for peak traffic means paying for GPUs idle during troughs. Provisioning for average means dropping requests at peaks. Managed APIs handle this elastically — at a price built into their margins.
+- **Capacity planning risk.** Provisioning for peak traffic means paying for GPUs idle during troughs. Provisioning for average means dropping requests at peaks. Managed APIs handle this elastically, at a price built into their margins.
 - **Model upgrade cost.** A new open model arrives every 2–3 months. Self-hosters must integrate, benchmark, requantize, and redeploy. Managed APIs absorb this work.
 - **Reliability engineering.** Building a 99.9% SLO inference service from scratch requires multi-region replication, health checking, auto-scaling, traffic shaping. Months of engineering before the first paid request.
 - **Compliance and audit.** SOC 2, HIPAA, ISO 27001 add real cost. Managed APIs have these; self-hosters acquire them.
@@ -2355,12 +2368,12 @@ You operate a customer-facing chat product. Peak-hour load is **1,000 concurrent
 
 Llama-3-70B at 141 GB BF16 cannot fit on one H100 (80 GB). The minimum unit is **TP=2** (Ch. 8), giving ~70 GB weights per GPU plus ~10 GB headroom for KV. The 2-GPU replica's combined KV pool is ~20 GB, supporting roughly 15 simultaneous 4K-context requests (Ch. 5's worked example). For 1,000 concurrent: `1,000 / 15 ≈ 67 replicas, or ~134 H100s`. PP across nodes (Ch. 33) adds bubble overhead that doesn't pay off at this per-replica concurrency; stick with TP=2 within an NVLink domain.
 
-Move to **FP8 quantization** (Ch. 15): weights drop to ~70 GB, still using TP=2 means each GPU holds 35 GB of weights and contributes 45 GB to KV — the per-replica KV pool jumps to 90 GB. Per-replica concurrency: `90 / 1.34 ≈ 67 active requests`. For 1,000 concurrent: **15 replicas, or 30 H100s** — a 4× reduction. Quantization is the single most impactful capacity decision in this scenario. Adding **KV-INT8** on top (Ch. 15) further halves KV per token, doubling concurrency again to ~13 H100s — though with measurable accuracy implications that warrant a workload-specific evaluation per the protocol in Ch. 22.
+Move to **FP8 quantization** (Ch. 15): weights drop to ~70 GB, still using TP=2 means each GPU holds 35 GB of weights and contributes 45 GB to KV, the per-replica KV pool jumps to 90 GB. Per-replica concurrency: `90 / 1.34 ≈ 67 active requests`. For 1,000 concurrent: **15 replicas, or 30 H100s**, a 4× reduction. Quantization is the single most impactful capacity decision in this scenario. Adding **KV-INT8** on top (Ch. 15) further halves KV per token, doubling concurrency again to ~13 H100s; though with measurable accuracy implications that warrant a workload-specific evaluation per the protocol in Ch. 22.
 
 ### Step 3: scheduler configuration
 
 - **Enable chunked prefill** (Ch. 11). With 500-token prompts plus 4,000-token shared history, prefill is non-trivial; chunking limits the per-step cost to a tunable budget (typically 2,048 tokens). Without chunked prefill, generation stalls of 100–500 ms appear regularly, blowing the TPOT SLO.
-- **Enable prefix caching** (Ch. 12). The 4K-token rolling history is the largest contributor to per-request prefill cost. With ~85% prefix-cache hit rate on chat workloads (typical figure cited in production reports; verify against your own traffic), effective prefill on a hit drops to the new-tokens portion plus the trailing history tail — typically ~3–4× less work than full re-prefill, recovering most of the per-turn TTFT budget.
+- **Enable prefix caching** (Ch. 12). The 4K-token rolling history is the largest contributor to per-request prefill cost. With ~85% prefix-cache hit rate on chat workloads (typical figure cited in production reports; verify against your own traffic), effective prefill on a hit drops to the new-tokens portion plus the trailing history tail; typically ~3–4× less work than full re-prefill, recovering most of the per-turn TTFT budget.
 - **Enable continuous batching** (Ch. 10). Required, not optional. Static batching loses an order of magnitude of throughput in this scenario.
 - **Decide on speculative decoding** (Ch. 14). Helpful at low-to-moderate concurrency (single-request acceleration). At our high concurrency, the target's batch is already saturating bandwidth; speculation adds little and can even hurt. Defer; benchmark to confirm. (A cleanly-trained MTP head, if available with the model, is a defensible "free" speculation choice.)
 
@@ -2368,21 +2381,21 @@ Move to **FP8 quantization** (Ch. 15): weights drop to ~70 GB, still using TP=2 
 
 **Conversation-affine routing** (Ch. 25) is essential. Without it, the rolling history's prefix cache misses on every turn, killing the 85% hit rate. Hash by conversation ID, route consistently to the same replica.
 
-For replica failure, the lost cache rebuilds on the new replica's first turn — one slow TTFT, then steady state resumes. For high-availability targets, layer a **distributed prefix store** (LMCache or MoonCake, Ch. 30) so the cache survives replica replacement.
+For replica failure, the lost cache rebuilds on the new replica's first turn, one slow TTFT, then steady state resumes. For high-availability targets, layer a **distributed prefix store** (LMCache or MoonCake, Ch. 30) so the cache survives replica replacement.
 
 ### Step 5: observability and admission
 
-Alert on `vllm:num_preemptions_total rate > 0` (Ch. 24) — indicates KV pressure mismatch. Alert on prefix-cache hit rate dropping below 75% — indicates routing affinity is broken. Alert on TPOT-p99 above 50 ms (the engineering SLO; the user-promised SLO is 60 ms, leaving 10 ms of buffer for incidents).
+Alert on `vllm:num_preemptions_total rate > 0` (Ch. 24), indicates KV pressure mismatch. Alert on prefix-cache hit rate dropping below 75%, indicates routing affinity is broken. Alert on TPOT-p99 above 50 ms (the engineering SLO; the user-promised SLO is 60 ms, leaving 10 ms of buffer for incidents).
 
 **Admission control** caps total in-flight KV at 90% of pool size; surplus requests queue. **Per-tenant KV quota** (Ch. 32) prevents one tenant from starving others.
 
 ### Step 6: cost check
 
-Sizing for peak: 30 H100s on FP8 at $4/hour on-demand = `$120/hour ≈ $86,000/month`. Reserved-instance pricing typically lowers this 30–50%; assume $60,000/month with a 1-year commitment. The dollar cost is fixed regardless of utilization — paid 24/7 for the provisioned capacity.
+Sizing for peak: 30 H100s on FP8 at $4/hour on-demand = `$120/hour ≈ $86,000/month`. Reserved-instance pricing typically lowers this 30–50%; assume $60,000/month with a 1-year commitment. The dollar cost is fixed regardless of utilization, paid 24/7 for the provisioned capacity.
 
 The economic question is **cost per useful token**. With 1,000 concurrent users active 8 hours/day at ~16 tok/s served per stream, aggregate served throughput is ~13.8 billion tokens/month (`1,000 × 16 × 3,600 × 8 × 30`). Self-hosted cost: `$60,000 / 13.8B tokens ≈ $4.35 per million tokens` on reserved capacity. At the on-demand rate it's ~$6.20 per million.
 
-Compare to managed open-model APIs at ~$0.50–0.90 per million tokens for Llama-3-70B-class. At this volume and active-hour pattern, self-hosting is roughly **5–10× more expensive per token than a managed API**. The self-hosted economics improve substantially in two cases: (a) sustained 24/7 utilization (the 8-hour-active assumption is what kills it here — provisioned GPUs are idle 16 hours/day); (b) compliance, customization, or data-residency constraints that managed APIs cannot satisfy.
+Compare to managed open-model APIs at ~$0.50–0.90 per million tokens for Llama-3-70B-class. At this volume and active-hour pattern, self-hosting is roughly **5–10× more expensive per token than a managed API**. The self-hosted economics improve substantially in two cases: (a) sustained 24/7 utilization (the 8-hour-active assumption is what kills it here; provisioned GPUs are idle 16 hours/day); (b) compliance, customization, or data-residency constraints that managed APIs cannot satisfy.
 
 For this scenario as written, the honest recommendation is the **managed API**, unless a non-cost factor binds. Self-hosting becomes attractive when (i) the active-hour pattern is closer to 24/7, (ii) volume is significantly higher (10×+ this scenario), or (iii) a regulatory constraint forces it.
 
@@ -2390,11 +2403,11 @@ For this scenario as written, the honest recommendation is the **managed API**, 
 
 A complementary scenario: a legal-tech product that processes 1,000-page documents (~120K tokens), generating 10K-token summaries. 100 concurrent jobs, no SLO on TTFT (batch-style), TPOT loose (the user is reading async).
 
-- **KV at 120K context, BF16** = `120,000 × 327,680 ≈ 39 GB per request` — barely fits on one H100.
+- **KV at 120K context, BF16** = `120,000 × 327,680 ≈ 39 GB per request`, barely fits on one H100.
 - **MLA-equivalent model would shrink KV by ~10–60×**; if quality permits, a model with MLA or a CLA variant changes the economics by an order of magnitude.
 - **Chunked prefill** at C=2048 chunks the prefill of 120K tokens into ~60 chunks; each chunk takes ~200 ms; total prefill ~12 s per request. **No SLO on TTFT** means this is fine, but it loads the GPU for the duration.
-- **No prefix caching** wins (every document is unique) — disable it; remove the lookup overhead.
-- **Disaggregated PD wins big** (Ch. 13) — prefill workers grind through long prompts on a compute-dense pool; decode workers handle the 10K-token summaries on a bandwidth-dense pool. KV transfer is large (39 GB) but transferred once per request and amortized over 10K decode tokens.
+- **No prefix caching** wins (every document is unique), disable it; remove the lookup overhead.
+- **Disaggregated PD wins big** (Ch. 13); prefill workers grind through long prompts on a compute-dense pool; decode workers handle the 10K-token summaries on a bandwidth-dense pool. KV transfer is large (39 GB) but transferred once per request and amortized over 10K decode tokens.
 - **B200 + MXFP4 + MLA-equivalent model** on 4 GPUs per replica fits two requests simultaneously; on 4 H100s, one. The hardware choice is a 2× capacity decision before any software.
 
 This second case study illustrates that the architectural choices flip almost entirely between "1,000 chat users at 4K context" and "100 long-document analyses at 120K context." The same model, same engine, drastically different optimal config.
@@ -2403,11 +2416,11 @@ This second case study illustrates that the architectural choices flip almost en
 
 Three meta-lessons:
 
-1. **Quantization is the highest-leverage decision.** A single architectural choice (BF16 → FP8) cut the cluster from 134 GPUs to 30 GPUs in this scenario — a >4× reduction. No scheduler tuning matches that magnitude.
+1. **Quantization is the highest-leverage decision.** A single architectural choice (BF16 → FP8) cut the cluster from 134 GPUs to 30 GPUs in this scenario, a >4× reduction. No scheduler tuning matches that magnitude.
 2. **Prefix caching is load-bearing for chat.** Missing the prefix cache turns every turn into a full re-prefill, blowing the TTFT SLO by several-fold. Lose the routing affinity and the entire architecture's economics collapse.
 3. **The cost question is dominated by utilization pattern, not architecture.** Once you've made the right architectural choices, the build-vs-buy decision turns mostly on whether your traffic sustains GPU utilization. The 8-hour-active scenario above tilts strongly toward managed; a 24/7 sustained-traffic scenario at the same concurrency would tilt toward self-hosted. Compute the active-hour-weighted cost per token honestly before committing.
 
-> **Key takeaways — Ch. 35.** The discipline of inference systems engineering is to pick the right combination of optimizations — quantization, chunked prefill, prefix caching, conversation-affine routing, admission control — for a specific workload's profile. No single optimization is always right; the case-study method is to walk the request through every chapter of this manual and make each decision explicitly.
+> **Key takeaways — Ch. 35.** The discipline of inference systems engineering is to pick the right combination of optimizations (quantization, chunked prefill, prefix caching, conversation-affine routing, admission control) for a specific workload's profile. No single optimization is always right; the case-study method is to walk the request through every chapter of this manual and make each decision explicitly.
 
 ---
 
@@ -2417,7 +2430,7 @@ Three meta-lessons:
 
 ## 36 — State-space hybrids: serving Mamba, Jamba, Griffin
 
-> A transformer's KV cache grows with context. An SSM's "cache" is a fixed-size hidden state per token, independent of context. This single difference re-shapes the entire serving stack — the roofline, the memory-pressure model, the prefix-cache strategy, the kernel library.
+> A transformer's KV cache grows with context. An SSM's "cache" is a fixed-size hidden state per token, independent of context. This single difference re-shapes the entire serving stack; the roofline, the memory-pressure model, the prefix-cache strategy, the kernel library.
 
 ### What an SSM block actually computes
 
@@ -2428,9 +2441,9 @@ h_t = A(x_t) · h_{t-1} + B(x_t) · x_t
 y_t = C(x_t) · h_t
 ```
 
-where A, B, C are input-dependent (the "selective" part) and `d_state` is typically small (16–128). Critically, **`h_t` is the only thing that needs to be cached** — it is a fixed-size summary of all preceding tokens. There is no analog to KV cache that grows with sequence length.
+where A, B, C are input-dependent (the "selective" part) and `d_state` is typically small (16–128). Critically, **`h_t` is the only thing that needs to be cached**; it is a fixed-size summary of all preceding tokens. There is no analog to KV cache that grows with sequence length.
 
-For comparison, a transformer caches `2 · n_layers · n_kv · d_h · b` bytes **per token**; an SSM caches `n_layers · d_state · b` bytes **regardless of token count**. At Mamba-2 scale (`d_state = 128`, BF16, 64 layers), per-request cache is `64 × 128 × 2 = 16 KB total` — five orders of magnitude smaller than a 32K-context Llama-3-70B KV cache (10.7 GB).
+For comparison, a transformer caches `2 · n_layers · n_kv · d_h · b` bytes **per token**; an SSM caches `n_layers · d_state · b` bytes **regardless of token count**. At Mamba-2 scale (`d_state = 128`, BF16, 64 layers), per-request cache is `64 × 128 × 2 = 16 KB total`; five orders of magnitude smaller than a 32K-context Llama-3-70B KV cache (10.7 GB).
 
 ### The SSM inference roofline
 
@@ -2441,13 +2454,13 @@ For each decode step, an SSM block:
 - Computes `O(d · d_state)` FLOPs (the state update and projection).
 - Writes the new `h_t`.
 
-The arithmetic intensity for the state update is `O(d) / O(d_state · b)` — for typical configurations, ~10–50 FLOP/byte, much lower than transformer linear-projection intensity at moderate B but **independent of context length**. SSMs at long context have an inherent bandwidth advantage; SSMs at short context have an inherent disadvantage (no batching headroom in the state update).
+The arithmetic intensity for the state update is `O(d) / O(d_state · b)`; for typical configurations, ~10–50 FLOP/byte, much lower than transformer linear-projection intensity at moderate B but **independent of context length**. SSMs at long context have an inherent bandwidth advantage; SSMs at short context have an inherent disadvantage (no batching headroom in the state update).
 
 ### The selective scan kernel
 
 Mamba-2's training-time forward is computed via a **selective scan**, a parallel-prefix algorithm over the per-position state updates. The scan decomposes into matrix multiplications over chunks of length `C` (typically 64–256), giving access to tensor-core throughput; this is the "Mamba-2 = SSMs are SSMs" insight (Dao & Gu, ICML 2024)[Mamba-2].
 
-For inference (autoregressive single-token), the scan reduces to a sequential update — no parallelism advantage from chunking. The inference kernel for Mamba is therefore a tight loop over layers, and on small-batch decode it is launch-overhead-bound (Ch. 7's launch-tax problem applies harder).
+For inference (autoregressive single-token), the scan reduces to a sequential update, no parallelism advantage from chunking. The inference kernel for Mamba is therefore a tight loop over layers, and on small-batch decode it is launch-overhead-bound (Ch. 7's launch-tax problem applies harder).
 
 ### Hybrid models: Jamba, RecurrentGemma, Codestral Mamba
 
@@ -2464,13 +2477,13 @@ KV_bytes_per_token = 2 · n_attention_layers · n_kv · d_h · b
 state_bytes_per_request = n_ssm_layers · d_state · b
 ```
 
-For Jamba 1.5 (8 attention layers, 56 SSM layers, n_kv=8, d_h=128, BF16), per-request KV at 32K context is `2 × 8 × 8 × 128 × 2 × 32,768 = 1.07 GB` — 10× less than a same-size pure-transformer at the same context.
+For Jamba 1.5 (8 attention layers, 56 SSM layers, n_kv=8, d_h=128, BF16), per-request KV at 32K context is `2 × 8 × 8 × 128 × 2 × 32,768 = 1.07 GB`, 10× less than a same-size pure-transformer at the same context.
 
 ### Prefix caching is different for SSMs
 
 Transformer prefix caching is a memory lookup: the KV blocks of a shared prefix are referenced and reused. SSM prefix caching is fundamentally different:
 
-- The cached "state" is only useful if every preceding token was processed — a per-position state cannot be queried like KV.
+- The cached "state" is only useful if every preceding token was processed, a per-position state cannot be queried like KV.
 - To replay prefix state for a new request, you can store the *final* state at end of prefix and use it as initial state for the new tokens. This works for a fully-shared prefix (system prompt). It does not work for partial overlap.
 - For hybrid models, caching the attention-layer KV blocks works as before, but caching the SSM state is "all or nothing" per prefix end-position.
 
@@ -2478,7 +2491,7 @@ Consequence: **prefix-cache hit rates on SSMs/hybrids are lower** than on transf
 
 ### The kernel library landscape
 
-- **Mamba-2 reference kernels** (`mamba_ssm` Python package) — Triton-based, training-focused.
+- **Mamba-2 reference kernels** (`mamba_ssm` Python package). Triton-based, training-focused.
 - **vLLM ≥ 0.7** has Mamba support via `vllm/model_executor/layers/mamba/`.
 - **llama.cpp** has Mamba CPU support via the GGUF quantization machinery.
 - **CUTLASS-based selective scan kernels** are emerging from NVIDIA for Blackwell.
@@ -2490,7 +2503,7 @@ Production-grade SSM serving is younger than transformer serving; expect kernel 
 1. **Memory pressure is constant per request, not growing.** This means SSM serving never runs out of KV mid-request. The OOM failure mode of transformers does not apply.
 2. **Decode is even more bandwidth-bound at small d_state.** The state update is a `d × d_state` GEMV; at `d_state = 128`, batching helps less than transformer batching does.
 3. **Continuous batching still applies** but for a different reason: amortizing parameter reads across batch B, exactly as in transformers. The KV-pressure justification (Ch. 9) is moot.
-4. **Long context is qualitatively different.** A 1M-token request on a pure SSM costs no more memory than a 1K-token request — only more compute. This makes long-context serving on SSMs operationally simpler.
+4. **Long context is qualitatively different.** A 1M-token request on a pure SSM costs no more memory than a 1K-token request, only more compute. This makes long-context serving on SSMs operationally simpler.
 5. **TP and PP sharding work** on hybrids the same way as on transformers; SP / Ring Attention (Ch. 20) does not directly apply (the SSM scan does not decompose along the sequence dimension the same way attention does).
 
 ### When to choose an SSM-hybrid for serving
@@ -2503,8 +2516,8 @@ Production-grade SSM serving is younger than transformer serving; expect kernel 
 ### When to stay with a transformer
 
 - Frontier reasoning and chat where attention's exact retrieval matters.
-- Workloads with high prefix-cache hit rates (chat, agentic) — transformer wins on cache reuse.
-- Anything where the open-weight ecosystem matters — transformers have ~10× more public deployment maturity as of 2026.
+- Workloads with high prefix-cache hit rates (chat, agentic), transformer wins on cache reuse.
+- Anything where the open-weight ecosystem matters; transformers have ~10× more public deployment maturity as of 2026.
 
 > **Key takeaways — Ch. 36.** SSMs cache a fixed-size state per request (KB), not KV that grows with context (GB). Inference roofline is bandwidth-bound but in a different regime; selective scan kernels enter at training; inference is a tight per-layer loop. Hybrids (Jamba, RecurrentGemma) combine attention for exact retrieval with SSM for bulk modeling. Prefix caching on SSMs is "all or nothing" per prefix end-position, so hit rates are lower. Production SSM serving is younger than transformer serving.
 
@@ -2528,15 +2541,15 @@ For a model with L layers:
 
 The KV cache size is halved (only "even" layers store). Quality on Llama-2/3 holds at sharing ratio s=2 (50% reduction); s=3 is borderline; s=4 starts to degrade noticeably on retrieval-heavy benchmarks.
 
-CLA can be combined with GQA: a Llama-3-70B with GQA-8 + CLA-2 has KV bytes per token of `327,680 / 2 = 163,840 B` — half the original.
+CLA can be combined with GQA: a Llama-3-70B with GQA-8 + CLA-2 has KV bytes per token of `327,680 / 2 = 163,840 B`, half the original.
 
 ### YOCO — You Only Cache Once
 
-**YOCO** (Sun, Dong, Wang, Yang, Wei, MSR, 2024)[YOCO] takes the cross-layer idea to its extreme. The model has two halves: a self-decoder (early layers, with normal causal attention and KV cache) and a cross-decoder (later layers, which read the self-decoder's KV via cross-attention). The late layers do not maintain their own KV — they query a shared pool from the early layers.
+**YOCO** (Sun, Dong, Wang, Yang, Wei, MSR, 2024)[YOCO] takes the cross-layer idea to its extreme. The model has two halves: a self-decoder (early layers, with normal causal attention and KV cache) and a cross-decoder (later layers, which read the self-decoder's KV via cross-attention). The late layers do not maintain their own KV, they query a shared pool from the early layers.
 
 The result: KV memory is determined by the early-layer width only, regardless of total depth. For a 64-layer model with 8 self-decoder + 56 cross-decoder layers, KV is `8/64 = 12.5%` of the same-config standard transformer. This is competitive with MLA's reductions, with simpler kernel implementation (cross-attention is well-understood).
 
-The cost: training requires a different objective (the cross-decoder layers have access to all positions of the self-decoder, breaking strict causality at the cross-attention step — handled via masking). YOCO models exist but have not been widely adopted in open-weight releases as of 2026.
+The cost: training requires a different objective (the cross-decoder layers have access to all positions of the self-decoder, breaking strict causality at the cross-attention step, handled via masking). YOCO models exist but have not been widely adopted in open-weight releases as of 2026.
 
 ### MiniCache — pruning per token
 
@@ -2574,13 +2587,13 @@ As of 2026-Q2, vLLM has experimental CLA support; SGLang has not yet. YOCO and M
 - **YOCO** is bigger commitment (requires training-time architecture choice) but offers the most aggressive KV reduction without changing the attention algorithm.
 - **MiniCache** is the only post-hoc option; deploy it in front of any existing model when KV memory binds and retraining is not on the table. Verify quality on your eval distribution.
 
-> **Key takeaways — Ch. 37.** Cross-layer KV sharing reduces KV bytes by `1/(s+1)` for sharing across (s+1) layers. CLA-2 (50% reduction) is near-free on quality; YOCO is the most aggressive but requires architecture-level commitment; MiniCache works post-hoc. These reductions multiply with GQA, MLA, and KV-INT — at the limit, KV bytes can be 1/32 of MHA BF16. Block-table and kernel adjustments are minor and well-bounded.
+> **Key takeaways — Ch. 37.** Cross-layer KV sharing reduces KV bytes by `1/(s+1)` for sharing across (s+1) layers. CLA-2 (50% reduction) is near-free on quality; YOCO is the most aggressive but requires architecture-level commitment; MiniCache works post-hoc. These reductions multiply with GQA, MLA, and KV-INT, at the limit, KV bytes can be 1/32 of MHA BF16. Block-table and kernel adjustments are minor and well-bounded.
 
 ---
 
 ## 38 — Thinking models: serving extended-reasoning workloads
 
-> "Thinking" models — OpenAI o1 / o3, DeepSeek-R1, Anthropic Extended Thinking, Gemini 2 Thinking — generate long internal reasoning chains before producing a final answer. From the inference engineer's perspective, these are autoregressive decoders that emit 10K–100K tokens per request. The serving characteristics differ from chat in five qualitative ways, and the production playbook is different.
+> "Thinking" models (OpenAI o1 / o3, DeepSeek-R1, Anthropic Extended Thinking, Gemini 2 Thinking) generate long internal reasoning chains before producing a final answer. From the inference engineer's perspective, these are autoregressive decoders that emit 10K–100K tokens per request. The serving characteristics differ from chat in five qualitative ways, and the production playbook is different.
 
 ### What changes
 
@@ -2600,15 +2613,15 @@ Property by property, comparing chat and thinking workloads:
 
 ### The KV pressure problem
 
-A single thinking request at full output length holds onto KV for thousands of decode steps. With Llama-70B-class GQA, 32K-token output = 10.7 GB of KV per request. **A 30 H100 cluster (Ch. 35) sized for 1,000 4K-context chat users can support only ~50 simultaneous thinking requests** at 32K output — a 20× reduction in capacity relative to chat.
+A single thinking request at full output length holds onto KV for thousands of decode steps. With Llama-70B-class GQA, 32K-token output = 10.7 GB of KV per request. **A 30 H100 cluster (Ch. 35) sized for 1,000 4K-context chat users can support only ~50 simultaneous thinking requests** at 32K output, a 20× reduction in capacity relative to chat.
 
 Three responses:
 
-1. **Aggressive KV quantization.** KV-INT4 (Ch. 15) is more attractive here than in chat: the sustained per-request KV cost is high, the user is waiting longer, and the quality cost shows up as reasoning-quality regression — which can be measured offline. KV-INT4 on R1-class models has been shown to retain reasoning quality when calibrated on math/code data.
+1. **Aggressive KV quantization.** KV-INT4 (Ch. 15) is more attractive here than in chat: the sustained per-request KV cost is high, the user is waiting longer, and the quality cost shows up as reasoning-quality regression, which can be measured offline. KV-INT4 on R1-class models has been shown to retain reasoning quality when calibrated on math/code data.
 
-2. **MLA / cross-layer KV.** Chs. 6 and 37 — every byte saved here is a token of additional context the same cluster can support. Frontier reasoning models increasingly ship with MLA (R1 is V3-architecture) or YOCO-style cross-layer sharing.
+2. **MLA / cross-layer KV.** Chs. 6 and 37; every byte saved here is a token of additional context the same cluster can support. Frontier reasoning models increasingly ship with MLA (R1 is V3-architecture) or YOCO-style cross-layer sharing.
 
-3. **KV offloading to CPU/NVMe** (Ch. 30). Thinking decode is bandwidth-bound on HBM; if a portion of the KV is offloaded to CPU/NVMe and prefetched a few layers ahead, the decode rate is preserved while pool capacity is multiplied. **GPUDirect Storage** (Ch. 30) is the enabling technology — without it, the CPU bounce buffer makes offload impractical at long context.
+3. **KV offloading to CPU/NVMe** (Ch. 30). Thinking decode is bandwidth-bound on HBM; if a portion of the KV is offloaded to CPU/NVMe and prefetched a few layers ahead, the decode rate is preserved while pool capacity is multiplied. **GPUDirect Storage** (Ch. 30) is the enabling technology; without it, the CPU bounce buffer makes offload impractical at long context.
 
 ### Mid-think cancellation
 
@@ -2617,9 +2630,9 @@ A user can abort a thinking request mid-stream (e.g., by closing a chat tab). In
 1. Receive the cancel signal (HTTP connection close, gRPC cancel, etc.).
 2. Propagate it through the API server / engine core IPC (Ch. 23).
 3. Free the KV blocks at the next scheduler step.
-4. Optionally emit a "partial result" — the reasoning content generated so far, which the product surface may still display.
+4. Optionally emit a "partial result"; the reasoning content generated so far, which the product surface may still display.
 
-Cancellation latency directly affects KV pressure. A 5-second propagation delay means 5 seconds of "zombie" KV on every aborted request — at high abort rates, this dominates pool occupancy. Production engines as of 2026 treat cancellation as a first-class scheduler signal with the same priority as preemption.
+Cancellation latency directly affects KV pressure. A 5-second propagation delay means 5 seconds of "zombie" KV on every aborted request; at high abort rates, this dominates pool occupancy. Production engines as of 2026 treat cancellation as a first-class scheduler signal with the same priority as preemption.
 
 ### Output-length prediction (or non-prediction)
 
@@ -2664,7 +2677,7 @@ The benchmark output schema for thinking adds two fields: `thinking_tokens` and 
 - `vllm:num_running_requests` plateauing while queue grows → KV-pool bound; consider KV-INT8.
 - `vllm:num_preemptions_total` growing on long-thinking traffic → preemption thrash; tighten admission.
 - TPOT regression on thinking traffic vs chat traffic → bandwidth contention; the long-decode cohort is interfering with the short-output cohort. Disaggregate.
-- Per-tenant `max_thinking_tokens` distributions — a single tenant pushing extreme thinking-token budgets will dominate the pool.
+- Per-tenant `max_thinking_tokens` distributions; a single tenant pushing extreme thinking-token budgets will dominate the pool.
 
 > **Key takeaways — Ch. 38.** Thinking models = autoregressive decoders that emit 10K–100K tokens per request. KV pressure is their defining failure mode; KV-INT, MLA, cross-layer sharing, and offload all become more attractive than in chat. Mid-think cancellation is a first-class scheduler signal. Output length is unobservable; admission is reservation- or optimistic-with-eviction. The right unit objective is correct-answers-per-GPU-hour, not raw throughput. NVL72 + B200 + disaggregated PD is the canonical 2026 thinking-model serving topology.
 
@@ -2674,7 +2687,7 @@ The benchmark output schema for thinking adds two fields: `thinking_tokens` and 
 
 > *New in Edition IX.* Until this part, the manual has been theory-and-mechanism: what each layer of the stack does, why it does it, and how to reason about it from first principles. Part XI grounds the entire manual in **measured, primary-source-cited deployments running on actual H100 GPUs in actual production**. We give two chapters: a forensically detailed case study of the largest open-source H100 deployment whose internals are publicly documented (SGLang on 96 H100s serving DeepSeek-V3), and a comprehensive benchmark catalog covering MLPerf Inference v5.0, the major engines, the major managed-API providers, and the kernel-level frontier (Hazy Research's megakernel).
 >
-> Every number in this part is cited to its primary source — a paper, a vendor blog, an MLPerf submission, or a reproducible production deployment. Where two sources disagree, both are quoted with the reason for the discrepancy.
+> Every number in this part is cited to its primary source; a paper, a vendor blog, an MLPerf submission, or a reproducible production deployment. Where two sources disagree, both are quoted with the reason for the discrepancy.
 
 ## 39 — Field case study: SGLang + DeepSeek-V3 on 96 H100s
 
@@ -2742,6 +2755,7 @@ The writeup provides ablations that quantify each technique's individual contrib
 Without disaggregation, prefill bursts interrupt decode at every step boundary, decode latency grows by 30–50%, and DP-attention is incompatible with DeepEP's auto-mode (which cannot run normal-dispatch and low-latency-dispatch in the same communication group).[LMSYS-EP-2025]
 
 Effect of disaggregation alone, holding everything else constant:
+
 - Decode TPOT-p99 reduction: **~40%** (from prefill-interruption removal)
 - Compatibility with DP-attention + DeepEP simultaneously: **structurally enabled** (was not possible before)
 
@@ -2759,7 +2773,7 @@ For SGLang's decode at T=128 tokens-per-GPU, d=7168, BF16, k=8, P=72:
 bytes_dispatch ≈ 128 × 7168 × 2 × 8 × (1 − 1/72) ≈ 14.5 MB per GPU per dispatch
 ```
 
-For 58 MoE layers with dispatch + combine per layer: **~1.7 GB per GPU per forward pass**. At NVLink-5 within the NVL-NVSwitch domain (each NVSwitch hop, ~900 GB/s effective), per-step communication is ~2 ms. Across InfiniBand (~25 GB/s NDR), it would be ~70 ms — which is why DeepEP's topology-aware dispatch (intra-node first, cross-node second) is structural.
+For 58 MoE layers with dispatch + combine per layer: **~1.7 GB per GPU per forward pass**. At NVLink-5 within the NVL-NVSwitch domain (each NVSwitch hop, ~900 GB/s effective), per-step communication is ~2 ms. Across InfiniBand (~25 GB/s NDR), it would be ~70 ms; which is why DeepEP's topology-aware dispatch (intra-node first, cross-node second) is structural.
 
 Without DeepEP (using plain NCCL all-to-all), throughput drops by 40–60% because the irregular dispatch payload pattern is mis-handled.
 
@@ -2768,6 +2782,7 @@ Without DeepEP (using plain NCCL all-to-all), throughput drops by 40–60% becau
 TBO splits a single batch into two micro-batches and overlaps compute of one with all-to-all communication of the other. This is the "DualPipe pattern" applied at inference time.
 
 Quantitative effects from the LMSYS writeup:[LMSYS-EP-2025]
+
 - **Prefill throughput**: **+27% to +35%** at fixed token count per device.
 - **Memory-bound batch size**: enables **batches of 16,384 tokens per device** vs. 8,192 vanilla (OOM at 16K vanilla); throughput at large batches is **+40.5% over the vanilla baseline**.
 - **Decode**: speedup contingent on batch size > ~64–128 tokens; below that, TBO yields minimal or *negative* gains (e.g., −27% at batch 32 in real-test cases) due to insufficient compute to hide communication.
@@ -2780,7 +2795,7 @@ EPLB takes observed expert-load statistics and computes an expert placement that
 
 Effect: GPU "balancedness" (mean compute time / max compute time across GPUs in a MoE layer) improves materially with EPLB. The end-to-end prefill throughput gap to DeepSeek's official numbers narrows from 20% (default expert distribution) to **6%** (simulated perfect EPLB).[LMSYS-EP-2025] Without EPLB, the long tail of slowest GPUs determines step time.
 
-EPLB's secondary benefit is **flexibility in parallelism degree**: with only 256 routed experts, EP sizes are restricted to powers-of-two (16, 32, 64, 128, 256). With 32 redundant experts (288-expert pool), EP=12, 24, 36, 72, 144 all become divisible — which is exactly how the deployment configured EP=72.
+EPLB's secondary benefit is **flexibility in parallelism degree**: with only 256 routed experts, EP sizes are restricted to powers-of-two (16, 32, 64, 128, 256). With 32 redundant experts (288-expert pool), EP=12, 24, 36, 72, 144 all become divisible; which is exactly how the deployment configured EP=72.
 
 #### E. DP-attention (Ch. 8 and Ch. 20 hybrid)
 
@@ -2798,7 +2813,7 @@ The masked-layout kernel pairs natively with DeepEP's low-latency dispatch in th
 
 KV transfer between prefill and decode pools is **RDMA-over-IB**, with non-blocking transfer running on a background thread so the scheduler's event loop is uninterrupted. The implementation uses queue pairs and scatter-gather elements (SGE) for non-contiguous memory chunks. SGLang's API supports both **Mooncake** and **NIXL** as pluggable RDMA libraries.
 
-For DeepSeek-V3 at 4,096-token prompts, MLA shrinks per-token KV to ~1,152 B/layer (Ch. 6 equation 6.1) for `d_c=512, d_h^R=64, BF16`, so per-request KV at 4K context is `4096 × 1152 × 61 ≈ 287 MB` — far smaller than Llama-3-70B GQA (1.34 GB at 4K) but still requiring fast transport. At 200 Gb/s NDR (~25 GB/s), 287 MB transfers in ~11 ms.
+For DeepSeek-V3 at 4,096-token prompts, MLA shrinks per-token KV to ~1,152 B/layer (Ch. 6 equation 6.1) for `d_c=512, d_h^R=64, BF16`, so per-request KV at 4K context is `4096 × 1152 × 61 ≈ 287 MB`, far smaller than Llama-3-70B GQA (1.34 GB at 4K) but still requiring fast transport. At 200 Gb/s NDR (~25 GB/s), 287 MB transfers in ~11 ms.
 
 ### What this case study proves about the manual
 
@@ -2822,7 +2837,7 @@ Walking through the deployment chapter-by-chapter:
 | Ch. 22 (benchmarking protocol) | Full reproducible setup; instructions on GitHub at issue 6017 | ✓ |
 | Ch. 30 (KV transport) | RDMA over IB, Mooncake / NIXL pluggable | ✓ |
 | Ch. 33 (DualPipe spirit) | Two-batch overlap (TBO) is the inference-time DualPipe | ✓ |
-| Ch. 34 (TCO) | $0.20/M output tokens — explicit at-scale economics | ✓ |
+| Ch. 34 (TCO) | $0.20/M output tokens; explicit at-scale economics | ✓ |
 
 This is the manual's full surface area, exercised by a single deployment, with measured numbers. Few public artifacts in production LLM serving exercise this much of the stack at once.
 
@@ -2832,7 +2847,7 @@ The LMSYS team open-sourced the entire setup. Reproduction instructions are at [
 
 > **Operational rule.** When evaluating a frontier MoE serving framework, run the SGLang DeepSeek-V3 reproducer on whatever cluster you have access to, even if scaled down. The numbers are the strongest single calibration check on whether your stack is actually production-grade. Anything more than 30% off the per-node throughputs above on equivalent hardware indicates something is wrong with your software path.
 
-> **Key takeaways — Ch. 39.** SGLang on 96 H100s (Atlas Cloud) runs DeepSeek-V3 at ~52K input tokens/s and ~22K output tokens/s per node, costing $0.20/million output tokens — ~5× cheaper than DeepSeek's API. The deployment exercises PD-disaggregation, EP=72 with DeepEP, two-batch overlap, EPLB, DP-attention, DeepGEMM, MLA, RDMA KV transfer. Performance is within 6% of DeepSeek's profile when EPLB is well-tuned. Fully reproducible; instructions public.
+> **Key takeaways — Ch. 39.** SGLang on 96 H100s (Atlas Cloud) runs DeepSeek-V3 at ~52K input tokens/s and ~22K output tokens/s per node, costing $0.20/million output tokens, ~5× cheaper than DeepSeek's API. The deployment exercises PD-disaggregation, EP=72 with DeepEP, two-batch overlap, EPLB, DP-attention, DeepGEMM, MLA, RDMA KV transfer. Performance is within 6% of DeepSeek's profile when EPLB is well-tuned. Fully reproducible; instructions public.
 
 ---
 
@@ -2847,6 +2862,7 @@ The catalog covers seven primary sources: MLPerf Inference v5.0 (April 2025); To
 MLPerf Inference is the industry-standard, audited benchmark from MLCommons. v5.0 introduced Llama-3.1-405B and significantly expanded the Llama-2-70B submissions (became the most-submitted benchmark, surpassing ResNet-50). The H100 Llama-2-70B numbers are the most widely-cited reference points in the field.[MLPerf-v5][NVIDIA-MLPerf-v4.1]
 
 NVIDIA's official MLPerf v4.1 / v5.0 disclosures report Blackwell B200 at:
+
 - **Llama-2-70B Server**: 10,756 tokens/sec/GPU (4× over H100)
 - **Llama-2-70B Offline**: 11,264 tokens/sec/GPU (3.7× over H100)
 
@@ -2877,6 +2893,7 @@ Together AI's commercial inference platform, built on FlashAttention-3 and propr
 | Llama-3.1-405B | up to 80 tokens/sec |
 
 Their comparison frame:[Together-IE2-2024]
+
 - **4× faster decode throughput than open-source vLLM**
 - 1.3–2.5× faster than commercial competitors (Bedrock, Azure AI, Fireworks, OctoAI)
 - For Llama-3.1: 1.9–4.5× faster than vLLM
@@ -2892,35 +2909,38 @@ The discrepancy between Together's per-stream number and MLPerf's aggregate-thro
 | Together AI | $3.36/hour | from $1.75/hour | $0.54–$0.90 |
 | Fireworks AI | $5.80/hour | (reserved tiers vary) | comparable |
 
-These prices ground the TCO arithmetic in Ch. 34. At Together's $3.36/hour on-demand and the back-derived H100 throughput of ~2,700 tok/s on Llama-2-70B-class via well-tuned TRT-LLM, the at-100%-utilization cost is `$3.36 / (2,700 × 3,600) = $0.346 per million output tokens` per H100. With TP=2 deployed for a 70B model, the per-million-token cost roughly doubles to ~$0.69 — consistent with the $0.54–$0.90 list price (the difference is the gross margin built in).
+These prices ground the TCO arithmetic in Ch. 34. At Together's $3.36/hour on-demand and the back-derived H100 throughput of ~2,700 tok/s on Llama-2-70B-class via well-tuned TRT-LLM, the at-100%-utilization cost is `$3.36 / (2,700 × 3,600) = $0.346 per million output tokens` per H100. With TP=2 deployed for a 70B model, the per-million-token cost roughly doubles to ~$0.69, consistent with the $0.54–$0.90 list price (the difference is the gross margin built in).
 
 This calibrates the manual's Ch. 35 case-study cost analysis with real prices instead of placeholders.
 
 ### D. SGLang and vLLM on H100 — open-source baseline
 
 For Llama-3-70B-class models on 4×H100 (TP=4), **vLLM v0.6+** delivers:[vLLM-v0.6-blog]
+
 - **1.8× higher throughput than v0.5** at the same configuration
 - Aggregate 2,500–4,000 tok/s on a 4×H100 node depending on prompt mix and max_num_batched_tokens setting
 
 **SGLang ≥ 0.4** (with RadixAttention, overlapped scheduler, and DP-attention for MoE) is comparable to or faster than vLLM on chat-shaped workloads with high prefix-cache hits, and meaningfully faster on MoE models (DeepSeek-V3 case study, Ch. 39).
 
-The Hazy Research blog post that compared megakernel to vLLM and SGLang (May 2025) measured vLLM and SGLang at **2.5–4 forward passes/ms** on a single Llama-1B forward pass on H100 — i.e., 250–400 µs per Llama-1B forward pass.[Hazy-megakernel] The Hazy megakernel achieves **<1 ms per forward pass on H100, <680 µs on B200**, with **78% memory bandwidth utilization**, beating vLLM and SGLang by **>1.5× on this specific small-model decode latency benchmark**.
+The Hazy Research blog post that compared megakernel to vLLM and SGLang (May 2025) measured vLLM and SGLang at **2.5–4 forward passes/ms** on a single Llama-1B forward pass on H100, i.e., 250–400 µs per Llama-1B forward pass.[Hazy-megakernel] The Hazy megakernel achieves **<1 ms per forward pass on H100, <680 µs on B200**, with **78% memory bandwidth utilization**, beating vLLM and SGLang by **>1.5× on this specific small-model decode latency benchmark**.
 
-This is the "below 1 ms barrier" — the lowest published per-forward-pass latency for any LLM on H100 as of 2025. It is achievable only via single-kernel persistent execution; production engines that must support continuous batching, multiple model architectures, and dynamic features cannot adopt this directly, but the megakernel is the empirical upper bound on what the H100 can do for Llama-1B-scale autoregressive inference.
+This is the "below 1 ms barrier"; the lowest published per-forward-pass latency for any LLM on H100 as of 2025. It is achievable only via single-kernel persistent execution; production engines that must support continuous batching, multiple model architectures, and dynamic features cannot adopt this directly, but the megakernel is the empirical upper bound on what the H100 can do for Llama-1B-scale autoregressive inference.
 
 ### E. FlashAttention-3 on H100 — kernel-level numbers
 
 The FA-3 paper's published H100 numbers (NeurIPS 2024 final, with the camera-ready update):[FA3]
+
 - **BF16**: ~840 TFLOP/s (≈85% of H100 peak BF16)
 - **FP8**: ~1.3 PFLOP/s (≈66% of H100 peak FP8)
 
-H100 SFU (`exp` via `ex2.approx`): 3.9 TFLOP/s, vs 989 TFLOP/s tensor-core BF16 — a 256× ratio that determines the GEMM/softmax interleaving budget.
+H100 SFU (`exp` via `ex2.approx`): 3.9 TFLOP/s, vs 989 TFLOP/s tensor-core BF16; a 256× ratio that determines the GEMM/softmax interleaving budget.
 
 These kernel-level peaks set the ceiling for any attention-bound workload on H100. Real production attention typically delivers 60–80% of these peaks (overhead from masking, variable-length sequences, dtype casts). FlashInfer (Ch. 4) routes engine calls to FA-3 on Hopper-class hardware; a substantial fraction of any engine's "achieved attention throughput" on H100 is FA-3 throughput.
 
 ### F. Anyscale — reproducible methodology
 
 Anyscale's *Reproducible Performance Metrics for LLM inference* report (and its open-source `LLMPerf` tool) is the methodology canonical reference used by Together, Fireworks, and others. It defines:[Anyscale-LLMPerf]
+
 - **Mean output tokens/second/request** (per-stream rate)
 - **Mean TTFT** with documented prompt distribution
 - **Mean and p99 TPOT** with explicit concurrency
@@ -2938,10 +2958,10 @@ LLMPerf is open-source and can be run against any OpenAI-compatible endpoint. It
 │                     │ 1×B200       │ Llama-2-70B Srv   │ 10,756 tok/s/GPU     │
 │                     │ 1×B200       │ Llama-2-70B Off   │ 11,264 tok/s/GPU     │
 │                     │ 1×H200       │ Llama-2-70B-class │ ~50% > H100          │
-│                     │              │   (Lambda v5.0)   │                      │
+│                     │              │   (Lambda v5.0) │                      │
 ├─────────────────────┼──────────────┼───────────────────┼──────────────────────┤
 │ SGLang DeepSeek-V3  │ 96×H100      │ DSV3 prefill 4K   │ 50,302 tok/s/node    │
-│  (Atlas, 12 nodes)  │              │ DSV3 prefill 4K + │                      │
+│  (Atlas, 12 nodes) │              │ DSV3 prefill 4K + │                      │
 │                     │              │   simulated EPLB  │ 59,337 tok/s/node    │
 │                     │              │ DSV3 decode 2K-in │ 22,282 tok/s/node    │
 │                     │              │   = 2,785 tok/s/H100 sustained          │
@@ -2952,16 +2972,16 @@ LLMPerf is open-source and can be run against any OpenAI-compatible endpoint. It
 │                     │              │ Llama-3.1-405B    │ ~80 tok/s per stream │
 ├─────────────────────┼──────────────┼───────────────────┼──────────────────────┤
 │ Hazy Megakernel     │ 1×H100       │ Llama-1B fwd pass │ <1 ms (>1.5× vLLM/   │
-│                     │ 1×B200       │ Llama-1B fwd pass │   SGLang)            │
+│                     │ 1×B200       │ Llama-1B fwd pass │   SGLang) │
 │                     │              │ Bandwidth util    │ <680 µs              │
 │                     │              │                   │ 78% of peak HBM      │
 ├─────────────────────┼──────────────┼───────────────────┼──────────────────────┤
-│ FA-3 paper (kernel- │ 1×H100       │ BF16 attention    │ ~840 TFLOP/s (85%)   │
-│  level)             │ 1×H100       │ FP8 attention     │ ~1.3 PFLOP/s         │
-│                     │ 1×H100       │ exp (SFU)         │ 3.9 TFLOP/s          │
+│ FA-3 paper (kernel- │ 1×H100       │ BF16 attention    │ ~840 TFLOP/s (85%) │
+│  level) │ 1×H100       │ FP8 attention     │ ~1.3 PFLOP/s         │
+│                     │ 1×H100       │ exp (SFU) │ 3.9 TFLOP/s          │
 ├─────────────────────┼──────────────┼───────────────────┼──────────────────────┤
 │ vLLM v0.6 release   │ 4×H100, TP=4 │ Llama-3-70B       │ 2,500–4,000 tok/s    │
-│                     │              │   aggregate       │   (cluster total)    │
+│                     │              │   aggregate       │   (cluster total) │
 │                     │ 4×H100       │   v0.6 vs v0.5    │ 1.8× throughput      │
 │                     │              │   v0.6 latency    │ 5× lower             │
 └─────────────────────┴──────────────┴───────────────────┴──────────────────────┘
@@ -2979,13 +2999,13 @@ Three meta-lessons emerge when you read these numbers side by side:
 
 > **Operational rule.** Calibrate your own H100 deployment against this catalog. If you are running Llama-3-70B-class on TRT-LLM with FP8 and getting <2,000 tok/s/H100 aggregate at server-style SLO, your stack has at least 30% headroom. The most common cause is sub-optimal `max_num_batched_tokens` (Ch. 10), insufficient prefix-cache reuse (Ch. 12), or a slow tokenizer (Ch. 26). If you're at >2,500 tok/s/H100, you are within striking distance of MLPerf-grade tuning.
 
-> **Key takeaways — Ch. 40.** The H100 delivers ~2,689 tok/s/GPU on MLPerf Llama-2-70B Server (FP8 TRT-LLM, audited) and ~2,785 tok/s/GPU on SGLang DeepSeek-V3 decode (FP8 MoE) — both representing 75–85% HBM peak utilization. Hazy's megakernel sets the per-forward-pass latency floor at <1 ms on H100 for Llama-1B (78% HBM peak). Together IE2 delivers ~350 tok/s per stream on Llama-3-70B (per-stream rate, distinct from aggregate). FA-3 hits 85% of H100 BF16 peak. Use the right number for your operating point; bandwidth is binding in every regime.
+> **Key takeaways — Ch. 40.** The H100 delivers ~2,689 tok/s/GPU on MLPerf Llama-2-70B Server (FP8 TRT-LLM, audited) and ~2,785 tok/s/GPU on SGLang DeepSeek-V3 decode (FP8 MoE), both representing 75–85% HBM peak utilization. Hazy's megakernel sets the per-forward-pass latency floor at <1 ms on H100 for Llama-1B (78% HBM peak). Together IE2 delivers ~350 tok/s per stream on Llama-3-70B (per-stream rate, distinct from aggregate). FA-3 hits 85% of H100 BF16 peak. Use the right number for your operating point; bandwidth is binding in every regime.
 
 ---
 
 
 
-A reference for the acronyms and terms used throughout this manual. Definitions are operational, not exhaustive — they aim to convey what the term means in production inference contexts.
+A reference for the acronyms and terms used throughout this manual. Definitions are operational, not exhaustive; they aim to convey what the term means in production inference contexts.
 
 **All-reduce.** A collective operation in which every GPU contributes a value and every GPU receives the sum (or other reduction) across all contributions. The dominant collective in tensor parallelism. NCCL's ring algorithm is bandwidth-optimal for large messages.
 
@@ -3206,39 +3226,39 @@ A single page of every formula derived in the manual, in uniform notation, suita
 ```
 ─── Roofline ───────────────────────────────────────────────────────────────────
 ridge_intensity = peak_compute / peak_bandwidth                                  (2.1)
-intensity_linear(decode, B)      = 2B / b                                        (2.4)
-intensity_attention(decode)      = 2 n_h / (n_kv b)                              (2.5)
-intensity_attention(MLA absorb)  ≈ 2 n_h d_h / ((d_c + d_h^R) b)                 (6.2)
+intensity_linear(decode, B) = 2B / b                                        (2.4)
+intensity_attention(decode) = 2 n_h / (n_kv b) (2.5)
+intensity_attention(MLA absorb) ≈ 2 n_h d_h / ((d_c + d_h^R) b) (6.2)
 
 ─── KV ──────────────────────────────────────────────────────────────────────────
-KV_per_token (MHA/GQA)  = 2 n_layers n_kv d_h dtype_bytes                       (5.1)
-KV_per_token (MLA)      = n_layers (d_c + d_h^R) dtype_bytes                    (6.1)
-KV_per_token (CLA-s)    = KV_per_token / (s+1)
-KV_per_token (KV-INT8)  = KV_per_token / 2  (dtype_bytes=1)
+KV_per_token (MHA/GQA) = 2 n_layers n_kv d_h dtype_bytes                       (5.1)
+KV_per_token (MLA) = n_layers (d_c + d_h^R) dtype_bytes                    (6.1)
+KV_per_token (CLA-s) = KV_per_token / (s+1)
+KV_per_token (KV-INT8) = KV_per_token / 2  (dtype_bytes=1)
 
 ─── Speculative decoding ───────────────────────────────────────────────────────
-P(accept | x ~ q) = min(1, p(x)/q(x))                                          (14.1)
-E[accepted | i.i.d. α, draft k]   = (1 − α^{k+1}) / (1 − α)                    (14.2)
+P(accept | x ~ q) = min(1, p(x)/q(x)) (14.1)
+E[accepted | i.i.d. α, draft k]   = (1 − α^{k+1}) / (1 − α) (14.2)
 speedup_wall_clock                = E[accepted] / (1 + (c_draft / c_target) k) (14.3)
 
 ─── NCCL ring all-reduce ───────────────────────────────────────────────────────
-T_ring(N, m)         = 2(N−1) α_msg + (2(N−1)/N) m β                            (8.1)
+T_ring(N, m) = 2(N−1) α_msg + (2(N−1)/N) m β                            (8.1)
 bytes_per_GPU        = (2(N−1)/N) m
 
 ─── Pipeline parallelism ──────────────────────────────────────────────────────
-bubble_fraction(P, M) = (P − 1) / (M + P − 1)                                  (33.1)
+bubble_fraction(P, M) = (P − 1) / (M + P − 1) (33.1)
 
 ─── Pollaczek–Khinchine (M/G/1) ───────────────────────────────────────────────
-E[W_q]            = ρ (1 + C²) E[S] / (2 (1 − ρ))                              (16.1)
-P(W_q > t)        ≈ ρ exp(− t (1 − ρ) / E[S])                                  (16.2)
-W_q^{p99}         ≈ E[S] ln(100 ρ) / (1 − ρ)                                   (16.3)
+E[W_q]            = ρ (1 + C²) E[S] / (2 (1 − ρ)) (16.1)
+P(W_q > t) ≈ ρ exp(− t (1 − ρ) / E[S]) (16.2)
+W_q^{p99}         ≈ E[S] ln(100 ρ) / (1 − ρ) (16.3)
 
 ─── MoE all-to-all ────────────────────────────────────────────────────────────
-bytes_dispatch_per_GPU ≈ T d dtype_bytes k (1 − 1/P)                           (19.1)
+bytes_dispatch_per_GPU ≈ T d dtype_bytes k (1 − 1/P) (19.1)
 total per-MoE-layer    ≈ 2 × bytes_dispatch  (dispatch + combine)
 
 ─── Sarathi chunked prefill saturation ────────────────────────────────────────
-P:D_ratio_optimum = C / (B − 1)                                                (11.1)
+P:D_ratio_optimum = C / (B − 1) (11.1)
 ```
 
 Each formula is implemented in the runnable `fieldmanual.derive` module (Appendix D). Verify any numerical claim by importing and calling the corresponding function.
@@ -3363,8 +3383,7 @@ class ModelConfig:
     name: str; n_layers: int; n_heads: int; n_kv_heads: int; head_dim: int
     hidden_size: int; intermediate_size: int; vocab_size: int
 
-LLAMA3_70B = ModelConfig(
-    "Llama-3-70B-Instruct",
+LLAMA3_70B = ModelConfig(    "Llama-3-70B-Instruct",
     n_layers=80, n_heads=64, n_kv_heads=8, head_dim=128,
     hidden_size=8192, intermediate_size=28672, vocab_size=128256)
 
@@ -3405,7 +3424,7 @@ def reproduce_manual_numbers():
     w_bf16 = weight_bytes_total(LLAMA3_70B, 2)
     w_fp8  = weight_bytes_total(LLAMA3_70B, 1)
     print(f"\n[Ch. 5]  Llama-3-70B weights BF16: {w_bf16/1e9:.1f} GB  (manual: ~140 GB) ✓")
-    print(f"[Ch. 5]  Llama-3-70B weights FP8:  {w_fp8/1e9:.1f} GB   (manual: ~70 GB)  ✓")
+    print(f"[Ch. 5]  Llama-3-70B weights FP8:  {w_fp8/1e9:.1f} GB   (manual: ~70 GB) ✓")
 
     mla = kv_per_token_mla(512, 64, 61, 2)
     mha_eq = 2 * 61 * 128 * 128 * 2
@@ -3470,8 +3489,7 @@ from openai import AsyncOpenAI
 async def issue_request(client, prompt, max_tokens, params):
     t_enter = time.perf_counter()
     first_tok_time = None; last_tok_time = None; n_out = 0
-    async for event in client.chat.completions.create(
-        model=params["model"], stream=True,
+    async for event in client.chat.completions.create(model=params["model"], stream=True,
         messages=[{"role": "user", "content": prompt}],
         max_tokens=max_tokens,
         temperature=params["temperature"], top_p=params["top_p"]):
@@ -3485,7 +3503,7 @@ async def issue_request(client, prompt, max_tokens, params):
         "tpot_ms": ((last_tok_time - first_tok_time) / max(1, n_out-1)) * 1000
                    if first_tok_time and last_tok_time and n_out > 1 else None,
         "e2e_ms":  (last_tok_time - t_enter) * 1000 if last_tok_time else None,
-        "n_out":   n_out,
+        "n_out": n_out,
     }
 
 
@@ -3498,8 +3516,7 @@ async def open_loop_client(corpus, lam_per_s, duration_s, params):
         await asyncio.sleep(random.expovariate(lam_per_s))
         prompt = random.choice(corpus)
         max_tokens = int(prompt["expected_output_tokens"] * 1.5)
-        inflight.append(asyncio.create_task(
-            issue_request(client, prompt["prompt"], max_tokens, params)))
+        inflight.append(asyncio.create_task(issue_request(client, prompt["prompt"], max_tokens, params)))
     return await asyncio.gather(*inflight)
 
 
@@ -3527,7 +3544,7 @@ def report(results):
 
 
 # Example usage:
-#   corpus = json.load(open("prompts.jsonl"))   # 10K-prompt corpus from Ch. 22
+#   corpus = json.load(open("prompts.jsonl")) # 10K-prompt corpus from Ch. 22
 #   results = asyncio.run(open_loop_client(corpus, lam_per_s=16,
 #                                          duration_s=600,
 #                                          params={"url": "http://...", "model": "...",
@@ -3569,7 +3586,7 @@ A one-page reference of the imperative rules scattered through this manual. Carr
 
 13. **Verify chat templates render correctly with the model's eval tokens.** A misconfigured template silently degrades quality with no metric tripping. (Ch. 26)
 
-14. **GPU sampler, not CPU sampler.** A CPU sampler costs 1–2 ms PCIe RTT — invisible in profiling that doesn't measure host-device copies. (Ch. 27)
+14. **GPU sampler, not CPU sampler.** A CPU sampler costs 1–2 ms PCIe RTT; invisible in profiling that doesn't measure host-device copies. (Ch. 27)
 
 15. **For long-context workloads, KV-INT8 first.** Doubles effective context capacity at <0.5 ppl loss. (Ch. 15)
 
